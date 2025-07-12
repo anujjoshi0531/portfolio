@@ -1,0 +1,53 @@
+"use client"
+
+import { PageTemplate } from "@/components/global/template"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import SVG404 from "@/components/site/SVG404"
+
+export default function NotFound() {
+  return (
+    <>
+    <PageTemplate />
+      <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <div className="text-center space-y-8 max-w-2xl mx-auto">
+          {/* 404 Illustration */}
+          <div className="relative">
+            <div className="text-8xl md:text-[250px] font-bold text-muted-foreground/20 select-none">404</div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="size-36 md:size-48 flex items-center justify-center">
+                <SVG404 />
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="space-y-4">
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight">Page Not Found</h1>
+            <p className="text-lg text-muted-foreground max-w-md mx-auto">
+              {
+                "Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or you entered the wrong URL."
+              }
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button asChild  className="min-w-[140px]">
+              <Link href="/">
+                Go Home
+              </Link>
+            </Button>
+            <Button variant="secondary" onClick={() => window.history.back()} className="min-w-[140px]">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Go Back
+            </Button>
+          </div>
+
+            </div>
+      </div>
+    </>
+
+  )
+}
