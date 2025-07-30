@@ -1,5 +1,4 @@
 import { Client } from "@notionhq/client";
-import { cache } from "react";
 import { NotionAPI } from "notion-client";
 
 export const notion = new NotionAPI();
@@ -7,20 +6,19 @@ export const notionClient = new Client({
   auth: process.env.NOTION_TOKEN,
 });
 
-export const getRecordMap = cache(async (pageId: string) => {
+export const getRecordMap = async (pageId: string) => {
   const data = await notion.getPage(pageId);
   return data;
-}
-);
+};
 
-export const getPageById = cache(async (id: string) => {
+export const getPageById = async (id: string) => {
   const response = await notionClient.pages.retrieve({
     page_id: id,
   });
   return response;
-})
+};
 
-export const getPages = cache(async ({
+export const getPages = async ({
   query,
   tags,
   dateFilter,
@@ -110,10 +108,10 @@ export const getPages = cache(async ({
     ],
     page_size: limit,
   });
-});
+};
 
 
-export const getAllTags = cache(async () => {
+export const getAllTags = async () => {
   const database = await notionClient.databases.retrieve({
     database_id: process.env.NOTION_DATABASE_ID!,
   });
@@ -121,47 +119,47 @@ export const getAllTags = cache(async () => {
   const tags = tagsProperty.multi_select?.options.map((tag: any) => (tag.name)) || [];  
   return tags;
 
-});
+};
 
-export const totalPages = cache(async () => {
+export const totalPages = async () => {
   const response = await notionClient.databases.query({
     database_id: process.env.NOTION_DATABASE_ID!,
    });
   return response.results.length;
-})
+};
 
-export const getProjectType = cache(async () => {
+export const getProjectType = async () => {
   const database = await notionClient.databases.retrieve({
     database_id: process.env.NOTION_PROJECT_ID!,
   });
   const typeProperty = database.properties.Category as any;
   return typeProperty.select?.options;
-});
+};
 
-export const getProject = cache(async () => {
+export const getProject = async () => {
   const response = await notionClient.databases.query({
     database_id: process.env.NOTION_PROJECT_ID!,
   });
   return response.results;
-});
+};
 
-export const getExperience = cache(async () => {
+export const getExperience = async () => {
   const experiences = await notionClient.databases.query({
     database_id: process.env.NOTION_EXPERIENCE_ID!,
   });
   return experiences.results;
-});
+};
 
-export const getEducation = cache(async () => {
+export const getEducation = async () => {
   const education = await notionClient.databases.query({
     database_id: process.env.NOTION_EDUCATION_ID!,
   });
   return education.results;
-});
+};
 
-export const getTestimonials = cache(async () => {
+export const getTestimonials = async () => {
   const testimonials = await notionClient.databases.query({
     database_id: process.env.NOTION_TESTIMONIAL_ID!,
   });
   return testimonials.results;
-});
+};
