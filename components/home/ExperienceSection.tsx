@@ -46,7 +46,7 @@ export default function ExperienceSection() {
           grouped[type].push(exp)
         })
 
-        const sortedTypes = Object.keys(grouped)
+        const sortedTypes = Object.keys(grouped).sort()
         setGroupedExperiences(grouped)
         setTypes(sortedTypes)
         setSelectedType(sortedTypes[0] || "")
