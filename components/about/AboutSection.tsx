@@ -36,7 +36,7 @@ export default function AboutSection() {
             Additionally, I share my knowledge and passion with the world through my <a className="link text-theme" target="_blank" href="/blog">blogs</a>, where I demonstrate how to build full-stack applications.
           </p>
           <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
-            Currently, I&apos;m leading a project called <a className="link text-theme" target="_blank" href="#">Smith Story</a>, an LLM model aimed at crafting stories with images. Join me in this exciting endeavor to contribute to cutting-edge storytelling technology!
+            Currently, I&apos;m leading a project called <a className="link text-theme" target="_blank" href="https://netrai.netlify.app/">NetrAI</a>, a vision API SaaS that delivers cutting-edge tools like image colorization and super-resolution. Join me in this exciting endeavor to push the boundaries of computer vision technology!
           </p>
         </motion.div></motion.div>
       <PerkSection />
