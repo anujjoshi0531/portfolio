@@ -1,4 +1,6 @@
-export const containerVariants = {
+import { Variants } from "framer-motion";
+
+export const containerVariants: Variants = {
   hidden: {
     opacity: 0,
     scale: 0.5,
@@ -15,12 +17,12 @@ export const containerVariants = {
   },
 };
 
-export const childVariants = {
+export const childVariants: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { type: "spring", stiffness: 300 } },
 };
 
-export const menuVars = {
+export const menuVars: Variants = {
   initial: { scaleY: 0, opacity: 0 },
   animate: {
     scaleY: 1,
@@ -34,7 +36,7 @@ export const menuVars = {
   },
 };
 
-export const containerVars = {
+export const containerVars: Variants = {
   initial: {
     opacity: 0,
     transition: { staggerChildren: 0.1, staggerDirection: -1 },
@@ -45,7 +47,7 @@ export const containerVars = {
   },
 };
 
-export const mobileLinkVars = {
+export const mobileLinkVars: Variants = {
   initial: { y: "30vh", opacity: 0 },
   open: {
     y: 0,

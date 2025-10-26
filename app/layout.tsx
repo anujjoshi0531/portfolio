@@ -216,7 +216,7 @@ export default async function Layout({
               defaultTheme="dark">
               <HolyLoader color="white" />
               <Navbar />
-              <main className="lg:mx-[8rem] md:mx-[4rem] my-[3rem] sm:mx-[2rem] mx-6">
+              <main className="lg:mx-[8rem] md:mx-[4rem] my-[3rem] sm:mx-[2rem] mx-6 max-w-screen">
                 {children}
                 <ThemePicker />
               </main>

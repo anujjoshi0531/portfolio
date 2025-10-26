@@ -1788,6 +1788,7 @@ svg.notion-page-icon {
 
 .notion-table-of-contents {
   width: 100%;
+  max-width: 400px;
   margin: 4px 0;
 }
 

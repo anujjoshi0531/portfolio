@@ -1,0 +1,50 @@
+{
+  "name": "Anuj Joshi - Portfolio",
+  "short_name": "Anuj Joshi",
+  "description": "Portfolio of Anuj Joshi — Computer Science Engineer from DTU, Full Stack Developer, and AI/ML Enthusiast.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "id": "/",
+  "lang": "en",
+  "categories": ["portfolio", "technology", "developer", "web"],
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Projects",
+      "short_name": "Projects",
+      "description": "View all of Anuj Joshi’s portfolio projects.",
+      "url": "/projects",
+      "icons": [{ "src": "/icon.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Blog",
+      "short_name": "Blog",
+      "description": "Read technical blogs by Anuj Joshi.",
+      "url": "/blog",
+      "icons": [{ "src": "/icon.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

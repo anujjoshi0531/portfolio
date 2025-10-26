@@ -7,7 +7,6 @@ import { PageTemplate } from "@/components/global/template"
 import ProjectCard from "@/components/global/project-card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Skeleton } from "@/components/ui/skeleton"
-import SVG404 from "../site/SVG404"
 import NoWork from "../site/NoWork"
 
 // Loading skeleton components
@@ -95,18 +94,13 @@ export default function ProjectPage() {
   const renderProjectCards = (categoryId: string) => {
     const filteredProjects = getFilteredProjects(categoryId)
     return filteredProjects.length > 0 ? (
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
+      <div
         className="grid py-2 gap-6 md:grid-cols-2 lg:grid-cols-3"
       >
         {filteredProjects.map((project: any) => (
-          <motion.div variants={childVariants} key={project.id}>
-            <ProjectCard project={project} size={true} />
-          </motion.div>
+            <ProjectCard key={project.id} project={project} size={true} />
         ))}
-      </motion.div>
+      </div>
     ) : (
       <div className="mx-auto sm:w-3/4 md:w-2/3 lg:w-1/2 text-center">
         <NoWork />
@@ -153,7 +147,7 @@ export default function ProjectPage() {
           <TabsList className="flex flex-wrap h-auto justify-center mb-8 bg-transparent mx-auto gap-2">
             <TabsTrigger
               value="-1"
-              className="text-nowrap w-fit p-2 px-4 sm:text-lg font-semibold hover:bg-muted/50 active:bg-muted/50 transition-colors"
+              className="text-nowrap w-fit p-2 px-4 sm:text-lg font-semibold hover:bg-muted/50 transition-colors data-[state=active]:border-b-theme dark:data-[state=active]:border-b-theme"
             >
               All
             </TabsTrigger>
@@ -161,7 +155,7 @@ export default function ProjectPage() {
               <TabsTrigger
                 key={type.id}
                 value={type.id}
-                className="text-nowrap w-fit p-2 px-4 sm:text-lg font-semibold hover:bg-muted/50 active:bg-muted/50 transition-colors"
+                className="text-nowrap w-fit p-2 px-4 sm:text-lg font-semibold hover:bg-muted/50 transition-colors data-[state=active]:border-b-theme dark:data-[state=active]:border-b-theme"
               >
                 {type.name}
               </TabsTrigger>

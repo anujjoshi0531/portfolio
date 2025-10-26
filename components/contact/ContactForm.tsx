@@ -58,7 +58,7 @@ export default function ContactForm() {
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 100 }}
-      className="md:w-[500px] h-fit rounded-md p-4 py-10 sm:m-0 bg-muted/25">
+      className="md:w-[500px] h-fit rounded-md p-4 py-10 sm:m-0 bg-muted dark:bg-muted/25">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-6 mx-auto w-full max-w-[450px]">

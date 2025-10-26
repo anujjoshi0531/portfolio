@@ -19,7 +19,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   name = "q",
   type = "text",
   searchPath = "/blog",
-  placeholder = "Search...",
+  placeholder = "Search Blogs, Project, Articles..",
   className,
   loading = false,
   ...props
@@ -33,9 +33,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const value = propValue ?? term;
 
   return (
-    <div
-      ref={containerRef}
-      className="relative flex w-full cursor-pointer">
+    <div ref={containerRef} className="relative flex w-full">
       <Input
         ref={inputRef}
         name={name}
@@ -45,33 +43,35 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         className={cn(
-          "pl-6 h-14 rounded-full transition-all duration-300 ease-in-out w-full bg-background hover:bg-muted/50",
+          "pl-6 pr-20 h-14 rounded-full w-full bg-background text-base border border-muted focus:ring-2 focus:ring-theme focus:border-transparent transition-all duration-300",
           className
         )}
         {...props}
       />
       {value && (
         <Button
-          size="mdIcon"
+          size="icon"
           variant="ghost"
-          className="absolute rounded-full right-16 -translate-x-1/3 top-1/2 -translate-y-1/2"
+          className="absolute right-16 top-1/2 -translate-y-1/2 rounded-full h-9 w-9"
           onClick={(e) => {
             e.stopPropagation();
             clearSearch();
           }}
-          aria-label="Clear search">
-          <XIcon />
+          aria-label="Clear search"
+        >
+          <XIcon className="h-4 w-4" />
         </Button>
       )}
       <Button
         type="submit"
-        className="absolute right-0 top-0 rounded-l-none rounded-r-full"
+        className="absolute right-0 top-0 h-14 w-16 bg-theme hover:bg-theme/80 rounded-l-none rounded-r-full flex items-center justify-center transition-all"
         disabled={loading}
-        aria-label="Search">
+        aria-label="Search"
+      >
         {loading ? (
-          <Loader2 className="size-4 animate-spin" />
+          <Loader2 className="animate-spin text-white" />
         ) : (
-          <Search className="size-4" />
+          <Search className="text-white" />
         )}
       </Button>
     </div>

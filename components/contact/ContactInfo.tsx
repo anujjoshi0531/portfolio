@@ -19,7 +19,7 @@ export default function ContactInfo() {
           <p className="font-semibold">Phone</p>
           <SocialLink
             title="+91 981118 XXXX"
-            href="tel:9811184995"
+            href="tel:+919811184995"
             icon={FaPhoneAlt}
           />
         </div>
@@ -27,7 +27,7 @@ export default function ContactInfo() {
           <p className="font-semibold">Email</p>
           <SocialLink
             title="anujjoshi3105@gmail.com"
-            href="#"
+            href="mailto:anujjoshi3105@gmail.com"
             icon={FaEnvelope}
           />
         </div>
@@ -35,7 +35,7 @@ export default function ContactInfo() {
           <p className="font-semibold">Location</p>
           <SocialLink
             title="New Delhi, India"
-            href="https://www.google.com/maps/d/u/0/viewer?ie=UTF&msa=0&mid=1ugPBH9-MCw7w7lSrdNWcjO9_y7M&ll=28.577502328473237%2C77.171527&z=12"
+            href="https://share.google/IqMNA0wxT6dyQ2fsS"
             icon={FaMapMarkerAlt}
           />
         </div>
