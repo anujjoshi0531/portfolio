@@ -217,7 +217,7 @@ export default function BlogSection() {
 
   return (
     <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories">
-      <div className="relative group">
+      <div className="relative">
         {/* Gradient overlay for smooth edges */}
         <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
