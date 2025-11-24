@@ -232,7 +232,7 @@ export default async function Layout({
             </DarkProvider>
           </ThemeProvider>
       </body>
-      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GTAG || "G-95C2TB6XZZ"} strategy="afterInteractive" />
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GTAG || "G-95C2TB6XZZ"} />
     </html>
   );
 }
