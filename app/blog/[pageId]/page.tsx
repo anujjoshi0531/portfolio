@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
         url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/blog/${pageId}`,
         images: [
           {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/opengraph-image.png`,
+            url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/opengraph-image.webp`,
             width: 1200,
             height: 630,
             alt: "Page Not Found",
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
   const props = (data as any).properties || {};
   const title = extractPlainText(props.Name?.title) || "Untitled";
   const description = extractPlainText(props.Description?.rich_text) || "No description available.";
-  const image = props.Thumbnail?.url || `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/opengraph-image.png`;
+  const image = props.Thumbnail?.url || `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/opengraph-image.webp`;
   
   return {
     title,

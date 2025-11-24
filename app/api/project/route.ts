@@ -1,4 +1,5 @@
 import { getProject } from "@/lib/notion";
+export const revalidate = 3600;
 
 export async function GET() {
     try {

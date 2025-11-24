@@ -89,19 +89,19 @@ export const metadata: Metadata = {
   // Favicon and Icons
   icons: {
     icon: [
-      { url: "/icon.png", sizes: "32x32", type: "image/png" },
-      { url: "/icon.png", sizes: "16x16", type: "image/png" }
+      { url: "/icon.webp", sizes: "32x32", type: "image/webp" },
+      { url: "/icon.webp", sizes: "16x16", type: "image/webp" }
     ],
-    shortcut: "/icon.png",
+    shortcut: "/icon.webp",
     apple: [
-      { url: "/icon.png", sizes: "180x180", type: "image/png" }
+      { url: "/icon.webp", sizes: "180x180", type: "image/webp" }
     ],
     other: [
       {
         rel: "icon",
-        url: "/icon.png",
+        url: "/icon.webp",
         sizes: "192x192",
-        type: "image/png"
+        type: "image/webp"
       }
     ]
   },
@@ -116,18 +116,18 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${baseUrl}/opengraph-image.png`,
+        url: `${baseUrl}/opengraph-image.webp`,
         width: 1200,
         height: 630,
         alt: "Anuj Joshi - Portfolio",
-        type: "image/png"
+        type: "image/webp"
       },
       {
-        url: `${baseUrl}/opengraph-image-square.png`,
+        url: `${baseUrl}/opengraph-image.webp`,
         width: 600,
         height: 600,
         alt: "Anuj Joshi Portfolio Logo",
-        type: "image/png"
+        type: "image/webp"
       }
     ],
     emails: ["anujjoshi3105@gmail.com"],
@@ -142,7 +142,7 @@ export const metadata: Metadata = {
     title: "Anuj Joshi - Portfolio",
     description: "🚀 Computer Science Engineer from DTU | Full Stack Developer | AI/ML Enthusiast | Web3 & Robotics Explorer | Building innovative solutions with modern web technologies. Check out my latest projects and technical insights!",
     images: {
-      url: `${baseUrl}/opengraph-image.png`,
+      url: `${baseUrl}/opengraph-image.webp`,
       alt: "Anuj Joshi - Portfolio",
       width: 1200,
       height: 630
@@ -200,7 +200,7 @@ export default async function Layout({
   return (
     <html suppressHydrationWarning lang="en" className="scroll-smooth">
       <head>
-        <link rel="shortcut icon" href="/icon.png" type="image/x-icon" />
+        <link rel="shortcut icon" href="/icon.webp" type="image/x-icon" />
       </head>
       <body
         className={`overflow-x-hidden ${poppins.className}`}

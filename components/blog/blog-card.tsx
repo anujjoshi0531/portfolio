@@ -41,7 +41,7 @@ export default function BlogCard({
               : "aspect-video w-full sm:w-2/5 sm:aspect-square"
           )}>
           <Image
-            src={blog.properties.Thumbnail?.url || blog?.cover?.external?.url || "/icon.png"}
+            src={blog.properties.Thumbnail?.url || blog?.cover?.external?.url || "/icon.webp"}
             alt={blog.id}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -79,7 +79,7 @@ export default function BlogCard({
               <div className="flex items-center space-x-2">
                 <Avatar className="size-6">
                   <AvatarImage
-                    src={blog.properties.Author?.rich_text?.[0]?.plain_text}
+                    src="/icon.webp"
                     alt={blog.properties.Author?.rich_text?.[0]?.plain_text}
                   />
                   <AvatarFallback>

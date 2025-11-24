@@ -1,4 +1,5 @@
 import { getPages } from "@/lib/notion";
+export const revalidate = 3600;
 
 export async function POST(req: Request) {
   try {

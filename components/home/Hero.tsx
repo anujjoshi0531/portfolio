@@ -22,7 +22,7 @@ export default function Hero() {
         <motion.div variants={childVariants}>
           <Image
             priority
-            src="/avatar.png"
+            src="/avatar.webp"
             alt="Anuj Joshi"
             width={500}
             height={500}

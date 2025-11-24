@@ -64,7 +64,7 @@ const TestimonialCard = ({
         }`}
       >
         <Avatar className="w-12 h-12">
-          <AvatarImage src={testimonial.avatar || "/icon.png"} alt={testimonial.name} />
+          <AvatarImage src={testimonial.avatar || "/icon.webp"} alt={testimonial.name} />
           <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
         </Avatar>
         <div>

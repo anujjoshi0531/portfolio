@@ -20,7 +20,7 @@ export default function AboutSection() {
           className="relative w-max h-max group lg:col-span-2 group mb-10">
           <div className="absolute bg-theme group-hover:-translate-x-3 group-hover:-translate-y-3 left-5 top-5 size-[225px] sm:size-[400px] h-max-1/2 w-max-1/2 rounded-md transition-all duration-150"></div>
           <div className="size-[225px] sm:size-[400px] h-max-1/2 w-max-1/2 object-cover">
-            <Image src="/me.jpg" alt="profile" className="rounded-md" fill />
+            <Image src="/me.webp" alt="profile" className="rounded-md" fill />
           </div>
         </motion.div>
         <motion.div

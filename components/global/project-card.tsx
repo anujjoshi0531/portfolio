@@ -21,7 +21,7 @@ const ProjectCard = ({ project, size = false }: ProjectCardProps) => {
   const description = project.properties.Description?.rich_text
     ?.map((text: { plain_text: any; }) => text.plain_text)
     .join(" ") || "No description available";
-  const image = project.properties.Thumbnail?.url || '/icon.png';
+  const image = project.properties.Thumbnail?.url || '/icon.webp';
   const githubUrl = project.properties.GitHub?.url || "#";
   const liveUrl = project.properties.URL?.url || "#";
   const pid = project.properties.pid.rich_text[0]?.plain_text || "unknown";
