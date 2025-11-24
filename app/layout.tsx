@@ -11,6 +11,7 @@ import { PropsWithChildren } from "react";
 import ThemePicker from "@/components/global/theme-picker";
 import Navbar from "@/components/site/Navbar";
 import Footer from "@/components/site/Footer";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -199,10 +200,7 @@ export default async function Layout({
   return (
     <html suppressHydrationWarning lang="en" className="scroll-smooth">
       <head>
-        {/* Enhanced favicon setup */}
         <link rel="shortcut icon" href="/icon.png" type="image/x-icon" />
-        <link rel="manifest" href="/manifest.json" />
-        
       </head>
       <body
         className={`overflow-x-hidden ${poppins.className}`}
@@ -225,6 +223,7 @@ export default async function Layout({
             </DarkProvider>
           </ThemeProvider>
       </body>
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GTAG || "G-95C2TB6XZZ"} />
     </html>
   );
 }
