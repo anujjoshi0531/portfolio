@@ -1,7 +1,5 @@
 import { Poppins } from "next/font/google";
 import "@/styles/globals.css";
-import "@/styles/notion.css";
-import "@/styles/prism-theme.css"
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { DarkProvider } from "@/components/providers/dark-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -17,7 +15,8 @@ const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-poppins",
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"], // Only load needed weights
+  preload: true,
 });
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app";
@@ -197,10 +196,20 @@ export const metadata: Metadata = {
 export default async function Layout({
   children,
 }: PropsWithChildren) {
+  const contestApiOrigin = process.env.NEXT_PUBLIC_CONTEST_API 
+    ? new URL(process.env.NEXT_PUBLIC_CONTEST_API).origin 
+    : null;
+
   return (
     <html suppressHydrationWarning lang="en" className="scroll-smooth">
       <head>
         <link rel="shortcut icon" href="/icon.webp" type="image/x-icon" />
+        {contestApiOrigin && (
+          <>
+            <link rel="preconnect" href={contestApiOrigin} crossOrigin="anonymous" />
+            <link rel="dns-prefetch" href={contestApiOrigin} />
+          </>
+        )}
       </head>
       <body
         className={`overflow-x-hidden ${poppins.className}`}
@@ -223,7 +232,7 @@ export default async function Layout({
             </DarkProvider>
           </ThemeProvider>
       </body>
-      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GTAG || "G-95C2TB6XZZ"} />
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GTAG || "G-95C2TB6XZZ"} strategy="afterInteractive" />
     </html>
   );
 }

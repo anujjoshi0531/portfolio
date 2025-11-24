@@ -28,7 +28,7 @@ const SectionTemplate: React.FC<TemplateProps> = React.memo(({
           hidden: { opacity: 0, x: -50 },
         }}>
         <h1 className="text-4xl font-bold mb-2">{title}</h1>
-        <h3 className="font-[500] text-theme">{subtitle}</h3>
+        <h2 className="font-[500] text-theme">{subtitle}</h2>
       </motion.div>
       <motion.div
         className="my-[4rem] px-2 mx-auto"
@@ -74,7 +74,7 @@ const PageTemplate: React.FC<TemplateProps> = React.memo(({
           transition={{ duration: 0.2 }}>
           {title}
         </motion.h1>
-        <motion.h3
+        <motion.h2
           className="font-[500] text-lg md:text-xl text-theme"
           variants={{
             visible: { opacity: 1, y: 0 },
@@ -83,7 +83,7 @@ const PageTemplate: React.FC<TemplateProps> = React.memo(({
           transition={{ duration: 0.4 }}>
           {subtitle}
           {children}
-        </motion.h3>
+        </motion.h2>
       </motion.div>
     </>
   );

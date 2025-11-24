@@ -36,7 +36,11 @@ export default function ExperienceSection() {
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
-        const response = await fetch("/api/experience")
+        const response = await fetch("/api/experience", {
+          headers: {
+            'Cache-Control': 'max-age=3600',
+          },
+        })
         const data: NotionExperience[] = await response.json()
 
         const grouped: Record<string, NotionExperience[]> = {}
@@ -126,6 +130,7 @@ export default function ExperienceSection() {
                   onClick={() =>
                     setCurrentExperienceIndex((prev) => (prev + 1) % selectedExperiences.length)
                   }
+                  aria-label="Next experience"
                   className={cn(
                     "cursor-pointer transform font-bold bg-primary",
                     "ring-2 ring-primary border-2 rounded-full p-1 border-background hover:text-primary duration-150",
@@ -144,11 +149,14 @@ export default function ExperienceSection() {
               </div>
 
               {/* Dot Indicators */}
-              <div className="w-full mt-4 flex justify-center gap-2">
+              <div className="w-full mt-4 flex justify-center gap-2" role="tablist" aria-label="Experience indicators">
                 {selectedExperiences.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentExperienceIndex(index)}
+                    role="tab"
+                    aria-label={`Go to experience ${index + 1}`}
+                    aria-selected={index === currentExperienceIndex}
                     className={cn(
                       "h-2.5 w-2.5 rounded-full transition-all duration-300",
                       index === currentExperienceIndex
@@ -185,7 +193,7 @@ function ExperienceContent({
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-xl text-theme">{formattedExperience.role}</h3>
           {formattedExperience.certificate && (
-            <Button variant="ghost" size="mdIcon" onClick={handleCertificateDownload}>
+            <Button variant="ghost" size="mdIcon" onClick={handleCertificateDownload} aria-label="Download certificate">
               <Award className="text-theme" />
             </Button>
           )}

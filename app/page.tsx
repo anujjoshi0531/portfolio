@@ -1,11 +1,28 @@
+import dynamic from "next/dynamic";
 import Hero from "@/components/home/Hero";
 import AboutSection from "@/components/about/AboutSection";
-import ExperienceSection from "@/components/home/ExperienceSection";
-import ProjectSection from "@/components/home/ProjectSection";
 import { SectionTemplate } from "@/components/global/template";
-import BlogSection from "@/components/home/BlogSection";
-import QuoteSection from "@/components/about/QuoteSection";
-import TestimonialSection from "@/components/home/TestimonialSection";
+
+// Dynamically import heavy components to reduce initial bundle size
+const ExperienceSection = dynamic(() => import("@/components/home/ExperienceSection"), {
+  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
+});
+
+const ProjectSection = dynamic(() => import("@/components/home/ProjectSection"), {
+  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
+});
+
+const BlogSection = dynamic(() => import("@/components/home/BlogSection"), {
+  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
+});
+
+const QuoteSection = dynamic(() => import("@/components/about/QuoteSection"), {
+  loading: () => <div className="h-32 animate-pulse bg-muted rounded-lg" />,
+});
+
+const TestimonialSection = dynamic(() => import("@/components/home/TestimonialSection"), {
+  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
+});
 
 export default async function Page() {
   return (

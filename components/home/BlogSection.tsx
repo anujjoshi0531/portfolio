@@ -24,6 +24,7 @@ const ScrollButton = ({
   <button
     onClick={onClick}
     disabled={disabled}
+    aria-label={`Scroll ${direction}`}
     className={cn(
       "cursor-pointer transform font-bold bg-primary",
       "ring-2 ring-primary border-2 rounded-full p-1 border-background hover:text-primary duration-150",
@@ -56,11 +57,14 @@ const ScrollIndicator = ({
   currentIndex: number
   onDotClick: (index: number) => void
 }) => (
-  <div className="flex justify-center mt-6 space-x-2">
+  <div className="flex justify-center mt-6 space-x-2" role="tablist" aria-label="Blog scroll indicators">
     {Array.from({ length: Math.ceil(totalItems / 2) }).map((_, index) => (
       <button
         key={index}
         onClick={() => onDotClick(index)}
+        role="tab"
+        aria-label={`Go to blog section ${index + 1}`}
+        aria-selected={index === Math.floor(currentIndex / 2)}
         className={cn(
           "w-2 h-2 rounded-full transition-all duration-300",
           index === Math.floor(currentIndex / 2)
@@ -200,7 +204,7 @@ export default function BlogSection() {
           </div>
         ))}
         <div className="flex justify-center items-center min-w-[350px] p-4">
-            <Link href="/blog" className="relative">
+            <Link href="/blog" className="relative" aria-label="View all blog posts">
               <MagnetBtn text="READ MORE &#183;READ MORE &#183;READ MORE &#183;READ MORE &#183;">
                 <div className="flex items-center space-x-2">
                   <MdArrowOutward />

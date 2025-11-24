@@ -13,8 +13,9 @@ interface PerkProps {
 }
 
 function Perk({ value, link, title, icon: Icon, subtitle }: PerkProps) {
+  const perkText = `${value}+ ${title}`;
   return (
-    <Link href={link || "#"} target={link ? "_blank" : "_self"}>
+    <Link href={link || "#"} target={link ? "_blank" : "_self"} aria-label={link ? `View ${perkText}` : perkText}>
       <div className="p-4 text-center m-1 space-y-1 bg-muted/60 hover:bg-muted/80 rounded-md hover:scale-[1.02] transition-all duration-150 group">
         {Icon && (
           <Icon className="text-theme text-3xl md:text-4xl my-4 mx-auto group-hover:scale-110" />

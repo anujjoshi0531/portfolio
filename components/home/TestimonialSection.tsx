@@ -99,7 +99,11 @@ export default function TestimonialSection() {
   useEffect(() => {
     const fetchTestimonial = async () => {
       try {
-        const res = await fetch("api/testimonial");
+        const res = await fetch("api/testimonial", {
+          headers: {
+            'Cache-Control': 'max-age=3600',
+          },
+        });
         const data = await res.json();
         const transformedData = transformNotionData(data);
 
@@ -142,6 +146,7 @@ export default function TestimonialSection() {
         <button
           onClick={handlePrev}
           disabled={loading || testimonials.length === 0}
+          aria-label="Previous testimonial"
           className="[grid-area:nav-left] hidden sm:block group before:absolute before:inset-px before:transition-all before:duration-300 before:-z-10 before:rounded-full hover:before:inset-full before:bg-primary rounded-full w-10 h-10 shrink-0 relative isolate bg-background md:mt-4 m-auto text-background text-2xl transition-all delay-300 hover:bg-background border-primary border-2"
         >
           <FaAngleLeft className="m-auto text-background group-hover:text-primary" />
@@ -162,6 +167,7 @@ export default function TestimonialSection() {
         <button
           onClick={handleNext}
           disabled={loading || testimonials.length === 0}
+          aria-label="Next testimonial"
           className="[grid-area:nav-right] hidden sm:block group before:absolute before:inset-px before:transition-all before:duration-300 before:-z-10 before:rounded-full hover:before:inset-full before:bg-primary rounded-full w-10 h-10 shrink-0 relative isolate bg-background md:mt-4 m-auto text-background text-2xl transition-all delay-300 hover:bg-background border-primary border-2"
         >
           <FaAngleRight className="m-auto text-background group-hover:text-primary" />

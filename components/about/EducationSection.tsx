@@ -64,7 +64,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
                 {timeAgo(new Date(edu.start))} - {timeAgo(new Date(edu.end))}
               </time>
             </div>
-            <Link href={edu.url || "#"} className="font-medium link text-sm my-1">
+            <Link href={edu.url || "#"} className="font-medium link text-sm my-1" aria-label={`Visit ${edu.institution} website`}>
               {edu.institution},&nbsp;
                 <span>{edu.place}</span>
             </Link>

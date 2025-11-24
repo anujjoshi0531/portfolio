@@ -25,6 +25,7 @@ export const SearchResultItem = memo(function SearchResultItem({ page, onClose }
       href={`/blog/${pageUrl}`}
       className="block cursor-pointer px-6 py-4 hover:bg-accent transition-colors"
       onClick={onClose}
+      aria-label={`View ${title || "page"}`}
     >
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0 mt-1">

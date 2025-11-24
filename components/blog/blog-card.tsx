@@ -19,6 +19,8 @@ export default function BlogCard({
 }: BlogCardProps) {
   const isVertical = variant === "vertical";
 
+  const blogTitle = extractPlainText(blog.properties.Name?.title) || "Untitled Blog";
+  
   return (    
   <Link
   key={blog.id}
@@ -26,7 +28,8 @@ export default function BlogCard({
       className={cn(
         "block w-full transition-transform duration-300 p-1",
         className
-      )}>
+      )}
+      aria-label={`Read blog post: ${blogTitle}`}>
       <Card
       key={blog.id}
         className={cn(

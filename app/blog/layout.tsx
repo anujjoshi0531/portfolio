@@ -1,5 +1,7 @@
 import { pages } from "@/lib/utils";
 import { Metadata } from "next";
+import "@/styles/notion.css";
+import "@/styles/prism-theme.css";
 
 export const metadata: Metadata = {
   title: pages.blog.title,

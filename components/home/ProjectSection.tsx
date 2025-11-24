@@ -32,7 +32,11 @@ export default function ProjectSection({ className }: ProjectSectionProps) {
       setLoading(true)
       setError(null)
 
-      const response = await fetch("/api/project")
+      const response = await fetch("/api/project", {
+        headers: {
+          'Cache-Control': 'max-age=3600',
+        },
+      })
 
       if (!response.ok) {
         throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`)
@@ -84,7 +88,7 @@ export default function ProjectSection({ className }: ProjectSectionProps) {
           <ProjectCard key={`project-${index}`} project={project} />
         ))}
         <div className="flex items-center justify-center my-auto mx-8 flex-shrink-0">
-          <Link href="/project" className="block">
+          <Link href="/project" className="block" aria-label="View all projects">
             <MagnetBtn text="Projects &nbsp;&#183;&nbsp; Projects &nbsp;&#183;&nbsp; Projects &nbsp;&#183;&nbsp; Projects &nbsp;&#183;&nbsp;">
               <MdArrowOutward className="ml-2" />
             </MagnetBtn>

@@ -54,10 +54,13 @@ export default function Navbar() {
             animate="animate"
             exit="exit"
             className="origin-top fixed z-[100] top-0 left-0 h-screen w-screen bg-muted text-center font-semibold uppercase">
-            <FaX
+            <button
               className="absolute right-10 top-8 cursor-pointer text-2xl active:scale-75"
               onClick={toggleMenu}
-            />
+              aria-label="Close menu"
+            >
+              <FaX />
+            </button>
             <motion.div
               variants={containerVars}
               initial="initial"
@@ -110,7 +113,7 @@ export default function Navbar() {
           }}
           initial="initial"
           animate="animate">
-          <Link href="/">
+          <Link href="/" aria-label="Home">
             <TbHexagonLetterAFilled className="text-5xl font-bold hover:text-theme hover:scale-110 duration-150 transition-all" />
           </Link>
         </motion.div>
@@ -168,7 +171,7 @@ export default function Navbar() {
         {/* Mobile Menu Icon */}
         <div className="lg:hidden flex items-center space-x-2">
           <SearchButton />
-          <Button variant="ghost" className="rounded-full" onClick={toggleMenu}>
+          <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
             <FaBars/>
           </Button>
         </div>

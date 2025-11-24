@@ -61,11 +61,19 @@ export default function ProjectPage() {
       try {
         setLoading(true)
         // Fetch projects
-        const projectsResponse = await fetch("/api/project")
+        const projectsResponse = await fetch("/api/project", {
+          headers: {
+            'Cache-Control': 'max-age=3600',
+          },
+        })
         const projectsData = await projectsResponse.json()
 
         // Fetch types/categories
-        const typesResponse = await fetch("/api/project-type")
+        const typesResponse = await fetch("/api/project-type", {
+          headers: {
+            'Cache-Control': 'max-age=3600',
+          },
+        })
         const typesData = await typesResponse.json()
 
         setProjects(projectsData)

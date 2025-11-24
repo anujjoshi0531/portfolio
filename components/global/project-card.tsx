@@ -54,7 +54,7 @@ const ProjectCard = ({ project, size = false }: ProjectCardProps) => {
           ))}
         </div>
         <p className="my-4 text-sm line-clamp-6">{description}</p>
-        <Link href={`/blog/${pid}`} className="w-fit">
+        <Link href={`/blog/${pid}`} className="w-fit" aria-label={`Learn more about ${title}`}>
           <Button size="sm" className="w-fit">
             Learn More&nbsp;&gt;
           </Button>
@@ -66,7 +66,7 @@ const ProjectCard = ({ project, size = false }: ProjectCardProps) => {
           alt={`${title} thumbnail`}
           fill
           className="object-cover"
-          priority
+          loading="lazy"
         />
       </div>
       <figcaption className="absolute bottom-5 left-4 fig">

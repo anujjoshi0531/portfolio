@@ -27,6 +27,7 @@ export default function Hero() {
             width={500}
             height={500}
             className="object-cover transition-transform duration-300 ease-in-out hover:scale-105"
+            sizes="(max-width: 768px) 150px, (max-width: 1024px) 300px, 500px"
           />
         </motion.div>
       </motion.div>
@@ -45,14 +46,14 @@ export default function Hero() {
               Hi, I&apos;m&nbsp;
               <span className="text-theme">Anuj Joshi</span>
             </motion.h1>
-            <motion.h3
+            <motion.h2
               variants={childVariants}
               className="overflow-hidden whitespace-nowrap">
               <Typewriter
                 texts={["A Fullstack Developer", "A Machine Learning Enthusiast", "Tech Enthusiast"]}
                 className="h-8 font-[500] text-[1rem] sm:text-[1.5rem] md:text-2xl"
               />
-            </motion.h3>
+            </motion.h2>
           </motion.div>
 
           <motion.div

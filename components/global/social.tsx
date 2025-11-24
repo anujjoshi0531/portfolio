@@ -39,6 +39,7 @@ function SocialIcon({ href, title, children }: SocialIconProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      aria-label={title}
       title={title}>
       {children}
     </a>
