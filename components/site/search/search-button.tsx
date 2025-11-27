@@ -31,7 +31,7 @@ export default function SearchButton() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <TooltipComponent message="Search pages (Ctrl+K)">
         <DialogTrigger asChild>
-          <Button variant="ghost" size="icon" className="z-1000 rounded-full" aria-label="Search pages">
+          <Button variant="ghost" size="icon" className="z-1000 rounded-full" aria-label="Open search dialog (Ctrl+K)">
             <Search />
           </Button>
         </DialogTrigger>

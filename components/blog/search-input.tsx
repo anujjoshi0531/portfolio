@@ -66,7 +66,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         type="submit"
         className="absolute right-0 top-0 h-14 w-16 bg-theme hover:bg-theme/80 rounded-l-none rounded-r-full flex items-center justify-center transition-all"
         disabled={loading}
-        aria-label="Search"
+        aria-label={loading ? "Searching blogs" : "Search blogs"}
       >
         {loading ? (
           <Loader2 className="animate-spin text-white" />

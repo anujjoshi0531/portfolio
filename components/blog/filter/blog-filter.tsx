@@ -37,8 +37,8 @@ export const BlogFilter= ({tags}: {tags: string[]}) => {
 
   return (
     <Sheet>
-      <SheetTrigger className={cn(buttonVariants({ variant: "secondary", size: "md" }))}>
-        <SlidersHorizontal size="icon" className="rounded-full" />
+      <SheetTrigger className={cn(buttonVariants({ variant: "secondary", size: "md" }))} aria-label={`Open blog filters${count > 0 ? ` (${count} active)` : ""}`}>
+        <SlidersHorizontal className="h-5 w-5" />
         {count > 0 && (
           <Badge className="text-xs">{count}</Badge>
         )}
@@ -114,10 +114,10 @@ export const BlogFilter= ({tags}: {tags: string[]}) => {
         </ScrollArea>
 
         <SheetFooter className="gap-2 flex flex-row">
-          <Button size="md" variant="outline" onClick={clearFilters}>
+          <Button size="md" variant="ghost" onClick={clearFilters} aria-label="Clear Filters">
             Clear
           </Button>
-          <SheetClose onClick={saveFilters} className={cn(buttonVariants({ variant: "default", size: "md" }))}>
+          <SheetClose onClick={saveFilters} className={cn(buttonVariants({ variant: "default", size: "md" }))} aria-label="Save Changes">
             Save Changes
           </SheetClose>
         </SheetFooter>

@@ -18,9 +18,9 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
       <div className="sm:p-2.5 p-1 flex justify-center items-center group-hover:bg-theme/10 rounded-full relative overflow-hidden group-hover:[&::after]:absolute group-hover:[&::after]:top-0 group-hover:[&::after]:w-full group-hover:[&::after]:h-2.5 group-hover:[&::after]:content-[''] group-hover:[&::after]:bg-theme group-hover:[&::after]:animate-animate-icon">
         <span className="text-xl sm:text-2xl mx-auto">{skill.icon}</span>
       </div>
-      <h5 className="group-hover:text-theme w-full sm:text-md text-sm text-nowrap">
+      <h4 className="group-hover:text-theme w-full sm:text-md text-sm text-nowrap">
         {skill.name}
-      </h5>
+      </h4>
     </motion.div>
   );
 };

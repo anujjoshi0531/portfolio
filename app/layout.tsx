@@ -167,8 +167,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: baseUrl,
     languages: {
-      "en-US": baseUrl,
-      "en": baseUrl
+      "x-default": baseUrl
     }
   },
   
@@ -232,7 +231,7 @@ export default async function Layout({
             </DarkProvider>
           </ThemeProvider>
       </body>
-      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GTAG || "G-95C2TB6XZZ"} />
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GTAG!} />
     </html>
   );
 }

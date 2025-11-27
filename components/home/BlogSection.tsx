@@ -24,7 +24,7 @@ const ScrollButton = ({
   <button
     onClick={onClick}
     disabled={disabled}
-    aria-label={`Scroll ${direction}`}
+    aria-label={`Scroll blog posts ${direction}`}
     className={cn(
       "cursor-pointer transform font-bold bg-primary",
       "ring-2 ring-primary border-2 rounded-full p-1 border-background hover:text-primary duration-150",

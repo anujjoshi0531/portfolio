@@ -27,7 +27,18 @@ export const BlogFiltertag: React.FC<BlogFiltertagProps> = ({
           <Badge
             key={tag}
             onClick={() => toggleSelection(tag)}
-            variant={ selection.includes(tag) ? "default" : "outline" }>
+            variant={ selection.includes(tag) ? "default" : "outline" }
+            role="button"
+            tabIndex={0}
+            aria-label={`${selection.includes(tag) ? "Remove" : "Add"} ${tag} filter`}
+            aria-pressed={selection.includes(tag)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggleSelection(tag);
+              }
+            }}
+          >
             {tag}
           </Badge>
         ))}

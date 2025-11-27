@@ -34,7 +34,7 @@ const ProjectCard = ({ project, size = false }: ProjectCardProps) => {
           className="absolute top-4 left-4 text-xl hover:text-theme hover:scale-110"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="GitHub Repository"
+          aria-label={`View ${title} GitHub repository`}
         >
           <FaGithub />
         </Link>
@@ -43,7 +43,7 @@ const ProjectCard = ({ project, size = false }: ProjectCardProps) => {
           className="absolute top-4 right-4 text-xl hover:text-theme hover:scale-110"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Live Website"
+          aria-label={`Visit ${title} live website`}
         >
           <FaGlobe />
         </Link>

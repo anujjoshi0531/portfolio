@@ -48,6 +48,7 @@ export const BlogFilterDate: React.FC<BlogFilterDateProps> = ({
           <Button
             variant="secondary"
             size="sm"
+            aria-label={`${label} date${value ? `: ${format(value, "PP")}` : " (not selected)"}`}
             className={cn(
               "w-full justify-start text-left font-normal",
               !value && "text-muted-foreground"

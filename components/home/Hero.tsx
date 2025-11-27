@@ -63,7 +63,7 @@ export default function Hero() {
             className="flex flex-wrap gap-5 py-10 justify-center lg:justify-start">
             <motion.div variants={childVariants}>
               <Link href="/contact" passHref>
-                <Button>
+                <Button aria-label="Go to contact page">
                   <FaPaperPlane />
                   Contact Me
                 </Button>
@@ -74,7 +74,7 @@ export default function Hero() {
               <Link
                 href="/resume.pdf"
                 target="_blank">
-                <Button variant="outline">
+                <Button variant="secondary" aria-label="Download resume (opens in new tab)">
                   <FaLink />
                   Resume
                 </Button>

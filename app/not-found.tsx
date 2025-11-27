@@ -34,12 +34,12 @@ export default function NotFound() {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button asChild  className="min-w-[140px]">
-              <Link href="/">
+            <Button asChild className="min-w-[140px]">
+              <Link href="/" aria-label="Go to homepage">
                 Go Home
               </Link>
             </Button>
-            <Button variant="secondary" onClick={() => window.history.back()} className="min-w-[140px]">
+            <Button variant="secondary" onClick={() => window.history.back()} className="min-w-[140px]" aria-label="Go back to previous page">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Go Back
             </Button>

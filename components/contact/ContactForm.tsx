@@ -94,7 +94,8 @@ export default function ContactForm() {
           type="submit"
           className="text-muted"
           size="md"
-          disabled={isLoading}>
+          disabled={isLoading}
+          aria-label={isLoading ? "Sending message" : "Send contact message"}>
           {isLoading ? (
             <>
               <div className="size-4 mr-2 animate-spin rounded-full border-2 border-t-theme" />

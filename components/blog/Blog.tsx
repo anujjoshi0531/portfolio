@@ -21,9 +21,22 @@ export default function Blog({ posts, tags, total }: { posts: any, tags: string[
   const blogCards = useMemo(() => {
     if (!posts || posts.length === 0) {
       return (
-        <div className="text-center py-8 text-muted-foreground mx-auto">
-          <NoWork />
-          <p className="font-semibold text-lg">No blogs available at the moment</p>
+        <div className="col-span-full flex flex-col items-center justify-center">
+          <div className="max-w-lg w-full text-center space-y-6">
+            <div className="flex justify-center mb-4">
+              <div className="size-64 md:size-128 text-muted-foreground/80">
+                <NoWork className="w-full h-full" />
+              </div>
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-2xl md:text-3xl font-bold text-foreground">
+                No Blogs Available
+              </h3>
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+                We couldn&apos;t find any blog posts matching your criteria.
+              </p>
+            </div>
+          </div>
         </div>
       );
     }
@@ -51,8 +64,9 @@ export default function Blog({ posts, tags, total }: { posts: any, tags: string[
             variant="secondary"
             size="icon"
             className="hidden md:inline-flex"
-            onClick={() => setLayout(layout === "grid" ? "list" : "grid")}>
-            {layout === "grid" ? <List /> : <Grid />}
+            onClick={() => setLayout(layout === "grid" ? "list" : "grid")} 
+            aria-label={`Switch blog layout to ${layout === "grid" ? "list" : "grid"} view`}>
+            {layout === "grid" ? <List /> : <Grid />} 
           </Button>
         </div>
       </div>

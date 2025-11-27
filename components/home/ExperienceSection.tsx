@@ -105,6 +105,15 @@ export default function ExperienceSection() {
                 type === selectedType ? "bg-muted border-l-2 border-theme" : ""
               }`}
               onClick={() => setSelectedType(type)}
+              role="button"
+              tabIndex={0}
+              aria-label={`Filter experiences by ${type}`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setSelectedType(type);
+                }
+              }}
             >
               <span className={`group-hover:text-theme font-semibold ${type === selectedType ? "text-theme" : ""}`}>
                 {type} <Badge className="ml-4">{groupedExperiences[type]?.length}</Badge>

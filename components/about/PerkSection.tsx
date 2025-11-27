@@ -3,7 +3,6 @@ import { perkData } from "@/lib/data";
 import { Perk, PerkAnimation, PerkSkeleton } from "@/components/global/perk";
 import { useEffect, useState, useRef } from "react";
 
-// Helper function to fetch with timeout
 async function fetchWithTimeout(url: string, timeout: number = 5000): Promise<any> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -34,7 +33,6 @@ export default function PerkSection() {
   const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
-    // Only fetch when section is visible (defer loading)
     if (hasLoaded) return;
 
     const observer = new IntersectionObserver(
@@ -44,7 +42,7 @@ export default function PerkSection() {
           fetchData();
         }
       },
-      { rootMargin: '100px' } // Start loading 100px before section is visible
+      { rootMargin: '100px' }
     );
 
     if (sectionRef.current) {
@@ -60,23 +58,23 @@ export default function PerkSection() {
 
   async function fetchData() {
     try {
-      // Fetch projects first (faster, local API)
       const projectsRes = await fetch("/api/project", {
         headers: {
           'Cache-Control': 'max-age=3600',
         },
-      }).then((res) => res.json()).catch(() => []);
+      }).then((res) => res.json()).catch((err) => {
+        console.error("Error fetching projects:", err);
+        return [];
+      });
       setTotalProjects(projectsRes?.length || 0);
 
-      // Fetch ratings with timeout (slow external APIs) - don't block rendering
       const ratingPromises = perkData.map((perk) =>
         fetchWithTimeout(
           `${process.env.NEXT_PUBLIC_CONTEST_API}/${perk.platform}?username=${perk.username}`,
-          5000 // 5 second timeout
+          5000
         )
       );
 
-      // Don't wait for all ratings - update as they come in
       Promise.allSettled(ratingPromises).then((results) => {
         const fetchedRatings = perkData.reduce((acc, perk, idx) => {
           const result = results[idx];

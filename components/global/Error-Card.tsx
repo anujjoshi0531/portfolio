@@ -62,7 +62,7 @@ export default function ErrorCard({
         )}
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
-        <Button variant="destructive" size="md" className="flex mx-auto" onClick={handleReset}>
+        <Button variant="destructive" size="md" className="flex mx-auto" onClick={handleReset} aria-label="Try again to resolve the error">
           <RefreshCw className="mr-2 h-4 w-4" />
           Try Again
         </Button>

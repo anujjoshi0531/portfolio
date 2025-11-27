@@ -84,7 +84,7 @@ export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue =
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" size="sm" className="gap-2 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap justify-start">
+        <Button variant="secondary" size="sm" className="gap-2 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap justify-start" aria-label={`Sort blogs by ${selectedOption?.label?.toLowerCase() || "default"}`}>
           <ArrowDownWideNarrow className="size-4" />
           {selectedOption?.label || "Sort by"}
           <ChevronDown className="size-4" />

@@ -113,7 +113,7 @@ export default function Navbar() {
           }}
           initial="initial"
           animate="animate">
-          <Link href="/" aria-label="Home">
+          <Link href="/" aria-label="Go to homepage">
             <TbHexagonLetterAFilled className="text-5xl font-bold hover:text-theme hover:scale-110 duration-150 transition-all" />
           </Link>
         </motion.div>

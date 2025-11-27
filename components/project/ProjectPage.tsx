@@ -138,6 +138,7 @@ export default function ProjectPage() {
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              aria-label="Try again to load projects"
             >
               Try Again
             </button>
@@ -156,6 +157,7 @@ export default function ProjectPage() {
             <TabsTrigger
               value="-1"
               className="text-nowrap w-fit p-2 px-4 sm:text-lg font-semibold hover:bg-muted/50 transition-colors data-[state=active]:border-b-theme dark:data-[state=active]:border-b-theme"
+              aria-label="Show all projects"
             >
               All
             </TabsTrigger>
@@ -164,6 +166,7 @@ export default function ProjectPage() {
                 key={type.id}
                 value={type.id}
                 className="text-nowrap w-fit p-2 px-4 sm:text-lg font-semibold hover:bg-muted/50 transition-colors data-[state=active]:border-b-theme dark:data-[state=active]:border-b-theme"
+                aria-label={`Show ${type.name} projects`}
               >
                 {type.name}
               </TabsTrigger>
