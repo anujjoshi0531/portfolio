@@ -1,5 +1,3 @@
-
-
 export default function QuoteSection() {
   return (
     <div className="relative max-w-3xl mx-auto aspect-video flex items-center justify-center">

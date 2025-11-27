@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Avatar } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib"
 
 interface BlogCardSkeletonProps {
   variant?: "vertical" | "horizontal"

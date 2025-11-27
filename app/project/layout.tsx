@@ -1,10 +1,7 @@
-import { pages } from "@/lib/utils";
 import { Metadata } from "next";
+import { getMetadata } from "@/lib";
 
-export const metadata: Metadata = {
-  title: pages.project.title,
-  description: pages.project.description,
-};
+export const metadata: Metadata = getMetadata("project");
 
 export default function ProjectLayout({
   children,

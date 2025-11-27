@@ -59,7 +59,6 @@ export const socialLinks = [
     icon: <FaInstagram />,
   },
 ];
-
 export const skills = [
   {
     title: "Machine Learning",
@@ -159,33 +158,42 @@ export const perkData = [
     icon: SiLeetcode,
     link: "https://leetcode.com/anujjoshi3105/",
     username: "anujjoshi3105",
+    level: "Knight",
+    rating: 1910,
   },
   {
     platform: "codeforces",
     icon: SiCodeforces,
     link: "https://codeforces.com/profile/anujjoshi3105",
     username: "anujjoshi3105",
+    level: "Specialist",
+    rating: 1400,
   },
   {
     platform: "codechef",
     icon: SiCodechef,
     link: "https://www.codechef.com/users/anujjoshi3105",
     username: "anujjoshi3105",
+    level: "2 Star",
+    rating: 1500,
   },
   {
     platform: "gfg",
     icon: SiGeeksforgeeks,
     link: "https://auth.geeksforgeeks.org/user/anujjoshi3105",
     username: "anujjoshi3105",
+    level: "4 Star",
+    rating: 1900,
   },
   {
     platform: "atcoder",
     icon: FaCode,
     link: "https://atcoder.jp/users/anujjoshi3105",
     username: "anujjoshi3105",
+    level: "Green",
+    rating: 900,
   },
 ];
-
 export const socialLink = [
   {
     title: "LinkedIn",

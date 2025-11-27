@@ -1,13 +1,17 @@
 import NotFound from "@/app/not-found";
 import { NotionPage } from "@/components/blog/NotionPage";
-import { getRecordMap, getPageById } from "@/lib/notion";
-import { extractPlainText } from "@/lib/utils";
+import { extractPlainText } from "@/lib";
+import { fetchPage } from "@/lib/server/notion";
+import { redirect } from "next/navigation";
+import { validate } from "uuid";
 
 export const revalidate = 60 * 60; // Revalidate every hour
 
 export async function generateMetadata({ params }: { params: Promise<{ pageId: string }> }) {
   const { pageId } = await params;
-  const data = await getPageById(pageId);
+  const { data } = await fetchPage(pageId);
+
+  console.log("data", data);
 
   if (!data) {
     return {
@@ -41,6 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
   const title = extractPlainText(props.Name?.title) || "Untitled";
   const description = extractPlainText(props.Description?.rich_text) || "No description available.";
   const image = props.Thumbnail?.url || `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/opengraph-image.webp`;
+  const slug = extractPlainText(props.Slug?.rich_text);
   
   return {
     title,
@@ -49,7 +54,7 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
       title,
       description,
       type: "website",
-      url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/blog/${pageId}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/blog/${slug}`,
       images: [
         {
           url: image,
@@ -74,10 +79,11 @@ export default async function page({ params } : {
   params: Promise<{ pageId: string }>;
 }) {
   const { pageId } = await params;
-  const data = await getRecordMap(pageId);
-
-  if(!data) return <NotFound />
-  return (
-    <NotionPage recordMap={data} />
-  );
+  const { data, recordMap } = await fetchPage(pageId);
+  if (validate(pageId)) {
+    const slug = extractPlainText((data as any)?.properties?.Slug?.rich_text);
+    if (slug) redirect(`/blog/${slug}`);
+  }
+  if (!data) return <NotFound />;
+  return <NotionPage recordMap={recordMap} />;
 }

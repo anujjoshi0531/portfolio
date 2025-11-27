@@ -1,12 +1,9 @@
-import { pages } from "@/lib/utils";
-import { Metadata } from "next";
 import "@/styles/notion.css";
 import "@/styles/prism-theme.css";
+import { Metadata } from "next";
+import { getMetadata } from "@/lib";
 
-export const metadata: Metadata = {
-  title: pages.blog.title,
-  description: pages.blog.description,
-};
+export const metadata: Metadata = getMetadata("blog");
 
 export default function BlogLayout({
   children,

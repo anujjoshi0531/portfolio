@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { SectionTemplate } from "@/components/global/template";
 import { FaGraduationCap } from "react-icons/fa";
-import { extractPlainText, timeAgo } from "@/lib/utils";
+import { extractPlainText, timeAgo } from "@/lib";
 import { Skeleton } from "../ui/skeleton";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";

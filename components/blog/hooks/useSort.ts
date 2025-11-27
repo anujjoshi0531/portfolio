@@ -3,12 +3,9 @@
 import {
   CalendarArrowDown,
   CalendarArrowUp,
-  ThumbsDown,
-  ThumbsUp,
-  TrendingDown,
-  TrendingUp,
-  UserMinus,
-  UserPlus,
+  ArrowUpDown,
+  ArrowUpAZ,
+  ArrowDownZA,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -16,29 +13,41 @@ export const useSort = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const dateField = "published_at";
-
   const options = [
-    { label: "Highest Popularity", value: "popularity.desc", icon: TrendingUp },
-    { label: "Lowest Popularity", value: "popularity.asc", icon: TrendingDown },
     {
-      label: "Most Recent",
-      value: `${dateField}.desc`,
+      label: "Published (Newest First)",
+      value: "published-descending",
       icon: CalendarArrowUp,
     },
     {
-      label: "Least Recent",
-      value: `${dateField}.asc`,
+      label: "Published (Oldest First)",
+      value: "published-ascending",
       icon: CalendarArrowDown,
     },
-    { label: "Highest Rating", value: "vote_average.desc", icon: ThumbsUp },
-    { label: "Lowest Rating", value: "vote_average.asc", icon: ThumbsDown },
-    { label: "Most Voted", value: "vote_count.desc", icon: UserPlus },
-    { label: "Least Voted", value: "vote_count.asc", icon: UserMinus },
+    {
+      label: "Title (A-Z)",
+      value: "name-ascending",
+      icon: ArrowUpAZ,
+    },
+    {
+      label: "Title (Z-A)",
+      value: "name-descending",
+      icon: ArrowDownZA,
+    },
+    {
+      label: "Last Updated (Recent)",
+      value: "updates-descending",
+      icon: CalendarArrowUp,
+    },
+    {
+      label: "Last Updated (Oldest)",
+      value: "updates-ascending",
+      icon: CalendarArrowDown,
+    },
   ];
 
   const getSort = () => {
-    return searchParams.get("sort_by") ?? "";
+    return searchParams.get("sort_by") ?? "published-descending";
   };
 
   const setSort = (value: string) => {
@@ -47,7 +56,7 @@ export const useSort = () => {
     search.set("sort_by", value);
     search.delete("page");
 
-    router.replace(`/discover?${search.toString()}`);
+    router.replace(`/blog?${search.toString()}`);
   };
 
   return {

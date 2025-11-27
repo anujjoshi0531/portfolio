@@ -2,10 +2,10 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ArrowDownWideNarrow, ChevronDown, ChevronUp, Check } from "lucide-react"
+import { ArrowDownWideNarrow, ChevronDown, ChevronUp, Check, CalendarArrowUp, CalendarArrowDown, ArrowUpAZ, ArrowDownZA } from "lucide-react"
 
 interface SortOption {
   label: string
@@ -18,59 +18,45 @@ interface BlogSortProps {
   defaultValue?: string
 }
 
-export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue = "date-desc" }) => {
+export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue = "published-descending" }) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue)
+
+  useEffect(() => {
+    if (defaultValue) {
+      setSelectedValue(defaultValue)
+    }
+  }, [defaultValue])
 
   const options: SortOption[] = [
     {
-      label: "Most Recent",
-      value: "date-desc",
-      icon: ArrowDownWideNarrow,
+      label: "Published (Newest First)",
+      value: "published-descending",
+      icon: CalendarArrowUp,
     },
     {
-      label: "Least Recent",
-      value: "date-asc",
-      icon: ArrowDownWideNarrow,
-    },
-    {
-      label: "Most Popular",
-      value: "views-desc",
-      icon: ArrowDownWideNarrow,
-    },
-    {
-      label: "Least Popular",
-      value: "views-asc",
-      icon: ArrowDownWideNarrow,
-    },
-    {
-      label: "Most Likes",
-      value: "likes-desc",
-      icon: ArrowDownWideNarrow,
-    },
-    {
-      label: "Least Likes",
-      value: "likes-asc",
-      icon: ArrowDownWideNarrow,
-    },
-    {
-      label: "Reading Time (Shortest)",
-      value: "reading_time-asc",
-      icon: ArrowDownWideNarrow,
-    },
-    {
-      label: "Reading Time (Longest)",
-      value: "reading_time-desc",
-      icon: ArrowDownWideNarrow,
+      label: "Published (Oldest First)",
+      value: "published-ascending",
+      icon: CalendarArrowDown,
     },
     {
       label: "Title (A-Z)",
-      value: "title-asc",
-      icon: ArrowDownWideNarrow,
+      value: "name-ascending",
+      icon: ArrowUpAZ,
     },
     {
       label: "Title (Z-A)",
-      value: "title-desc",
-      icon: ArrowDownWideNarrow,
+      value: "name-descending",
+      icon: ArrowDownZA,
+    },
+    {
+      label: "Last Updated (Recent)",
+      value: "updates-descending",
+      icon: CalendarArrowUp,
+    },
+    {
+      label: "Last Updated (Oldest)",
+      value: "updates-ascending",
+      icon: CalendarArrowDown,
     },
   ]
 
@@ -84,7 +70,7 @@ export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue =
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" size="sm" className="gap-2 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap justify-start" aria-label={`Sort blogs by ${selectedOption?.label?.toLowerCase() || "default"}`}>
+        <Button variant="secondary" size="sm" className="gap-2 max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap justify-start" aria-label={`Sort blogs by ${selectedOption?.label?.toLowerCase() || "default"}`}>
           <ArrowDownWideNarrow className="size-4" />
           {selectedOption?.label || "Sort by"}
           <ChevronDown className="size-4" />
@@ -102,7 +88,7 @@ export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue =
               {option.label}
             </span>
             <div className="flex items-center gap-1">
-              {option.value.includes("asc") ? (
+              {option.value.includes("ascending") ? (
                 <ChevronUp className="size-4 text-muted-foreground" />
               ) : (
                 <ChevronDown className="size-4 text-muted-foreground" />

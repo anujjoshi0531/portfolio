@@ -1,4 +1,4 @@
-import { socialLinks } from "@/lib/data";
+import { socialLinks } from "@/lib";
 import { SocialIcon } from "@/components/global/social";
 import Link from "next/link";
 

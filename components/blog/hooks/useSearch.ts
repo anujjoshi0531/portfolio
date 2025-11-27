@@ -35,8 +35,12 @@ export const useSearch = (
   }, [value, auto]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleSearch(value: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    
     if (value !== "") {
-      router.push(`${searchPath}?q=${value}`);
+      params.set("q", value);
+      params.delete("page"); // Reset to page 1 when searching
+      router.push(`${searchPath}?${params.toString()}`);
       sendGAEvent("event", gaEventCategory, {
         search_term: value,
       });
@@ -44,6 +48,13 @@ export const useSearch = (
     }
 
     if (value === "" && pathname === searchPath) {
+      params.delete("q");
+      params.delete("page");
+      if (params.toString()) {
+        router.push(`${searchPath}?${params.toString()}`);
+      } else {
+        router.push(searchPath);
+      }
       return;
     }
 

@@ -8,7 +8,7 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "framer-motion";
-import { socialLinks } from "@/lib/data";
+import { socialLinks } from "@/lib";
 import { TbHexagonLetterAFilled } from "react-icons/tb";
 import ModeToggle from "@/components/global/mode-toggle";
 import ThemePicker from "@/components/global/theme-picker";

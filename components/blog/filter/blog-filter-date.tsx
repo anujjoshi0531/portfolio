@@ -1,7 +1,7 @@
 import * as React from "react";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
@@ -67,7 +67,6 @@ export const BlogFilterDate: React.FC<BlogFilterDateProps> = ({
             toDate={to}
             disabled={disabled}
             onSelect={setSelectedDate}
-            initialFocus
           />
         </PopoverContent>
       </Popover>

@@ -15,7 +15,7 @@ const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"], // Only load needed weights
+  weight: ["400", "500", "600", "700"],
   preload: true,
 });
 
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     default: "Anuj Joshi - Portfolio",
     template: `%s - Anuj Joshi`,
   },  
-  description: "Anuj Joshi is a Computer Science Engineer from DTU and passionate full-stack web developer specializing in modern web technologies, AI/ML, Web3, and robotics. Explore my portfolio featuring innovative projects, technical blogs, open-source contributions, and cutting-edge experiments that demonstrate expertise in React, Next.js, Python, JavaScript, and emerging technologies.",
+  description: "Explore the portfolio of Anuj Joshi, a full-stack developer specialized in building scalable systems, intuitive user experiences, and reliable end-to-end solutions. Showcasing high-impact projects, engineering insights, open-source contributions, and strong problem-solving capabilities.",
   
   keywords: [
     // Personal & Professional

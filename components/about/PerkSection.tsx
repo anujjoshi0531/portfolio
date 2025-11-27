@@ -1,28 +1,7 @@
 import { FaCertificate, FaCode } from "react-icons/fa6";
-import { perkData } from "@/lib/data";
+import { perkData } from "@/lib";
 import { Perk, PerkAnimation, PerkSkeleton } from "@/components/global/perk";
 import { useEffect, useState, useRef } from "react";
-
-async function fetchWithTimeout(url: string, timeout: number = 5000): Promise<any> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-  
-  try {
-    const response = await fetch(url, { 
-      signal: controller.signal,
-      next: { revalidate: 3600 }
-    });
-    clearTimeout(timeoutId);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  } catch (error: any) {
-    clearTimeout(timeoutId);
-    if (error.name === 'AbortError') {
-      console.warn(`Request to ${url} timed out after ${timeout}ms`);
-    }
-    return null;
-  }
-}
 
 export default function PerkSection() {
   const [loading, setLoading] = useState(true);
@@ -45,13 +24,14 @@ export default function PerkSection() {
       { rootMargin: '100px' }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [hasLoaded]);
@@ -69,10 +49,18 @@ export default function PerkSection() {
       setTotalProjects(projectsRes?.length || 0);
 
       const ratingPromises = perkData.map((perk) =>
-        fetchWithTimeout(
+        fetch(
           `${process.env.NEXT_PUBLIC_CONTEST_API}/${perk.platform}?username=${perk.username}`,
-          5000
+          { next: { revalidate: 3600 } }
         )
+          .then((res) => {
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            return res.json();
+          })
+          .catch((err) => {
+            console.error(`Error fetching ${perk.platform}:`, err);
+            return null;
+          })
       );
 
       Promise.allSettled(ratingPromises).then((results) => {
@@ -92,22 +80,6 @@ export default function PerkSection() {
     }
   }
 
-  if (loading) {
-    return (
-      <>
-        <PerkAnimation className="grid grid-cols-1 sm:grid-cols-2">
-          <PerkSkeleton />
-          <PerkSkeleton />
-        </PerkAnimation>
-        <PerkAnimation className="grid sm:grid-cols-2 lg:grid-cols-5">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <PerkSkeleton key={i} />
-          ))}
-        </PerkAnimation>
-      </>
-    );
-  }
-
   return (
     <div ref={sectionRef}>
       <PerkAnimation className="grid grid-cols-1 sm:grid-cols-2">
@@ -119,13 +91,13 @@ export default function PerkSection() {
         />
       </PerkAnimation>
       <PerkAnimation className="grid sm:grid-cols-2 lg:grid-cols-5">
-        {perkData.map(({ platform, icon, link }) => (
+        {perkData.map(({ platform, icon, link, level, rating }) => (
           <Perk
             key={platform}
             link={link}
-            value={ratings[platform.toLowerCase()]?.rating ?? "NA"}
+            value={loading ? rating : (ratings[platform.toLowerCase()]?.rating ?? rating)}
             title={platform}
-            subtitle={ratings[platform.toLowerCase()]?.level}
+            subtitle={loading ? level : (ratings[platform.toLowerCase()]?.level ?? level)}
             icon={icon}
           />
         ))}

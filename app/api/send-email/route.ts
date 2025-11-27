@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { sendToRecipient, sendThankYouEmail } from "@/lib/mail";
+import { sendToRecipient, sendThankYouEmail } from "@/lib/server/mail";
 
 export async function POST(request: Request) {
   const { name, email, message } = await request.json();

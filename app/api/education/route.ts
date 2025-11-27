@@ -1,4 +1,4 @@
-import { getEducation } from "@/lib/notion";
+import { getEducation } from "@/lib/server/notion";
 export const revalidate = 3600;
 
 export async function GET() {

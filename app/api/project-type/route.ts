@@ -1,4 +1,4 @@
-import { getProjectType } from "@/lib/notion";
+import { getProjectType } from "@/lib/server/notion";
 export const revalidate = 3600;
 
 export async function GET() {

@@ -1,10 +1,7 @@
-import { pages } from "@/lib/utils";
 import { Metadata } from "next";
+import { getMetadata } from "@/lib";
 
-export const metadata: Metadata = {
-  title: pages.about.title,
-  description: pages.about.description,
-};
+export const metadata: Metadata = getMetadata("about");
 
 export default function AboutLayout({
   children,

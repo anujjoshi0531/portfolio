@@ -7,7 +7,7 @@ import { FaPaperPlane, FaLink } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import Typewriter from "@/components/animate/Typewriter";
 import { childVariants, containerVariants } from "@/components/animate/animate";
-import { socialLink } from "@/lib/data";
+import { socialLink } from "@/lib";
 import Link from "next/link";
 
 export default function Hero() {

@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { cn, extractPlainText, timeAgo } from "@/lib/utils";
+import { cn, extractPlainText, timeAgo } from "@/lib";
 import Image from "next/image";
 import Link from "next/link";
 

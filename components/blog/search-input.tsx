@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSearch } from "@/components/blog/hooks/useSearch";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 import { Search, XIcon, Loader2 } from "lucide-react";
 import React, { useRef } from "react";
 

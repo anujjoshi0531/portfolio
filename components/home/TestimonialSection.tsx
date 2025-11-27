@@ -5,7 +5,7 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SectionTemplate } from "@/components/global/template";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "../ui/skeleton";
-import { extractPlainText } from "@/lib/utils";
+import { extractPlainText } from "@/lib";
 
 interface Testimonial {
   id: string;

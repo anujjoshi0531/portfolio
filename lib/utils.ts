@@ -6,41 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const pages = {
-    about: {
-        title: "About",
-        description: "Learn more about me and my journey.",
-    },
-    blog: {
-        title: "Blogs",
-        description: "Read my latest articles and thoughts on various topics.",
-    },
-    project: {
-        title: "Projects",
-        description: "Explore my projects and contributions to the tech community.",
-    },
-    contact: {
-        title: "Contact",
-        description: "Get in touch with me for collaborations or inquiries.",
-    },
-}
-
-export function filterDiscoverParams(
-  params?: Record<string, string>
-): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(params ?? {}).filter(([key]) =>
-      availableParams.includes(key)
-    )
-  );
-}
-export const availableParams = [
-  "tags",
-  "published_gte",
-  "published_lte",
-  "limit",
-];
-
 export const timeAgo = (
   timestamp: Date | null,
   {
@@ -63,14 +28,8 @@ export const timeAgo = (
   return `${ms(diff)}${withAgo ? " ago" : ""}`;
 };
 
-
-export const extractPlainText = (richText: any[]): string =>
+export const extractPlainText = (richText: any): string =>
   Array.isArray(richText) ? richText.map((item) => item.plain_text || "").join("") : ""
-
-export const getPageUrl = (page: any): string => {
-  const slug = extractPlainText(page.properties.Slug?.rich_text || [])
-  return slug || page.id
-}
 
 export const hexToHSL = (hex: string): string => {
   hex = hex.replace(/^#/, "");

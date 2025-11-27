@@ -4,26 +4,10 @@ import { SectionTemplate } from "@/components/global/template"
 import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { cn, extractPlainText, timeAgo } from "@/lib/utils"
+import { cn, extractPlainText, timeAgo } from "@/lib"
 import { Award, ChevronRight } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import ErrorCard from "../global/Error-Card"
-
-type NotionExperience = {
-  id: string
-  properties: {
-    Role: { title: { plain_text: string }[] }
-    Type: { select: { name: string } | null }
-    Organization: { rich_text: { plain_text: string }[] }
-    Description: { rich_text: { plain_text: string }[] }
-    Start: { date: { start: string } }
-    End: { date: { start: string | null } }
-    Place: { rich_text: { plain_text: string }[] }
-    URL: { url: string | null }
-    Certificate: { url: string | null }
-    Skills: { multi_select: { name: string }[] }
-  }
-}
 
 export default function ExperienceSection() {
   const [groupedExperiences, setGroupedExperiences] = useState<Record<string, NotionExperience[]>>({})

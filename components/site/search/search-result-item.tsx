@@ -4,7 +4,7 @@ import { memo } from "react"
 import Link from "next/link"
 import { FileIcon, Calendar, User, Tag } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { extractPlainText, getPageUrl, timeAgo } from "@/lib/utils"
+import { extractPlainText, timeAgo } from "@/lib"
 
 interface SearchResultItemProps {
   page: any
@@ -17,7 +17,8 @@ export const SearchResultItem = memo(function SearchResultItem({ page, onClose }
   const author = extractPlainText(page.properties.Author?.rich_text || [])
   const publishedDate = page.properties.Published?.date?.start
   const tags = page.properties.Tags?.multi_select || []
-  const pageUrl = getPageUrl(page)
+  const slug = extractPlainText(page.properties.Slug?.rich_text || [])
+  const pageUrl = slug || page.id
   const isProject = page.properties.Project?.checkbox || false
 
   return (

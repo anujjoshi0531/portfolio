@@ -1,10 +1,10 @@
-import { getPages } from "@/lib/notion";
+import { searchPages } from "@/lib/server/notion";
 export const revalidate = 3600;
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const res = await getPages(body);
+    const res = await searchPages(body);
     return Response.json(res);
   } catch (error) {
     console.error('Error in search-notion:', error)
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const res = await getPages({});
+    const res = await searchPages({});
     return Response.json(res);
   } catch (error) {
     console.error('Error in search-notion (GET):', error)

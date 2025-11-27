@@ -13,7 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useFilters } from "@/components/blog/hooks";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 import { SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -43,7 +43,7 @@ export const BlogFilter= ({tags}: {tags: string[]}) => {
           <Badge className="text-xs">{count}</Badge>
         )}
       </SheetTrigger>
-      <SheetContent className="flex flex-col px-0">
+      <SheetContent className="flex flex-col">
         <SheetHeader className="px-4 md:px-6">
           <SheetTitle className="text-2xl text-primary">Filters</SheetTitle>
           <SheetDescription>
@@ -51,75 +51,103 @@ export const BlogFilter= ({tags}: {tags: string[]}) => {
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className="px-4 md:px-6 overflow-y-scroll">
-            <BlogFilterDate
-              label="From"
-              align="start"
-              value={getFilter("published_gte")}
-              disableAfter={getFilter("published_lte")}
-              onChange={(value) =>
-                setFilter({ "published_gte": value })
-              }
-            />
-
-            <BlogFilterDate
-              label="To"
-              align="end"
-              value={getFilter("published_lte")}
-              disableBefore={getFilter("published_gte")}
-              onChange={(value) =>
-                setFilter({ "published_lte": value })
-              }
-            />
-          <BlogFiltertag 
-              tags={tags}
-              value={getFilter("tags")}
-              onChange={(value) => setFilter({ tags: value })}
-          />
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h4 className="mb-2">Sort By</h4>
-              <BlogSort />
+        <ScrollArea className="h-[calc(100vh-200px)] px-4 md:px-6">
+          <div className="space-y-6 py-2">
+            {/* Date Range Filters */}
+            <div className="space-y-4">
+              <h3 className="text-base font-semibold">Date Range</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <BlogFilterDate
+                  label="From"
+                  align="start"
+                  value={getFilter("published_gte")}
+                  disableAfter={getFilter("published_lte")}
+                  onChange={(value) =>
+                    setFilter({ "published_gte": value })
+                  }
+                />
+                <BlogFilterDate
+                  label="To"
+                  align="end"
+                  value={getFilter("published_lte")}
+                  disableBefore={getFilter("published_gte")}
+                  onChange={(value) =>
+                    setFilter({ "published_lte": value })
+                  }
+                />
+              </div>
             </div>
-            <div>
-              <h4 className="mb-1">Blogs Per Page</h4>
-              <Input
-                className="w-20"
-                type="number"
-                min={0}
-                max={20}
-                defaultValue={9}
-                value={getFilter("limit")}
-                onChange={(e) => setFilter({ limit: e.target.value })}
+
+            {/* Tags Filter */}
+            <div className="space-y-2">
+              <BlogFiltertag 
+                tags={tags}
+                value={getFilter("tags")}
+                onChange={(value) => setFilter({ tags: value })}
               />
             </div>
-          </div>
-          <div>
-            <h4 className="mb-1">Content Type</h4>
-            <div className="space-y-2">
-              {["Posts", "Projects"].map((type) => (
-                <div key={type} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={type.toLowerCase()}
-                    checked={contentTypes.includes(type)}
-                    onCheckedChange={(checked) =>
-                      handleContentTypeChange(type, checked as boolean)
-                    }
+
+            {/* Sort and Display Options */}
+            <div className="space-y-4">
+              <h3 className="text-base font-semibold">Sort & Display</h3>
+              <div className="space-y-4">
+                <div>
+                  <Label className="mb-2 block">Sort By</Label>
+                  <BlogSort 
+                    defaultValue={getFilter("sort_by") || "published-descending"}
+                    onSortChange={(value) => setFilter({ sort_by: value })}
                   />
-                  <Label htmlFor={type.toLowerCase()}>{type}</Label>
                 </div>
-              ))}
+                <div>
+                  <Label htmlFor="limit" className="mb-2 block">Blogs Per Page</Label>
+                  <Input
+                    id="limit"
+                    className="w-24"
+                    type="number"
+                    min={6}
+                    max={50}
+                    step={1}
+                    value={getFilter("limit") || "9"}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setFilter({ limit: val });
+                    }}
+                    placeholder="9"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Content Type Filter */}
+            <div className="space-y-2">
+              <h3 className="text-base font-semibold">Content Type</h3>
+              <div className="space-y-2">
+                {["Posts", "Projects"].map((type) => (
+                  <div key={type} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={type.toLowerCase()}
+                      checked={contentTypes.includes(type)}
+                      onCheckedChange={(checked) =>
+                        handleContentTypeChange(type, checked as boolean)
+                      }
+                    />
+                    <Label htmlFor={type.toLowerCase()} className="cursor-pointer">
+                      {type}
+                    </Label>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </ScrollArea>
 
         <SheetFooter className="gap-2 flex flex-row">
-          <Button size="md" variant="ghost" onClick={clearFilters} aria-label="Clear Filters">
+          <SheetClose onClick={saveFilters} className={cn(buttonVariants({ variant: "default", size: "sm" }))} aria-label="Save Changes">
+            Save
+          </SheetClose>
+          <Button size="sm" variant="secondary" onClick={clearFilters} aria-label="Clear Filters">
             Clear
           </Button>
-          <SheetClose onClick={saveFilters} className={cn(buttonVariants({ variant: "default", size: "md" }))} aria-label="Save Changes">
-            Save Changes
-          </SheetClose>
         </SheetFooter>
       </SheetContent>
     </Sheet>
