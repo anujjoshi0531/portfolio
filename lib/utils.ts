@@ -1,31 +1,23 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import ms from "ms";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 export const timeAgo = (
-  timestamp: Date | null,
-  {
-    withAgo,
-  }: {
-    withAgo?: boolean;
-  } = {}
+  timestamp: Date | null
 ): string => {
   if (!timestamp) return "Never";
+
   const diff = Date.now() - new Date(timestamp).getTime();
-  if (diff < 1000) {
-    return "Just now";
-  } else if (diff > 82800000) {
-    return new Date(timestamp).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  }
-  return `${ms(diff)}${withAgo ? " ago" : ""}`;
+
+  if (diff < 1000) return "Just now";
+  if (diff < 60000) return `${Math.floor(diff / 1000)} seconds ago`;
+  if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+
+  return new Date(timestamp).toLocaleDateString();
 };
 
 export const extractPlainText = (richText: any): string =>
@@ -63,4 +55,8 @@ export const hexToHSL = (hex: string): string => {
   }
 
   return `${Math.round(h)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%`;
+};
+
+export const formatDate = (date: Date): string => {
+  return new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" }).format(date);
 };

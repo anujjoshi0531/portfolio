@@ -28,7 +28,9 @@ export default async function Page() {
       </SectionTemplate>
       <ExperienceSection />
       <ProjectSection />
-      <BlogSection />
+      <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories">
+        <BlogSection />
+      </SectionTemplate>
       <QuoteSection />
       <TestimonialSection />
     </main>

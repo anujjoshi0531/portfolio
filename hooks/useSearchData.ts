@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { useDebounce } from "use-debounce"
+import { useDebounce } from "@/hooks/useDebounce"
 
-export function useSearch() {
+export function useSearchData() {
   const [query, setQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [searchResult, setSearchResult] = useState<any>(null)
   const [searchError, setSearchError] = useState<any>(null)
 
-  const [value] = useDebounce(query, 300)
+  const value = useDebounce<string>(query, 300)
   const hasQuery = useMemo(() => query.trim().length > 0, [query])
 
   useEffect(() => {

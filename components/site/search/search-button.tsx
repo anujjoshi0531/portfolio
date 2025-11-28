@@ -2,11 +2,10 @@
 
 import { useState, useRef, useCallback, useEffect } from "react"
 import { Search } from "lucide-react"
+import { useKeyboardShortcut , useSearchData } from "@/components/site/search/hooks"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import TooltipComponent from "../../global/tooltip-component"
-import { useKeyboardShortcut } from "./hooks/use-keyboard"
-import { useSearch } from "./hooks/use-search"
+import TooltipComponent from "@/components/global/tooltip-component"
 import { SearchInput } from "./search-input"
 import { SearchResults } from "./search-results"
 
@@ -14,7 +13,7 @@ export default function SearchButton() {
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { query, setQuery, isLoading, searchResult, searchError, hasQuery } = useSearch()
+  const { query, setQuery, isLoading, searchResult, searchError, hasQuery } = useSearchData()
 
   useKeyboardShortcut(() => setIsOpen(true), isOpen)
 
@@ -31,13 +30,13 @@ export default function SearchButton() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <TooltipComponent message="Search pages (Ctrl+K)">
         <DialogTrigger asChild>
-          <Button variant="ghost" size="icon" className="z-1000 rounded-full" aria-label="Open search dialog (Ctrl+K)">
+          <Button variant="ghost" size="icon" className="rounded-full" aria-label="Open search dialog (Ctrl+K)">
             <Search />
           </Button>
         </DialogTrigger>
       </TooltipComponent>
 
-      <DialogContent className="max-w-4xl p-0">
+      <DialogContent className="max-w-4xl p-0 z-[1000000]">
         <DialogHeader className="px-6 py-2">
           <DialogTitle className="sr-only">Search</DialogTitle>
         </DialogHeader>

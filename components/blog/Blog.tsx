@@ -9,12 +9,12 @@ import { BlogFilter } from "./filter/blog-filter";
 import { BlogPagination } from "./blog-pagination";
 import { PageTemplate } from "../global/template";
 import NoWork from "../site/NoWork";
-import { Badge } from "@/components/ui/badge";
 import { useSearchParams, useRouter } from "next/navigation";
 
 interface BlogProps {
   posts: any;
   tags: string[];
+  categories: string[];
   totalPages: number;
   currentPage: number;
   totalCount: number;
@@ -24,6 +24,7 @@ interface BlogProps {
 export default function Blog({ 
   posts, 
   tags, 
+  categories,
   totalPages, 
   currentPage, 
   totalCount,
@@ -35,11 +36,10 @@ export default function Blog({
   
   // Get active filters from URL
   const activeTags = searchParams.get("tags")?.split(",").filter(Boolean) || [];
-  const activeQuery = searchParams.get("q") || "";
   const activeDateFrom = searchParams.get("published_gte");
   const activeDateTo = searchParams.get("published_lte");
   
-  const hasActiveFilters = activeTags.length > 0 || activeQuery || activeDateFrom || activeDateTo;
+  const hasActiveFilters = activeTags.length > 0 || activeDateFrom || activeDateTo;
   
   // Calculate result range
   const startResult = totalCount > 0 ? (currentPage - 1) * limit + 1 : 0;
@@ -118,7 +118,7 @@ export default function Blog({
           <SearchInput placeholder="Search Blogs, Project, Articles.." />
         </div>
         <div className="space-x-2 flex items-center">
-          <BlogFilter tags={tags} />
+          <BlogFilter tags={tags} categories={categories} />
           <Button
             variant="secondary"
             size="icon"

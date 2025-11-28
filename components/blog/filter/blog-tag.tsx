@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { useMultiSelect } from "@/components/blog/hooks";
+import { useMultiSelect } from "@/hooks";
 import { useState, useMemo } from "react";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ export const BlogFiltertag: React.FC<BlogFiltertagProps> = ({
   }, [filteredTags, selection]);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* Search Input */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -55,18 +55,18 @@ export const BlogFiltertag: React.FC<BlogFiltertagProps> = ({
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6"
+            className="absolute right-1 top-1/2 -translate-y-1/2 size-6"
             onClick={() => setSearchQuery("")}
             aria-label="Clear search"
           >
-            <X className="h-3 w-3" />
+            <X className="size-3" />
           </Button>
         )}
       </div>
 
       {/* Selected Tags */}
       {selectedTags.length > 0 && (
-        <div className="flex flex-wrap gap-0.5 max-h-24 overflow-y-auto">
+        <div className="flex flex-wrap gap-0.5 max-h-36 overflow-y-auto">
           {selectedTags.map((tag) => (
             <Badge
               key={tag}
@@ -90,7 +90,7 @@ export const BlogFiltertag: React.FC<BlogFiltertagProps> = ({
 
       {/* Available Tags */}
       {unselectedTags.length > 0 ? (
-        <div className="flex flex-wrap gap-0.5 max-h-24 overflow-y-auto">
+        <div className="flex flex-wrap gap-0.5 max-h-36 overflow-y-auto">
           {unselectedTags.map((tag) => (
             <Badge
               key={tag}

@@ -1,6 +1,6 @@
 export default function NoWork({ className }: { className?: string }) {
   return (
-<svg className={className} version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="595.28px" height="595.28px" viewBox="0 0 595.28 595.28" enableBackground="new 0 0 595.28 595.28">
+<svg className={className} version="1.1" id="Layer_1" xmlns="https://www.w3.org/2000/svg" x="0px" y="0px" width="595.28px" height="595.28px" viewBox="0 0 595.28 595.28" enableBackground="new 0 0 595.28 595.28">
 <path id="color_x5F_2" fill="currentColor" d="M349.655,226.123c0.055-1.103-2.844-0.486-2.888,0.398
 	c-0.438,8.746,0.167,18.667,3.551,27.168c-0.091,0.103-0.149,0.214-0.159,0.331c-1.781,19.989-5.21,39.967-5.387,60.069
 	c-0.467,0.218-0.798,0.519-0.705,0.822c0.021,0.067,0.037,0.135,0.057,0.202c-4.583,4.931-12.977,5.753-19.227,6.377

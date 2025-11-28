@@ -70,6 +70,22 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
   // Optimize font loading
   optimizeFonts: true,
+  // Suppress webpack warnings from third-party dependencies
+  webpack: (config, { isServer }) => {
+    // Suppress the critical dependency warning from keyv (used by notion-client)
+    config.module = config.module || {};
+    config.module.exprContextCritical = false;
+    
+    // Alternative: Ignore specific warnings using webpack's ignoreWarnings
+    config.ignoreWarnings = [
+      {
+        module: /node_modules\/keyv\/src\/index\.js/,
+        message: /Critical dependency: the request of a dependency is an expression/,
+      },
+    ];
+    
+    return config;
+  },
 }
 
 module.exports = nextConfig

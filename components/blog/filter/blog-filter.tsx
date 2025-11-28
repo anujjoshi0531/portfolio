@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useFilters } from "@/components/blog/hooks";
+import { useFilters } from "@/hooks";
 import { cn } from "@/lib";
 import { SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -23,22 +23,16 @@ import { Input } from "@/components/ui/input";
 import { BlogFilterDate } from "./blog-filter-date";
 import { BlogFiltertag } from "./blog-tag";
 import { BlogSort } from "./blog-sort";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export const BlogFilter= ({tags}: {tags: string[]}) => {
+export const BlogFilter= ({tags, categories}: {tags: string[], categories: string[]}) => {
   const { count, getFilter, setFilter, saveFilters, clearFilters } =
     useFilters();
-  const [contentTypes, setContentTypes] = useState<string[]>([]);
-
-  const handleContentTypeChange = (type: string, checked: boolean) => {
-    setContentTypes((prev) =>
-      checked ? [...prev, type] : prev.filter((t) => t !== type)
-    );
-  };
 
   return (
     <Sheet>
       <SheetTrigger className={cn(buttonVariants({ variant: "secondary", size: "md" }))} aria-label={`Open blog filters${count > 0 ? ` (${count} active)` : ""}`}>
-        <SlidersHorizontal className="h-5 w-5" />
+        <SlidersHorizontal />
         {count > 0 && (
           <Badge className="text-xs">{count}</Badge>
         )}
@@ -53,31 +47,6 @@ export const BlogFilter= ({tags}: {tags: string[]}) => {
 
         <ScrollArea className="h-[calc(100vh-200px)] px-4 md:px-6">
           <div className="space-y-6 py-2">
-            {/* Date Range Filters */}
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold">Date Range</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <BlogFilterDate
-                  label="From"
-                  align="start"
-                  value={getFilter("published_gte")}
-                  disableAfter={getFilter("published_lte")}
-                  onChange={(value) =>
-                    setFilter({ "published_gte": value })
-                  }
-                />
-                <BlogFilterDate
-                  label="To"
-                  align="end"
-                  value={getFilter("published_lte")}
-                  disableBefore={getFilter("published_gte")}
-                  onChange={(value) =>
-                    setFilter({ "published_lte": value })
-                  }
-                />
-              </div>
-            </div>
-
             {/* Tags Filter */}
             <div className="space-y-2">
               <BlogFiltertag 
@@ -87,62 +56,64 @@ export const BlogFilter= ({tags}: {tags: string[]}) => {
               />
             </div>
 
-            {/* Sort and Display Options */}
             <div className="space-y-4">
-              <h3 className="text-base font-semibold">Sort & Display</h3>
-              <div className="space-y-4">
-                <div>
-                  <Label className="mb-2 block">Sort By</Label>
-                  <BlogSort 
-                    defaultValue={getFilter("sort_by") || "published-descending"}
-                    onSortChange={(value) => setFilter({ sort_by: value })}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="limit" className="mb-2 block">Blogs Per Page</Label>
-                  <Input
-                    id="limit"
-                    className="w-24"
-                    type="number"
-                    min={6}
-                    max={50}
-                    step={1}
-                    value={getFilter("limit") || "9"}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setFilter({ limit: val });
-                    }}
-                    placeholder="9"
-                  />
-                </div>
+              <BlogFilterDate
+                label="Published From"
+                align="start"
+                value={getFilter("published_gte")}
+                disableAfter={getFilter("published_lte")}
+                onChange={(value) => setFilter({ "published_gte": value })}
+              />
+              <BlogFilterDate
+                label="Published To"
+                align="end"
+                value={getFilter("published_lte")}
+                disableBefore={getFilter("published_gte")}
+                onChange={(value) => setFilter({ "published_lte": value })}
+              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
+                <Label className="flex text-muted-foreground" htmlFor="sort_by">Sort By</Label>
+                <BlogSort 
+                  defaultValue={getFilter("sort_by") || "published-descending"}
+                  onSortChange={(value) => setFilter({ sort_by: value })}
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1"> 
+                <Label className="flex text-muted-foreground" htmlFor="limit">Blogs Per Page</Label>
+                <Input
+                  id="limit"
+                  className="w-full"
+                  type="number"
+                  min={6}
+                  max={60}
+                  step={1}
+                  value={getFilter("limit") ? Number(getFilter("limit")) : 9}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setFilter({ limit: val });
+                  }}
+                  placeholder="9"
+                />
               </div>
             </div>
 
             {/* Content Type Filter */}
-            <div className="space-y-2">
-              <h3 className="text-base font-semibold">Content Type</h3>
-              <div className="space-y-2">
-                {["Posts", "Projects"].map((type) => (
-                  <div key={type} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={type.toLowerCase()}
-                      checked={contentTypes.includes(type)}
-                      onCheckedChange={(checked) =>
-                        handleContentTypeChange(type, checked as boolean)
-                      }
-                    />
-                    <Label htmlFor={type.toLowerCase()} className="cursor-pointer">
-                      {type}
-                    </Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
+              <Label className="flex text-muted-foreground" htmlFor="category">Content Category</Label>
+              <RadioGroup className="w-full" value={getFilter("category")} onValueChange={(value) => setFilter({ category: value })}>
+                {categories.map((category) => (
+                  <div key={category} className="flex items-center space-x-2">
+                    <RadioGroupItem id={category} value={category} />
+                    <Label htmlFor={category}>{category}</Label>
                   </div>
                 ))}
-              </div>
+              </RadioGroup>
             </div>
           </div>
         </ScrollArea>
 
-        <SheetFooter className="gap-2 flex flex-row">
-          <SheetClose onClick={saveFilters} className={cn(buttonVariants({ variant: "default", size: "sm" }))} aria-label="Save Changes">
+        <SheetFooter className="grid grid-cols-2 gap-2">
+          <SheetClose onClick={() => saveFilters()} className={cn(buttonVariants({ variant: "default", size: "sm" }))} aria-label="Save Changes">
             Save
           </SheetClose>
           <Button size="sm" variant="secondary" onClick={clearFilters} aria-label="Clear Filters">

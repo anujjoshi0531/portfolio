@@ -38,7 +38,7 @@ export default function AboutSection() {
             Hello! My name is Anuj Joshi, and I am a passionate software engineer with a keen interest in Web Development and Machine Learning.
           </p>
           <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
-            At <a className="link text-theme" target="_blank" href="#" aria-label="LIMSTIR-DTU organization">LIMSTIR-DTU</a> and as a member of the Robotic Society at <a className="link text-theme" target="_blank" href="#" aria-label="SR-DTU Robotic Society">SR-DTU</a>, I strive to craft sustainable solutions for global challenges.
+            At <a className="link text-theme" target="_blank" href="https://limstir.vercel.app/" aria-label="LIMSTIR-DTU organization">LIMSTIR-DTU</a> and as a member of the Robotic Society at <a className="link text-theme" target="_blank" href="https://srdtu.vercel.app" aria-label="SR-DTU Robotic Society">SR-DTU</a>, I strive to craft sustainable solutions for global challenges.
           </p>
           <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
             Additionally, I share my knowledge and passion with the world through my <a className="link text-theme" target="_blank" href="/blog" aria-label="View blog posts">blogs</a>, where I demonstrate how to build full-stack applications.

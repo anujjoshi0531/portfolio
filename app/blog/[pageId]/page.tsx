@@ -1,5 +1,6 @@
 import NotFound from "@/app/not-found";
 import { NotionPage } from "@/components/blog/NotionPage";
+import BlogSection from "@/components/home/BlogSection";
 import { extractPlainText } from "@/lib";
 import { fetchPage } from "@/lib/server/notion";
 import { redirect } from "next/navigation";
@@ -10,21 +11,22 @@ export const revalidate = 60 * 60; // Revalidate every hour
 export async function generateMetadata({ params }: { params: Promise<{ pageId: string }> }) {
   const { pageId } = await params;
   const { data } = await fetchPage(pageId);
-
-  console.log("data", data);
-
+  
   if (!data) {
     return {
       title: "Page Not Found",
       description: "The requested page does not exist.",
+      alternates: {
+        canonical: `/blog/${pageId}`,
+      },
       openGraph: {
         title: "Page Not Found",
         description: "The requested page does not exist.",
         type: "website",
-        url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/blog/${pageId}`,
+        url: `/blog/${pageId}`,
         images: [
           {
-            url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/opengraph-image.webp`,
+            url: `/opengraph-image.webp`,
             width: 1200,
             height: 630,
             alt: "Page Not Found",
@@ -44,17 +46,21 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
   const props = (data as any).properties || {};
   const title = extractPlainText(props.Name?.title) || "Untitled";
   const description = extractPlainText(props.Description?.rich_text) || "No description available.";
-  const image = props.Thumbnail?.url || `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/opengraph-image.webp`;
+  const image = props.Thumbnail?.url || `/opengraph-image.webp`;
   const slug = extractPlainText(props.Slug?.rich_text);
+  
   
   return {
     title,
     description,
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
       title,
       description,
       type: "website",
-      url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app"}/blog/${slug}`,
+      url: `/blog/${slug}`,
       images: [
         {
           url: image,
@@ -85,5 +91,10 @@ export default async function page({ params } : {
     if (slug) redirect(`/blog/${slug}`);
   }
   if (!data) return <NotFound />;
-  return <NotionPage recordMap={recordMap} />;
+  
+  const tags = (data as any)?.properties?.Tags?.multi_select?.map((tag: any) => tag.name);
+  return <>
+  <NotionPage recordMap={recordMap} />
+  <BlogSection tags={tags} />
+  </>;
 }

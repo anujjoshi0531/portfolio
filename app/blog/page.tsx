@@ -1,5 +1,5 @@
 import Blog from "@/components/blog/Blog";
-import { getAllTags, searchPages, getPagesCount } from "@/lib/server/notion";
+import { getBlogFilters, searchPages, getPagesCount } from "@/lib/server/notion";
 
 interface SearchProps {
   searchParams: Promise<{ 
@@ -12,15 +12,19 @@ interface SearchProps {
     tags?: string;
   }>
 }
-
-export default async function BlogPage({ searchParams }: SearchProps) {
-  const allTags = await getAllTags();
+export async function generateMetadata({ searchParams }: SearchProps) {
   const params = await searchParams;
-  
-  // Parse search params with defaults
   const q = params.q || undefined;
-  const page = params.page ? parseInt(params.page, 10) : 1;
-  const limit = params.limit ? parseInt(params.limit, 10) : 9;
+  return {
+    title: q ? `Search Results for "${q}"` : "Blog",
+  }
+}
+export default async function BlogPage({ searchParams }: SearchProps) {
+  const { tags: allTags, categories: allCategories } = await getBlogFilters();
+  const params = await searchParams;
+  const q = params.q || undefined;
+  const page = params.page ? Number(params.page) : 1;
+  const limit = params.limit ? Number(params.limit) : 9;
   const tags = params.tags ? params.tags.split(",").filter(Boolean) : [];
   const published_gte = params.published_gte ? new Date(params.published_gte) : undefined;
   const published_lte = params.published_lte ? new Date(params.published_lte) : undefined;
@@ -33,7 +37,7 @@ export default async function BlogPage({ searchParams }: SearchProps) {
   } : undefined;
   
   // Get posts with pagination
-  const posts = await searchPages({
+  const data = await searchPages({
     query: q,
     tags: tags.length > 0 ? tags : undefined,
     dateFilter,
@@ -41,24 +45,23 @@ export default async function BlogPage({ searchParams }: SearchProps) {
     page,
     limit,
   });
-  
-  // Get total count with same filters
+
   const { total } = await getPagesCount({
     query: q,
     tags: tags.length > 0 ? tags : undefined,
     dateFilter,
   });
   
-  const blogs = [...posts.results];
+  const blogs = data.results;
   const totalPages = Math.ceil(total / limit);
   const currentPage = Math.max(1, Math.min(page, totalPages || 1));
-
 
   return (
     <main className="space-y-6">
       <Blog 
         posts={blogs} 
         tags={allTags} 
+        categories={allCategories}
         totalPages={totalPages}
         currentPage={currentPage}
         totalCount={total}

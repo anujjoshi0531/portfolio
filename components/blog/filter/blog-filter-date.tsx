@@ -1,7 +1,6 @@
 import * as React from "react";
-import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib";
+import { formatDate } from "@/lib";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
@@ -36,30 +35,28 @@ export const BlogFilterDate: React.FC<BlogFilterDateProps> = ({
     before: disableBefore ? new Date(disableBefore) : new Date("01/01/1900"),
   };
 
-  const setSelectedDate = (date?: Date) => {
-    onChange(date ? format(date, "yyyy/MM/dd") : "");
+  const setSelectedDate = (date: Date) => {
+    onChange(formatDate(date));
   };
 
   return (
-    <div className="flex gap-2 my-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
       <Label className="flex text-muted-foreground">{label}</Label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="secondary"
             size="sm"
-            aria-label={`${label} date${value ? `: ${format(value, "PP")}` : " (not selected)"}`}
-            className={cn(
-              "w-full justify-start text-left font-normal",
-              !value && "text-muted-foreground"
-            )}>
-            <CalendarIcon className="mr-2 size-4" />
-            {value ? format(value, "PP") : <span>Select date...</span>}
+            className="w-full justify-start"
+            aria-label={`${label} date${value ? `: ${new Date(value).toLocaleDateString()}` : " not selected"}`}>
+            <CalendarIcon />
+            {value ? new Date(value).toLocaleDateString() : <span>Select date</span>}
           </Button>
         </PopoverTrigger>
 
         <PopoverContent align={align} className="w-64 p-0 md:w-auto">
           <Calendar
+            required
             mode="single"
             captionLayout="dropdown"
             selected={selected}

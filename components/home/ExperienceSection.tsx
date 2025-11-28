@@ -85,23 +85,19 @@ export default function ExperienceSection() {
           {types.map((type) => (
             <li
               key={type}
-              className={`h-10 px-4 flex text-lg items-center justify-between cursor-pointer w-fit md:w-full text-nowrap hover:bg-muted group relative ${
+              className={`w-fit md:w-full ${
                 type === selectedType ? "bg-muted border-l-2 border-theme" : ""
               }`}
-              onClick={() => setSelectedType(type)}
-              role="button"
-              tabIndex={0}
-              aria-label={`Filter experiences by ${type}`}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setSelectedType(type);
-                }
-              }}
             >
-              <span className={`group-hover:text-theme font-semibold ${type === selectedType ? "text-theme" : ""}`}>
-                {type} <Badge className="ml-4">{groupedExperiences[type]?.length}</Badge>
-              </span>
+              <button
+                className="h-10 px-4 flex text-lg items-center justify-between cursor-pointer w-full text-nowrap hover:bg-muted group relative"
+                onClick={() => setSelectedType(type)}
+                aria-label={`Filter experiences by ${type}`}
+              >
+                <span className={`group-hover:text-theme font-semibold ${type === selectedType ? "text-theme" : ""}`}>
+                  {type} <Badge className="ml-4">{groupedExperiences[type]?.length}</Badge>
+                </span>
+              </button>
             </li>
           ))}
         </ul>

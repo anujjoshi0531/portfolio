@@ -1,8 +1,7 @@
 "use client"
 
-import { memo } from "react"
 import Link from "next/link"
-import { FileIcon, Calendar, User, Tag } from "lucide-react"
+import { FileIcon, Calendar, User } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { extractPlainText, timeAgo } from "@/lib"
 
@@ -11,15 +10,15 @@ interface SearchResultItemProps {
   onClose: () => void
 }
 
-export const SearchResultItem = memo(function SearchResultItem({ page, onClose }: SearchResultItemProps) {
+export const SearchResultItem = (function SearchResultItem({ page, onClose }: SearchResultItemProps) {
   const title = extractPlainText(page.properties.Name?.title || [])
   const description = extractPlainText(page.properties.Description?.rich_text || [])
   const author = extractPlainText(page.properties.Author?.rich_text || [])
   const publishedDate = page.properties.Published?.date?.start
   const tags = page.properties.Tags?.multi_select || []
   const slug = extractPlainText(page.properties.Slug?.rich_text || [])
+  const type = page.properties.Type?.select?.name
   const pageUrl = slug || page.id
-  const isProject = page.properties.Project?.checkbox || false
 
   return (
     <Link
@@ -40,7 +39,7 @@ export const SearchResultItem = memo(function SearchResultItem({ page, onClose }
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-semibold text-base truncate">{title || "Untitled"}</h3>
-            {isProject && <Badge>Project</Badge>}
+            {type && (<Badge>{type}</Badge>)}
           </div>
 
           {description && <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{description}</p>}
@@ -64,7 +63,6 @@ export const SearchResultItem = memo(function SearchResultItem({ page, onClose }
             <div className="flex flex-wrap gap-1 mt-2">
               {tags.map((tag: any) => (
                 <Badge key={tag.id} variant="outline">
-                  <Tag className="size-2 mr-1" />
                   {tag.name}
                 </Badge>
               ))}

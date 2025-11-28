@@ -10,6 +10,7 @@ import {
   NotionRenderer,
 } from 'react-notion-x'
 import NotFound from '@/app/not-found'
+import { useTheme } from 'next-themes';
 
 const Code = dynamic(async () => {
   const m = await import('react-notion-x/build/third-party/code')
@@ -104,7 +105,7 @@ export function NotionPage({
 }) {
   const components = React.useMemo<Partial<NotionComponents>>(
     () => ({
-      nextLegacyImage: Image,
+      nextImage: Image,
       nextLink: Link,
       Code,
       Collection,
@@ -120,21 +121,24 @@ export function NotionPage({
   // Get the first block to determine page type
   const keys = Object.keys(recordMap?.block || {})
   const block = recordMap?.block?.[keys[0]]?.value
-
+  const {theme} = useTheme()
   if (!block) {
     return <NotFound />
   }
-
+  
   return (
     <NotionRenderer
       components={components}
       recordMap={recordMap}
       previewImages={!!recordMap.preview_images}
-      showCollectionViewDropdown={false}
+      showCollectionViewDropdown={true}
       showTableOfContents={true}
       minTableOfContentsItems={3}
       fullPage={true}
-      header={true}
+      disableHeader={true}
+      isImageZoomable={true}
+      darkMode={theme === 'dark'}
+      isLinkCollectionToUrlProperty={true}
     />
   )
 }

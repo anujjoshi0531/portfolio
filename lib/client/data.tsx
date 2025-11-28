@@ -1,3 +1,4 @@
+import { CalendarArrowDown, CalendarArrowUp, ArrowUpAZ, ArrowDownZA } from "lucide-react";
 import {
   FaGit,
   FaGithub,
@@ -214,3 +215,36 @@ export const socialLink = [
     icon: FaTelegram,
   },
 ];
+
+export const sortOptions = [
+  {
+    label: "Recent Published",
+    value: "published-descending",
+    icon: CalendarArrowUp,
+  },
+  {
+    label: "Oldest Published",
+    value: "published-ascending",
+    icon: CalendarArrowDown,
+  },
+  {
+    label: "A-Z Title",
+    value: "name-ascending",
+    icon: ArrowUpAZ,
+  },
+  {
+    label: "Z-A Title",
+    value: "name-descending",
+    icon: ArrowDownZA,
+  },
+  {
+    label: "Recent Updated",
+    value: "updated-descending",
+    icon: CalendarArrowUp,
+  },
+  {
+    label: "Oldest Updated",
+    value: "updated-ascending",
+    icon: CalendarArrowDown,
+  },
+]

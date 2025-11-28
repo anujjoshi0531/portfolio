@@ -3,7 +3,7 @@
 import { sendGAEvent } from "@next/third-parties/google";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const useSearch = (
   auto = true,
@@ -17,7 +17,7 @@ export const useSearch = (
 
   const [page, setPage] = useState<string>();
   const [term, setTerm] = useState(query ?? "");
-  const [value] = useDebounce(term, 500);
+  const value = useDebounce<string>(term, 500);
 
   useEffect(() => {
     if (pathname !== searchPath) {

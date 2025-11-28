@@ -12,7 +12,7 @@ export const useFilters = (pathname: string = "/blog") => {
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries());
-    setFilters(filterDiscoverParams(params)); // Retain only relevant params
+    setFilters(filterDiscoverParams(params));
   }, [searchParams]);
 
   const getFilter = (key: string) => filters[key] ?? undefined;
@@ -24,10 +24,9 @@ export const useFilters = (pathname: string = "/blog") => {
     }));
   };
 
-  const saveFilters = () => {
+  const saveFilters = (value?: Record<string, string>) => {
     const currentParams = Object.fromEntries(searchParams.entries());
-    const updatedParams = { ...currentParams, ...filters };
-    delete updatedParams.page;
+    const updatedParams = { ...currentParams, ...filters, ...value };
     const query = new URLSearchParams(updatedParams);
     router.replace(`${pathname}?${query.toString()}`);
   };
@@ -40,7 +39,7 @@ export const useFilters = (pathname: string = "/blog") => {
       }
       return acc;
     }, {} as Record<string, string>);
-
+    
     const query = new URLSearchParams(filteredParams);
     setFilters({});
     router.replace(`${pathname}?${query.toString()}`);

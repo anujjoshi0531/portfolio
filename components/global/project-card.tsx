@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { memo } from "react";
+import { extractPlainText } from "@/lib";
 
 interface ProjectTag {
   id: string;
@@ -17,14 +18,12 @@ interface ProjectCardProps {
 
 const ProjectCard = ({ project, size = false }: ProjectCardProps) => {
   const tags = project?.properties?.Topics?.multi_select || [];
-  const title = project.properties.Name?.title?.[0]?.plain_text || "Untitled Project";
-  const description = project.properties.Description?.rich_text
-    ?.map((text: { plain_text: any; }) => text.plain_text)
-    .join(" ") || "No description available";
+  const title = extractPlainText(project.properties.Name?.title || []) || "Untitled Project";
+  const description = extractPlainText(project.properties.Description?.rich_text || []) || "No description available";
   const image = project.properties.Thumbnail?.url || '/icon.webp';
   const githubUrl = project.properties.GitHub?.url || "#";
   const liveUrl = project.properties.URL?.url || "#";
-  const pid = project.properties.pid.rich_text[0]?.plain_text || "unknown";
+  const pid = extractPlainText(project.properties.pid?.rich_text || []) || "unknown";
   
   return (
     <figure className={`${size ? "w-full" : "w-[450px]"} h-[450px] relative photo transition-all rounded-md outline-none`}>

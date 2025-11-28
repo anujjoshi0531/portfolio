@@ -39,7 +39,7 @@ export const buildFilter = ({
   tags,
   dateFilter,
   isPublic = true,
-  isProject,
+  category,
 }: {
   query?: string;
   tags?: string[];
@@ -49,7 +49,7 @@ export const buildFilter = ({
     before?: Date;
   };
   isPublic?: boolean;
-  isProject?: boolean;
+  category?: string;
 }) => {
   const baseFilter: any[] = [
     {
@@ -58,10 +58,10 @@ export const buildFilter = ({
     },
   ];
 
-  if (isProject !== undefined) {
+  if (category !== undefined) {
     baseFilter.push({
-      property: "Project",
-      checkbox: { equals: isProject },
+      property: "Category",
+      select: { equals: category },
     });
   }
   if (query) {
@@ -112,7 +112,7 @@ export const getPagesCount = async ({
   tags,
   dateFilter,
   isPublic = true,
-  isProject,
+  category,
 }: {
   query?: string;
   tags?: string[];
@@ -122,9 +122,9 @@ export const getPagesCount = async ({
     before?: Date;
   };
   isPublic?: boolean;
-  isProject?: boolean;
+  category?: string;
 }) => {
-  const baseFilter = buildFilter({ query, tags, dateFilter, isPublic, isProject });
+  const baseFilter = buildFilter({ query, tags, dateFilter, isPublic, category });
   const { results } = await notionClient.databases.query({
     database_id: process.env.NOTION_DATABASE_ID!,
     filter: {
@@ -142,7 +142,7 @@ export const searchPages = async ({
   page = 1,
   sort_by = "published-descending",
   isPublic = true,
-  isProject,
+  category,
 }: {
   query?: string;
   tags?: string[];
@@ -155,9 +155,9 @@ export const searchPages = async ({
   page?: number;
   sort_by?: string;
   isPublic?: boolean;
-  isProject?: boolean;
+  category?: string;
 }) => {
-  const baseFilter = buildFilter({ query, tags, dateFilter, isPublic, isProject });
+  const baseFilter = buildFilter({ query, tags, dateFilter, isPublic, category });
   
   const parseSort = (sortParam: string) => {
     const [property, direction] = sortParam.split("-");
@@ -168,8 +168,7 @@ export const searchPages = async ({
     const propertyMap: Record<string, string> = {
       "published": "Published",
       "name": "Name",
-      "updates": "Last Updated",
-      "last_updated": "Last Updated",
+      "updated": "Updated",
     };
     
     const notionProperty = propertyMap[property?.toLowerCase()] || "Published";
@@ -225,14 +224,15 @@ export const searchPages = async ({
   });
 };
 
-export const getAllTags = async () => {
+export const getBlogFilters = async () => {
   const database = await notionClient.databases.retrieve({
     database_id: process.env.NOTION_DATABASE_ID!,
   });
   const tagsProperty = database.properties.Tags as any;
-  const tags = tagsProperty.multi_select?.options.map((tag: any) => (tag.name)) || [];  
-  return tags;
-
+  const categoriesProperty = database.properties.Category as any;
+  const tags = tagsProperty?.multi_select?.options.map((tag: any) => (tag.name)) || [];
+  const categories = categoriesProperty?.select?.options.map((option: any) => (option.name)) || [];
+  return { tags, categories };
 };
 
 export const getProjectType = async () => {
@@ -298,6 +298,10 @@ export const getTestimonials = async () => {
 export const getBlogs = async () => {
   const { results } = await notionClient.databases.query({
     database_id: process.env.NOTION_DATABASE_ID!,
+    filter: {
+      property: "Public",
+      checkbox: { equals: true },
+    },
   });
   return results;
 };

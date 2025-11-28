@@ -1,6 +1,4 @@
-
 export function SearchFooter({ count }: { count: number }) {
-
   return (
     <div className="border-t px-6 py-3">
       <div className="flex items-center justify-between text-xs text-muted-foreground">

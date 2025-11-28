@@ -1,10 +1,9 @@
 "use client"
 
-import { SearchResultItem } from "./search-result-item"
-import { EmptyState } from "./empty-state"
-import { SearchFooter } from "./search-footer"
+import { SearchResultItem, EmptyState, SearchFooter } from "@/components/site/search"
 
 interface SearchResultsProps {
+  className?: string;
   hasQuery: boolean
   query: string
   searchResult: any
@@ -12,9 +11,9 @@ interface SearchResultsProps {
   onClose: () => void
 }
 
-export function SearchResults({ hasQuery, query, searchResult, searchError, onClose }: SearchResultsProps) {
+export function SearchResults({ className, hasQuery, query, searchResult, searchError, onClose }: SearchResultsProps) {
   return (
-    <>
+    <div className={className}>
       <div className="max-h-[500px] overflow-y-auto">
         {!hasQuery ? (
           <EmptyState message="Start typing to search pages..." />
@@ -32,8 +31,7 @@ export function SearchResults({ hasQuery, query, searchResult, searchError, onCl
           <EmptyState variant="error" title="Search error" message="Please try again or contact support" />
         ) : null}
       </div>
-
       {hasQuery && searchResult && searchResult.results && <SearchFooter count={searchResult.results.length || 0} />}
-    </>
+    </div>
   )
 }

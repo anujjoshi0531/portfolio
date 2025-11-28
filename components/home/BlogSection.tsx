@@ -1,5 +1,4 @@
-"use client"
-import { SectionTemplate } from "@/components/global/template"
+"use client" 
 import { useRef, useEffect, useState } from "react"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
@@ -11,6 +10,7 @@ import { cn } from "@/lib"
 import BlogCardSkeleton from "@/components/blog/blog-card-skeleton"
 import { Card } from "@/components/ui/card"
 import ErrorCard from "../global/Error-Card"
+
 
 const ScrollButton = ({
   direction,
@@ -76,7 +76,7 @@ const ScrollIndicator = ({
   </div>
 )
 
-export default function BlogSection() {
+export default function BlogSection({tags}: {tags?: string[]}) {
   const [blogs, setBlogs] = useState<QueryDatabaseResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -85,33 +85,38 @@ export default function BlogSection() {
   const [canScrollRight, setCanScrollRight] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setLoading(true)
-        setError(null)
-        const response = await fetch("/api/search", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ limit: 5 }),
-        })
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch blogs")
-        }
-
-        const data = await response.json()
-        setBlogs(data)
-      } catch (error) {
-        console.error("Error fetching blogs:", error)
-        setError("Failed to load blogs. Please try again later.")
-      } finally {
-        setLoading(false)
+  const fetchBlogs = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await fetch("/api/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          limit: 5,
+          tags,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch blogs")
       }
+      
+      const data = await response.json()
+      const { results } = data
+      
+      setBlogs({ results } as QueryDatabaseResponse)
+    } catch (error) {
+      console.error("Error fetching blogs:", error)
+      setError("Failed to load blogs. Please try again later.")
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchBlogs()
   }, [])
 
@@ -220,42 +225,41 @@ export default function BlogSection() {
   const totalItems = blogs?.results?.length || 0
 
   return (
-    <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories">
-      <div className="relative">
-        {/* Gradient overlay for smooth edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+    <div className="relative">
+      {/* Gradient overlay for smooth edges */}
+      <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-        {/* Main scroll container */}
-        <div
-          ref={scrollContainerRef}
-          className={cn(
-            "flex overflow-x-auto gap-2 px-8 py-4",
-            "scrollbar-hide scroll-smooth",
-            "snap-x snap-mandatory",
-          )}
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-            WebkitOverflowScrolling: "touch",
-          }}
-        >
-          {renderContent()}
-        </div>
-
-        {/* Navigation buttons */}
-        {!loading && !error && totalItems > 0 && (
-          <>
-            <ScrollButton direction="left" onClick={() => scroll("left")} disabled={!canScrollLeft} />
-            <ScrollButton direction="right" onClick={() => scroll("right")} disabled={!canScrollRight} />
-          </>
+      {/* Main scroll container */}
+      <div
+        ref={scrollContainerRef}
+        className={cn(
+          "flex overflow-x-auto gap-2 px-8 py-4",
+          "scrollbar-hide scroll-smooth",
+          "snap-x snap-mandatory",
         )}
-
-        {/* Scroll indicator */}
-        {!loading && !error && totalItems > 2 && (
-          <ScrollIndicator totalItems={totalItems} currentIndex={currentIndex} onDotClick={scrollToIndex} />
-        )}
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
+        {renderContent()}
       </div>
-    </SectionTemplate>
+
+      {/* Navigation buttons */}
+      {!loading && !error && totalItems > 0 && (
+        <>
+          <ScrollButton direction="left" onClick={() => scroll("left")} disabled={!canScrollLeft} />
+          <ScrollButton direction="right" onClick={() => scroll("right")} disabled={!canScrollRight} />
+        </>
+      )}
+
+      {/* Scroll indicator */}
+      {!loading && !error && totalItems > 2 && (
+        <ScrollIndicator totalItems={totalItems} currentIndex={currentIndex} onDotClick={scrollToIndex} />
+      )}
+    </div>
   )
 }
+

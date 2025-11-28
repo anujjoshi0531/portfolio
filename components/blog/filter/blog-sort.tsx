@@ -5,13 +5,8 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ArrowDownWideNarrow, ChevronDown, ChevronUp, Check, CalendarArrowUp, CalendarArrowDown, ArrowUpAZ, ArrowDownZA } from "lucide-react"
-
-interface SortOption {
-  label: string
-  value: string
-  icon: React.ComponentType<{ className?: string }>
-}
+import { ArrowDownWideNarrow, ChevronDown, Check } from "lucide-react"
+import { sortOptions } from "@/lib/client/data"
 
 interface BlogSortProps {
   onSortChange?: (value: string) => void
@@ -27,40 +22,7 @@ export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue =
     }
   }, [defaultValue])
 
-  const options: SortOption[] = [
-    {
-      label: "Published (Newest First)",
-      value: "published-descending",
-      icon: CalendarArrowUp,
-    },
-    {
-      label: "Published (Oldest First)",
-      value: "published-ascending",
-      icon: CalendarArrowDown,
-    },
-    {
-      label: "Title (A-Z)",
-      value: "name-ascending",
-      icon: ArrowUpAZ,
-    },
-    {
-      label: "Title (Z-A)",
-      value: "name-descending",
-      icon: ArrowDownZA,
-    },
-    {
-      label: "Last Updated (Recent)",
-      value: "updates-descending",
-      icon: CalendarArrowUp,
-    },
-    {
-      label: "Last Updated (Oldest)",
-      value: "updates-ascending",
-      icon: CalendarArrowDown,
-    },
-  ]
-
-  const selectedOption = options.find((option) => option.value === selectedValue)
+  const selectedOption = sortOptions.find((option) => option.value === selectedValue)
 
   const handleSortChange = (value: string) => {
     setSelectedValue(value)
@@ -70,31 +32,25 @@ export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue =
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" size="sm" className="gap-2 max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap justify-start" aria-label={`Sort blogs by ${selectedOption?.label?.toLowerCase() || "default"}`}>
-          <ArrowDownWideNarrow className="size-4" />
+        <Button variant="secondary" 
+        className="rounded-md h-9 px-2 w-full justify-start"
+        size="sm" aria-label={`Sort blogs by ${selectedOption?.label?.toLowerCase() || "default"}`}>
+          {selectedOption?.icon && <selectedOption.icon />}
           {selectedOption?.label || "Sort by"}
-          <ChevronDown className="size-4" />
+          <ChevronDown className="ml-auto" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        {options.map((option) => (
+      <DropdownMenuContent align="end" className="w-fit">
+        {sortOptions.map((option) => (
           <DropdownMenuItem
             key={option.value}
             onClick={() => handleSortChange(option.value)}
-            className="flex items-center justify-between cursor-pointer"
-          >
-            <span className="flex items-center gap-2">
-              <option.icon className="size-4" />
-              {option.label}
+            className="cursor-pointer w-full">
+            <span className="flex items-center gap-2 text-sm">
+              <option.icon />
+              {option.label}              
             </span>
-            <div className="flex items-center gap-1">
-              {option.value.includes("ascending") ? (
-                <ChevronUp className="size-4 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="size-4 text-muted-foreground" />
-              )}
-              {selectedValue === option.value && <Check className="size-4 text-primary" />}
-            </div>
+            {selectedValue === option.value && <Check />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

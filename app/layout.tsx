@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { DarkProvider } from "@/components/providers/dark-provider";
 import { Toaster } from "@/components/ui/sonner";
-import HolyLoader from "holy-loader";
+import NextTopLoader from 'nextjs-toploader';
 import { Metadata } from "next";
 import { PropsWithChildren } from "react";
 import ThemePicker from "@/components/global/theme-picker";
@@ -115,14 +115,14 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${baseUrl}/opengraph-image.webp`,
+        url: `/opengraph-image.webp`,
         width: 1200,
         height: 630,
         alt: "Anuj Joshi - Portfolio",
         type: "image/webp"
       },
       {
-        url: `${baseUrl}/opengraph-image.webp`,
+        url: `/opengraph-image.webp`,
         width: 600,
         height: 600,
         alt: "Anuj Joshi Portfolio Logo",
@@ -141,7 +141,7 @@ export const metadata: Metadata = {
     title: "Anuj Joshi - Portfolio",
     description: "🚀 Computer Science Engineer from DTU | Full Stack Developer | AI/ML Enthusiast | Web3 & Robotics Explorer | Building innovative solutions with modern web technologies. Check out my latest projects and technical insights!",
     images: {
-      url: `${baseUrl}/opengraph-image.webp`,
+      url: `/opengraph-image.webp`,
       alt: "Anuj Joshi - Portfolio",
       width: 1200,
       height: 630
@@ -220,7 +220,7 @@ export default async function Layout({
               disableTransitionOnChange
               storageKey="station-theme"
               defaultTheme="dark">
-              <HolyLoader color="white" />
+              <NextTopLoader easing="ease" speed={200} initialPosition={0.08} showSpinner={false} color="#fff" />
               <Navbar />
               <main className="lg:mx-[8rem] md:mx-[4rem] my-[3rem] sm:mx-[2rem] mx-6 max-w-screen">
                 {children}
