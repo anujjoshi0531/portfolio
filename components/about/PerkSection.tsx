@@ -1,7 +1,8 @@
 import { FaCertificate, FaCode } from "react-icons/fa6";
 import { perkData } from "@/lib";
-import { Perk, PerkAnimation, PerkSkeleton } from "@/components/global/perk";
+import { Perk, PerkAnimation } from "@/components/global/perk";
 import { useEffect, useState, useRef } from "react";
+import { config } from "@/lib/constant";
 
 export default function PerkSection() {
   const [loading, setLoading] = useState(true);
@@ -50,7 +51,7 @@ export default function PerkSection() {
 
       const ratingPromises = perkData.map((perk) =>
         fetch(
-          `${process.env.NEXT_PUBLIC_CONTEST_API}/${perk.platform}?username=${perk.username}`,
+          `${config.CONTEST_API}/${perk.platform}?username=${perk.username}`,
           { next: { revalidate: 3600 } }
         )
           .then((res) => {

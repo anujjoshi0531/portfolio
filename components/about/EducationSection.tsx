@@ -37,11 +37,10 @@ const EduCard = ({ edu }: { edu: Education }) => {
     >
       {/* Icon */}
       <motion.div
-        className={`md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative isolate rounded-full p-2 transition-all duration-150 shrink-0 ${
-          hasPassed
+        className={`md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative isolate rounded-full p-2 transition-all duration-150 shrink-0 ${hasPassed
             ? "bg-theme text-muted scale-110 shadow-lg shadow-theme"
             : "bg-muted text-theme"
-        }`}
+          }`}
       >
         <FaGraduationCap className="text-2xl" />
       </motion.div>
@@ -66,7 +65,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
             </div>
             <Link href={edu.url || "#"} className="font-medium link text-sm my-1" aria-label={`Visit ${edu.institution} website`}>
               {edu.institution},&nbsp;
-                <span>{edu.place}</span>
+              <span>{edu.place}</span>
             </Link>
           </div>
         </div>
@@ -174,7 +173,7 @@ export default function EducationSection() {
   }, []);
 
   return (
-    <SectionTemplate title="Academics" subtitle="My Academic Journey">
+    <SectionTemplate title="Academics" subtitle="My Academic Journey" id="education">
       <div ref={ref} className="space-y-20 relative">
         <div className="absolute inset-0 ml-5 -translate-x-1 md:mx-auto md:translate-x-0 translate-y-32 h-[72%] w-1 bg-muted" />
         <motion.div

@@ -1,9 +1,10 @@
 import { extractPlainText } from '@/lib';
 import { getBlogs } from '@/lib/server/notion';
 import type { MetadataRoute } from 'next';
+import { config } from '@/lib/constant';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://anujjoshi.netlify.app';
+    const baseUrl = config.BASE_URL;
     const pages = await getBlogs();
     const now = new Date();
 

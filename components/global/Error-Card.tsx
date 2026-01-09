@@ -40,7 +40,7 @@ export default function ErrorCard({
     <Card className={cn("bg-destructive/5 border hover:scale-[1.02] duration-300 border-destructive/20 rounded-2xl w-full max-w-md mx-auto shadow-lg", className)}> 
       <CardHeader className="pb-2">
         <div className="flex items-center gap-2">
-          <AlertCircle className="h-5 w-5 text-destructive" />
+          <AlertCircle className="size-5 text-destructive" />
           <CardTitle className="text-destructive text-xl">{title}</CardTitle>
         </div>
         <CardDescription>{description}</CardDescription>
@@ -63,7 +63,7 @@ export default function ErrorCard({
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
         <Button variant="destructive" size="md" className="flex mx-auto" onClick={handleReset} aria-label="Try again to resolve the error">
-          <RefreshCw className="mr-2 h-4 w-4" />
+          <RefreshCw className="mr-2 size-4" />
           Try Again
         </Button>
       </CardFooter>

@@ -45,23 +45,19 @@ const TestimonialCard = ({
 }) => {
   return (
     <div
-      className={`text-center ${
-        isVisible ? "" : "opacity-0"
-      } [grid-area:stack] transition-all duration-700`}
+      className={`text-center ${isVisible ? "" : "opacity-0"
+        } [grid-area:stack] transition-all duration-700`}
     >
       <blockquote
-        className={`block bg-muted hover:bg-muted rounded-md p-4 text-md relative isolate transition-all duration-500 ${
-          isVisible ? "scale-100" : "scale-0"
-        } before:absolute before:bg-muted before:w-6 before:h-6 before:rotate-45 before:-bottom-2 before:left-2/4 before:-translate-x-2/4 before:-z-10 before:transition before:duration-500 before:delay-500 ${
-          isVisible ? "before:translate-y-0" : "before:-translate-y-4"
-        }`}
+        className={`block bg-muted hover:bg-muted rounded-md p-4 text-md relative isolate transition-all duration-500 ${isVisible ? "scale-100" : "scale-0"
+          } before:absolute before:bg-muted before:w-6 before:h-6 before:rotate-45 before:-bottom-2 before:left-2/4 before:-translate-x-2/4 before:-z-10 before:transition before:duration-500 before:delay-500 ${isVisible ? "before:translate-y-0" : "before:-translate-y-4"
+          }`}
       >
         {testimonial.review}
       </blockquote>
       <div
-        className={`text-sm flex flex-col items-center gap-2 mt-6 transition-all duration-500 ${
-          isVisible ? "translate-y-0" : "translate-y-24"
-        }`}
+        className={`text-sm flex flex-col items-center gap-2 mt-6 transition-all duration-500 ${isVisible ? "translate-y-0" : "translate-y-24"
+          }`}
       >
         <Avatar className="w-12 h-12">
           <AvatarImage src={testimonial.avatar || "/icon.webp"} alt={testimonial.name} />
@@ -140,6 +136,7 @@ export default function TestimonialSection() {
     <SectionTemplate
       title="Testimonials"
       subtitle="What others say about me"
+      id="testimonials"
       className="lg:flex items-baseline justify-between"
     >
       <div className="lg:w-4/5 mx-auto mt-6 sm:grid grid-cols-[40px_auto_40px] [grid-template-areas:'nav-left_slider_nav-right'] gap-4 md:gap-6">

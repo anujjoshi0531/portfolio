@@ -23,12 +23,12 @@ export default async function Page() {
   return (
     <main className="space-y-24">
       <Hero />
-      <SectionTemplate title="About Me" subtitle="My Introduction">
+      <SectionTemplate title="About Me" subtitle="My Introduction" id="about">
         <AboutSection />
       </SectionTemplate>
       <ExperienceSection />
       <ProjectSection />
-      <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories">
+      <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories" id="blogs">
         <BlogSection />
       </SectionTemplate>
       <QuoteSection />

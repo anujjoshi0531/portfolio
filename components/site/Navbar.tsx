@@ -11,7 +11,6 @@ import {
 import { socialLinks } from "@/lib";
 import { TbHexagonLetterAFilled } from "react-icons/tb";
 import ModeToggle from "@/components/global/mode-toggle";
-import ThemePicker from "@/components/global/theme-picker";
 import { SocialIcon } from "@/components/global/social";
 import { containerVars, menuVars, mobileLinkVars } from "@/components/animate/animate";
 import Link from "next/link";
@@ -176,7 +175,6 @@ export default function Navbar() {
           </Button>
         </div>
       </motion.header>
-      <ThemePicker />
     </>
   );
 }

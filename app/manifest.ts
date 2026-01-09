@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://anujjoshi.netlify.app";
+import { config } from "@/lib/constant";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -80,7 +79,7 @@ export default function manifest(): MetadataRoute.Manifest {
     related_applications: [
       {
         platform: "webapp",
-        url: baseUrl,
+        url: config.BASE_URL,
       }
     ],
     prefer_related_applications: false,

@@ -85,9 +85,8 @@ export default function ExperienceSection() {
           {types.map((type) => (
             <li
               key={type}
-              className={`w-fit md:w-full ${
-                type === selectedType ? "bg-muted border-l-2 border-theme" : ""
-              }`}
+              className={`w-fit md:w-full ${type === selectedType ? "bg-muted border-l-2 border-theme" : ""
+                }`}
             >
               <button
                 className="h-10 px-4 flex text-lg items-center justify-between cursor-pointer w-full text-nowrap hover:bg-muted group relative"
@@ -163,7 +162,7 @@ export default function ExperienceSection() {
   }
 
   return (
-    <SectionTemplate title="Experience" subtitle="Where I've worked">
+    <SectionTemplate title="Experience" subtitle="Where I've worked" id="experience">
       {renderContent()}
     </SectionTemplate>
   )
@@ -226,12 +225,12 @@ export function ExperienceSkeleton() {
         <div className="sm:flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Skeleton className="h-6 w-48" />
-            <Skeleton className="h-8 w-8 rounded" />
+            <Skeleton className="size-8 rounded" />
           </div>
           <Skeleton className="h-4 w-32 mt-2 sm:mt-0" />
         </div>
         <div className="mt-2">
-          <Skeleton className="h-4 w-40" />
+          <Skeleton className="size-40" />
         </div>
         <ul className="list-none flex flex-col gap-2 mt-4 pl-5">
           {Array.from({ length: 4 }).map((_, index) => (

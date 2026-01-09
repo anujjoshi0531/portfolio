@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 interface TemplateProps {
   title?: string;
   subtitle?: string;
+  id?: string;
   children?: ReactNode;
   className?: string;
 }
@@ -13,11 +14,12 @@ interface TemplateProps {
 const SectionTemplate: React.FC<TemplateProps> = React.memo(({
   title,
   subtitle,
+  id,
   children,
   className = "",
 }) => {
   return (
-    <section className={`w-full pt-8 ${className}`}>
+    <section className={`w-full pt-8 ${className}`} id={id}>
       <motion.div
         className="border-l-[2.5px] border-theme px-4 my-12 select-none"
         initial="hidden"

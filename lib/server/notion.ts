@@ -1,10 +1,11 @@
 import { Client } from "@notionhq/client";
 import { NotionAPI } from "notion-client";
 import { validate } from "uuid";
+import { config } from "../constant";
 
 export const notion = new NotionAPI();
 export const notionClient = new Client({
-  auth: process.env.NOTION_TOKEN,
+  auth: config.NOTION_TOKEN,
 });
 
 export const fetchPage = async (param: string) => {
@@ -15,7 +16,7 @@ export const fetchPage = async (param: string) => {
     page = await notionClient.pages.retrieve({ page_id: param }).catch(() => null);
   } else {
     const { results } = await notionClient.databases.query({
-      database_id: process.env.NOTION_DATABASE_ID!,
+      database_id: config.NOTION_DATABASE_ID!,
       filter: {
         property: "Slug",
         rich_text: { equals: param },
@@ -126,7 +127,7 @@ export const getPagesCount = async ({
 }) => {
   const baseFilter = buildFilter({ query, tags, dateFilter, isPublic, category });
   const { results } = await notionClient.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID!,
+    database_id: config.NOTION_DATABASE_ID!,
     filter: {
       and: baseFilter,
     },
@@ -190,7 +191,7 @@ export const searchPages = async ({
     let currentPage = 1;
     while (currentPage < page) {
       const skipPage = await notionClient.databases.query({
-        database_id: process.env.NOTION_DATABASE_ID!,
+        database_id: config.NOTION_DATABASE_ID!,
         filter: {
           and: baseFilter,
         },
@@ -214,7 +215,7 @@ export const searchPages = async ({
   }
   
   return await notionClient.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID!,
+    database_id: config.NOTION_DATABASE_ID!,
     filter: {
       and: baseFilter,
     },
@@ -226,7 +227,7 @@ export const searchPages = async ({
 
 export const getBlogFilters = async () => {
   const database = await notionClient.databases.retrieve({
-    database_id: process.env.NOTION_DATABASE_ID!,
+    database_id: config.NOTION_DATABASE_ID!,
   });
   const tagsProperty = database.properties.Tags as any;
   const categoriesProperty = database.properties.Category as any;
@@ -237,7 +238,7 @@ export const getBlogFilters = async () => {
 
 export const getProjectType = async () => {
   const database = await notionClient.databases.retrieve({
-    database_id: process.env.NOTION_PROJECT_ID!,
+    database_id: config.NOTION_PROJECT_ID!,
   });
   const typeProperty = database.properties.Category as any;
   return typeProperty.select?.options;
@@ -245,7 +246,7 @@ export const getProjectType = async () => {
 
 export const getProject = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: process.env.NOTION_PROJECT_ID!,
+    database_id: config.NOTION_PROJECT_ID!,
     sorts: [
       {
         property: "End",
@@ -258,7 +259,7 @@ export const getProject = async () => {
 
 export const getExperience = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: process.env.NOTION_EXPERIENCE_ID!,
+    database_id: config.NOTION_EXPERIENCE_ID!,
     sorts: [
       {
         property: "End",
@@ -271,7 +272,7 @@ export const getExperience = async () => {
 
 export const getEducation = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: process.env.NOTION_EDUCATION_ID!,
+    database_id: config.NOTION_EDUCATION_ID!,
     sorts: [
       {
         property: "End",
@@ -284,7 +285,7 @@ export const getEducation = async () => {
 
 export const getTestimonials = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: process.env.NOTION_TESTIMONIAL_ID!,
+    database_id: config.NOTION_TESTIMONIAL_ID!,
     sorts: [
       {
         property: "Date",
@@ -297,7 +298,7 @@ export const getTestimonials = async () => {
 
 export const getBlogs = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: process.env.NOTION_DATABASE_ID!,
+    database_id: config.NOTION_DATABASE_ID!,
     filter: {
       property: "Public",
       checkbox: { equals: true },

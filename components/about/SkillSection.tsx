@@ -27,7 +27,7 @@ const SkillItem = ({ skill }: { skill: Skill }) => {
 
 export default function SkillSection() {
   return (
-    <SectionTemplate title="My Skills" subtitle="Technologies I work with">
+    <SectionTemplate title="My Skills" subtitle="Technologies I work with" id="skills">
       <motion.div
         className="flex justify-center items-start w-full gap-8 flex-wrap text-center"
         variants={containerVariants}

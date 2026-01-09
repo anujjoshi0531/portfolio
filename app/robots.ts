@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { config } from "@/lib/constant";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       disallow: [],
     },
-    sitemap: `${process.env.NEXT_PUBLIC_BASE_URL}/sitemap.xml`,
+    sitemap: `${config.BASE_URL}/sitemap.xml`,
   };
 }
