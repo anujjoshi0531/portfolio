@@ -52,7 +52,7 @@ export default function Navbar() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="origin-top fixed z-[100] top-0 left-0 h-screen w-screen bg-muted text-center font-semibold uppercase">
+            className="origin-top fixed z-100 top-0 left-0 h-screen w-screen bg-muted text-center font-semibold uppercase">
             <button
               className="absolute right-10 top-8 cursor-pointer text-2xl active:scale-75"
               onClick={toggleMenu}

@@ -187,7 +187,7 @@ export default function BlogSection({tags}: {tags?: string[]}) {
 
     if (!blogs || !blogs.results || blogs.results.length === 0) {
       return (
-          <Card className="bg-muted/30 backdrop-blur-sm border border-border/50 rounded-2xl p-8 px-12 text-center max-w-md mx-auto">
+          <Card className="bg-muted/30 backdrop-blur-xs border border-border/50 rounded-2xl p-8 px-12 text-center max-w-md mx-auto">
             <Sparkles className="size-16 text-muted-foreground mx-auto" />
             <div className="text-2xl font-semibold">No blogs yet</div>
             <p className="text-muted-foreground">Check back soon for fresh content and insights!</p>
@@ -200,7 +200,7 @@ export default function BlogSection({tags}: {tags?: string[]}) {
         {blogs.results.map((blog, index) => (
           <div
             key={blog.id}
-            className="flex-shrink-0 w-[350px] transform transition-all duration-300 hover:scale-[1.02]"
+            className="shrink-0 w-[350px] transform transition-all duration-300 hover:scale-[1.02]"
             style={{
               animationDelay: `${index * 100}ms`,
             }}
@@ -227,8 +227,8 @@ export default function BlogSection({tags}: {tags?: string[]}) {
   return (
     <div className="relative">
       {/* Gradient overlay for smooth edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-8 bg-linear-to-r from-background to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-8 bg-linear-to-l from-background to-transparent z-10 pointer-events-none" />
 
       {/* Main scroll container */}
       <div

@@ -36,7 +36,7 @@ export default function SearchButton() {
         </DialogTrigger>
       </TooltipComponent>
 
-      <DialogContent className="max-w-4xl p-0 z-[1000000]">
+      <DialogContent className="max-w-4xl p-0 z-1000000">
         <DialogHeader className="px-6 py-2">
           <DialogTitle className="sr-only">Search</DialogTitle>
         </DialogHeader>

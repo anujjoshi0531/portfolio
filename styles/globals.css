@@ -1,16 +1,192 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin 'tailwindcss-animate';
 
-.notion__container .notion-header {
-  display: none !important;
+
+@theme {
+  --color-theme: hsl(var(--theme));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-speeder: speeder 0.4s linear infinite;
+  --animate-lf: lf 0.6s linear infinite;
+  --animate-spin-slow: spin 5s linear infinite;
+  --animate-animate-icon: animateIcon 0.5s ease-in-out infinite;
+  --animate-profile: profile 8s ease-in-out infinite 1s;
+  --animate-quote: quote 8s infinite;
+  --animate-typing-dot-bounce: typing-dot-bounce 1.25s ease-out infinite;
+
+  @keyframes animateIcon {
+    0% {
+      top: 0;
+    }
+
+    100% {
+      top: 90%;
+    }
+  }
+
+  @keyframes profile {
+    0% {
+      border-radius: 60% 40% 40% 70%/60% 20% 70% 40%;
+    }
+
+    50% {
+      border-radius: 30% 60% 70% 40%/50% 60% 30% 60%;
+    }
+
+    100% {
+      border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
+    }
+  }
+
+  @keyframes speeder {
+    0% {
+      transform: translate(2px, 1px) rotate(0deg);
+    }
+
+    10% {
+      transform: translate(-1px, -3px) rotate(-1deg);
+    }
+
+    20% {
+      transform: translate(-2px, 0px) rotate(1deg);
+    }
+
+    30% {
+      transform: translate(1px, 2px) rotate(0deg);
+    }
+
+    40% {
+      transform: translate(1px, -1px) rotate(1deg);
+    }
+
+    50% {
+      transform: translate(-1px, 3px) rotate(-1deg);
+    }
+
+    60% {
+      transform: translate(-1px, 1px) rotate(0deg);
+    }
+
+    70% {
+      transform: translate(3px, 1px) rotate(-1deg);
+    }
+
+    80% {
+      transform: translate(-2px, -1px) rotate(1deg);
+    }
+
+    90% {
+      transform: translate(2px, 1px) rotate(0deg);
+    }
+
+    100% {
+      transform: translate(1px, -2px) rotate(-1deg);
+    }
+  }
+
+  @keyframes lf {
+    0% {
+      left: 200%;
+    }
+
+    100% {
+      left: -200%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes quote {
+    0% {
+      transform: translate(0px, 0px);
+    }
+
+    10% {
+      transform: translate(-50px, 0px);
+    }
+
+    20% {
+      transform: translate(-80px, 0px);
+    }
+
+    30% {
+      transform: translate(-100px, 0px);
+    }
+
+    40% {
+      transform: translate(-80px, 0px);
+    }
+
+    50% {
+      transform: translate(-50px, 0px);
+    }
+
+    60% {
+      transform: translate(0px, 0px);
+    }
+
+    70% {
+      transform: translate(50px, 0px);
+    }
+
+    80% {
+      transform: translate(100px, 0px);
+    }
+
+    90% {
+      transform: translate(50px, 0px);
+    }
+
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes typing-dot-bounce {
+
+    0%,
+    40% {
+      transform: translateY(0);
+    }
+
+    20% {
+      transform: translateY(-0.25rem);
+    }
+  }
 }
 
 @layer base {
 
-  :root,
-  .chatbot-theme {
+  :root {
     --theme: 140 100% 55%;
+    --chatbot-theme: hsl(var(--theme));
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -38,8 +214,7 @@
     --radius: 0.5rem;
   }
 
-  .dark,
-  .dark .chatbot-theme {
+  .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -65,16 +240,24 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
 
-
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  .chatbot-theme {
+    --primary: var(--chatbot-theme) !important;
+    --ring: var(--chatbot-theme) !important;
+  }
+}
+
+@layer utilities {
+  .notion__container .notion-header {
+    display: none !important;
   }
 
   .custom-bullet {
@@ -129,4 +312,15 @@
 
 .bar {
   background-color: hsl(var(--theme));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 5px;
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 2px;
 }

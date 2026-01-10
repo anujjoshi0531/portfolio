@@ -62,7 +62,7 @@ export default function ProjectSection({ className }: ProjectSectionProps) {
       return (
         <div className="flex gap-4">
           {Array.from({ length: 3 }).map((_, index) => (
-            <Skeleton key={index} className="h-[450px] w-[450px] rounded-lg flex-shrink-0" />
+            <Skeleton key={index} className="h-[450px] w-[450px] rounded-lg shrink-0" />
           ))}
         </div>
       )
@@ -87,7 +87,7 @@ export default function ProjectSection({ className }: ProjectSectionProps) {
         {projects.map((project: any, index: number) => (
           <ProjectCard key={`project-${index}`} project={project} />
         ))}
-        <div className="flex items-center justify-center my-auto mx-8 flex-shrink-0">
+        <div className="flex items-center justify-center my-auto mx-8 shrink-0">
           <Link href="/project" className="block" aria-label="View all projects">
             <MagnetBtn text="Projects &nbsp;&#183;&nbsp; Projects &nbsp;&#183;&nbsp; Projects &nbsp;&#183;&nbsp; Projects &nbsp;&#183;&nbsp;">
               <MdArrowOutward className="ml-2" />

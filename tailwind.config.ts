@@ -184,19 +184,6 @@ const config: Config = {
 		},
 	},
 	plugins: [
-		function ({ addUtilities }: PluginAPI) {
-			addUtilities({
-				"::-webkit-scrollbar": {
-					width: "10px",
-					height: "5px",
-					background: "hsl(var(--muted))",
-				},
-				"::-webkit-scrollbar-thumb": {
-					background: "hsl(var(--primary))",
-					borderRadius: "2px",
-				},
-			});
-		},
 		require("tailwindcss-animate"),
 	],
 };

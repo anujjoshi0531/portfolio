@@ -26,7 +26,7 @@ const ProjectCard = ({ project, size = false }: ProjectCardProps) => {
   const pid = extractPlainText(project.properties.pid?.rich_text || []) || "unknown";
   
   return (
-    <figure className={`${size ? "w-full" : "w-[450px]"} h-[450px] relative photo transition-all rounded-md outline-none`}>
+    <figure className={`${size ? "w-full" : "w-[450px]"} h-[450px] relative photo transition-all rounded-md outline-hidden`}>
       <div className="w-full h-full bottom-photo absolute bg-muted flex flex-col justify-center px-5 leading-5 md:leading-6">
         <Link
           href={githubUrl}

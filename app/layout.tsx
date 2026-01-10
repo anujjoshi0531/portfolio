@@ -8,7 +8,7 @@ import { Metadata } from "next";
 import { PropsWithChildren } from "react";
 import ThemePicker from "@/components/global/theme-picker";
 import Navbar from "@/components/site/Navbar";
-import PopupChatbot from "@/components/global/popup-chatbot";
+import PopupChatbot from "@/components/providers/chatbot-provider";
 import Footer from "@/components/site/Footer";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { config } from "@/lib/constant";
@@ -223,7 +223,7 @@ export default async function Layout({
             defaultTheme="dark">
             <NextTopLoader easing="ease" speed={200} initialPosition={0.08} showSpinner={false} color="#fff" />
             <Navbar />
-            <main className="lg:mx-[8rem] md:mx-[4rem] my-[3rem] sm:mx-[2rem] mx-6 max-w-screen">
+            <main className="lg:mx-32 md:mx-16 my-12 sm:mx-8 mx-6 max-w-screen">
               {children}
               <PopupChatbot />
               <ThemePicker />

@@ -75,7 +75,7 @@ const nextConfig = {
     // Suppress the critical dependency warning from keyv (used by notion-client)
     config.module = config.module || {};
     config.module.exprContextCritical = false;
-    
+
     // Alternative: Ignore specific warnings using webpack's ignoreWarnings
     config.ignoreWarnings = [
       {
@@ -83,7 +83,7 @@ const nextConfig = {
         message: /Critical dependency: the request of a dependency is an expression/,
       },
     ];
-    
+
     return config;
   },
 }

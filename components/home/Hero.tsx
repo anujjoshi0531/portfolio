@@ -51,7 +51,7 @@ export default function Hero() {
               className="overflow-hidden whitespace-nowrap">
               <Typewriter
                 texts={["A Fullstack Developer", "A Machine Learning Enthusiast", "Tech Enthusiast"]}
-                className="h-8 font-[500] text-[1rem] sm:text-[1.5rem] md:text-2xl"
+                className="h-8 font-medium text-[1rem] sm:text-[1.5rem] md:text-2xl"
               />
             </motion.h2>
           </motion.div>

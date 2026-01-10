@@ -235,7 +235,7 @@ export function ExperienceSkeleton() {
         <ul className="list-none flex flex-col gap-2 mt-4 pl-5">
           {Array.from({ length: 4 }).map((_, index) => (
             <li key={index} className="flex items-start gap-2">
-              <div className="w-1 h-1 bg-muted rounded-full mt-2 flex-shrink-0" />
+              <div className="w-1 h-1 bg-muted rounded-full mt-2 shrink-0" />
               <Skeleton className="h-4 w-full max-w-md" />
             </li>
           ))}

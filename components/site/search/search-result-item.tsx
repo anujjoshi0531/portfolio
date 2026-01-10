@@ -28,7 +28,7 @@ export const SearchResultItem = (function SearchResultItem({ page, onClose }: Se
       aria-label={`View ${title || "page"}`}
     >
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 mt-1">
+        <div className="shrink-0 mt-1">
           {page.icon?.emoji ? (
             <span className="text-lg">{page.icon.emoji}</span>
           ) : (

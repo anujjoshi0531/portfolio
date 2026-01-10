@@ -21,10 +21,10 @@ export default function BlogCardSkeleton({ variant = "vertical", className }: Bl
           )}
         >
           {/* Image placeholder */}
-          <div className="absolute inset-0 bg-gradient-to-br from-muted/80 to-muted/40" />
+          <div className="absolute inset-0 bg-linear-to-br from-muted/80 to-muted/40" />
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
 
           {/* Tags skeleton */}
           <div className="absolute bottom-2 left-2 flex gap-1">
@@ -34,7 +34,7 @@ export default function BlogCardSkeleton({ variant = "vertical", className }: Bl
         </div>
 
         {/* Content Section Skeleton */}
-        <div className={cn("flex flex-col justify-between flex-grow", !isVertical && "sm:w-3/5 py-6")}>
+        <div className={cn("flex flex-col justify-between grow", !isVertical && "sm:w-3/5 py-6")}>
           <div>
             {/* Title skeleton */}
             <CardHeader>

@@ -56,7 +56,7 @@ export default function ErrorCard({
           <div className="space-y-2">
             <Separator />
             <div className="rounded-md bg-background p-3">
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap break-words font-mono">{errorMessage}</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap wrap-break-word font-mono">{errorMessage}</p>
             </div>
           </div>
         )}

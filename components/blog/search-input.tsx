@@ -73,7 +73,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   };
 
   return (
-    <div className="relative z-[1000]">
+    <div className="relative z-1000">
       <div ref={containerRef} className="relative flex w-full">
         <Input
           ref={inputRef}

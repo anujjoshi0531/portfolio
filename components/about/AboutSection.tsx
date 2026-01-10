@@ -32,7 +32,7 @@ export default function AboutSection() {
           </div>
         </motion.div>
         <motion.div
-          className="flex flex-col gap-[1rem] lg:col-span-3"
+          className="flex flex-col gap-4 lg:col-span-3"
           variants={childVariants}>
           <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
             Hello! My name is Anuj Joshi, and I am a passionate software engineer with a keen interest in Web Development and Machine Learning.

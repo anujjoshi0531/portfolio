@@ -30,7 +30,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     return (
       <div className="px-6">
         <div className="flex items-center gap-4 border-b pb-4">
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             {isLoading ? (
               <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />
             ) : (
@@ -40,7 +40,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 
           <input
             ref={ref}
-            className="flex-1 text-base placeholder:text-muted-foreground border-none outline-none bg-transparent"
+            className="flex-1 text-base placeholder:text-muted-foreground border-none outline-hidden bg-transparent"
             placeholder="Search pages..."
             value={query}
             onChange={handleQueryChange}

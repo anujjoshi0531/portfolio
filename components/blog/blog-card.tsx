@@ -54,7 +54,7 @@ export default function BlogCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1 left-2 flex gap-1">
             {tags.map((topic: any) => (
               <Badge key={topic.id}>{topic.name}</Badge>
@@ -63,7 +63,7 @@ export default function BlogCard({
         </div>
         <div
           className={cn(
-            "flex flex-col justify-between flex-grow",
+            "flex flex-col justify-between grow",
             !isVertical && "sm:w-3/5 py-6"
           )}>
           <div>
