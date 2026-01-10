@@ -45,7 +45,7 @@ export default function ChatbotProvider() {
         width: "45px",
         height: "45px",
       }}
-      defaultOpen={true}
+      defaultOpen={false}
       width={450}
       height={600}
       tooltip="Chat with AI"
