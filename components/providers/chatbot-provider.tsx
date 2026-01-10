@@ -39,14 +39,13 @@ export default function ChatbotProvider() {
         ],
       }}
       placeholder="Ask me about my portfolio..."
-      stream={true}
+      stream={false}
       storageKey="portfolio-chat-session"
-      className="h-full"
       buttonStyle={{
         width: "45px",
         height: "45px",
       }}
-      defaultOpen={false}
+      defaultOpen={true}
       width={450}
       height={600}
       tooltip="Chat with AI"
