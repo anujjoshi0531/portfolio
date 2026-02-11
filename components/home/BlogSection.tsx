@@ -1,5 +1,5 @@
-"use client" 
-import { useRef, useEffect, useState } from "react"
+"use client"
+import { useRef, useEffect, useState, useCallback } from "react"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
 import BlogCard from "@/components/blog/blog-card"
@@ -76,7 +76,7 @@ const ScrollIndicator = ({
   </div>
 )
 
-export default function BlogSection({tags}: {tags?: string[]}) {
+export default function BlogSection({ tags }: { tags?: string[] }) {
   const [blogs, setBlogs] = useState<QueryDatabaseResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -85,7 +85,7 @@ export default function BlogSection({tags}: {tags?: string[]}) {
   const [canScrollRight, setCanScrollRight] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const fetchBlogs = async () => {
+  const fetchBlogs = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -99,14 +99,14 @@ export default function BlogSection({tags}: {tags?: string[]}) {
           tags,
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch blogs")
       }
-      
+
       const data = await response.json()
       const { results } = data
-      
+
       setBlogs({ results } as QueryDatabaseResponse)
     } catch (error) {
       console.error("Error fetching blogs:", error)
@@ -114,11 +114,11 @@ export default function BlogSection({tags}: {tags?: string[]}) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [tags])
 
   useEffect(() => {
     fetchBlogs()
-  }, [])
+  }, [fetchBlogs])
 
   // Update scroll button states
   const updateScrollButtons = () => {
@@ -187,11 +187,11 @@ export default function BlogSection({tags}: {tags?: string[]}) {
 
     if (!blogs || !blogs.results || blogs.results.length === 0) {
       return (
-          <Card className="bg-muted/30 backdrop-blur-xs border border-border/50 rounded-2xl p-8 px-12 text-center max-w-md mx-auto">
-            <Sparkles className="size-16 text-muted-foreground mx-auto" />
-            <div className="text-2xl font-semibold">No blogs yet</div>
-            <p className="text-muted-foreground">Check back soon for fresh content and insights!</p>
-          </Card>
+        <Card className="bg-muted/30 backdrop-blur-xs border border-border/50 rounded-2xl p-8 px-12 text-center max-w-md mx-auto">
+          <Sparkles className="size-16 text-muted-foreground mx-auto" />
+          <div className="text-2xl font-semibold">No blogs yet</div>
+          <p className="text-muted-foreground">Check back soon for fresh content and insights!</p>
+        </Card>
       )
     }
 
@@ -209,14 +209,14 @@ export default function BlogSection({tags}: {tags?: string[]}) {
           </div>
         ))}
         <div className="flex justify-center items-center min-w-[350px] p-4">
-            <Link href="/blog" className="relative" aria-label="View all blog posts">
-              <MagnetBtn text="READ MORE &#183;READ MORE &#183;READ MORE &#183;READ MORE &#183;">
-                <div className="flex items-center space-x-2">
-                  <MdArrowOutward />
-                </div>
-              </MagnetBtn>
-            </Link>
-          
+          <Link href="/blog" className="relative" aria-label="View all blog posts">
+            <MagnetBtn text="READ MORE &#183;READ MORE &#183;READ MORE &#183;READ MORE &#183;">
+              <div className="flex items-center space-x-2">
+                <MdArrowOutward />
+              </div>
+            </MagnetBtn>
+          </Link>
+
         </div>
       </>
     )

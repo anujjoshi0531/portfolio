@@ -6,12 +6,12 @@ import { fetchPage } from "@/lib/server/notion";
 import { redirect } from "next/navigation";
 import { validate } from "uuid";
 
-export const revalidate = 60 * 60; // Revalidate every hour
+export const revalidate = 3600; // Revalidate every hour
 
 export async function generateMetadata({ params }: { params: Promise<{ pageId: string }> }) {
   const { pageId } = await params;
   const { data } = await fetchPage(pageId);
-  
+
   if (!data) {
     return {
       title: "Page Not Found",
@@ -48,8 +48,8 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
   const description = extractPlainText(props.Description?.rich_text) || "No description available.";
   const image = props.Thumbnail?.url || `/opengraph-image.webp`;
   const slug = extractPlainText(props.Slug?.rich_text);
-  
-  
+
+
   return {
     title,
     description,
@@ -81,7 +81,7 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
   };
 }
 
-export default async function page({ params } : {
+export default async function page({ params }: {
   params: Promise<{ pageId: string }>;
 }) {
   const { pageId } = await params;
@@ -91,10 +91,10 @@ export default async function page({ params } : {
     if (slug) redirect(`/blog/${slug}`);
   }
   if (!data) return <NotFound />;
-  
+
   const tags = (data as any)?.properties?.Tags?.multi_select?.map((tag: any) => tag.name);
   return <>
-  <NotionPage recordMap={recordMap} />
-  <BlogSection tags={tags} />
+    <NotionPage recordMap={recordMap} />
+    <BlogSection tags={tags} />
   </>;
 }

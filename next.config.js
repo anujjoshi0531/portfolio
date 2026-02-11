@@ -57,7 +57,6 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
@@ -66,10 +65,7 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
-  // Optimize production builds
   productionBrowserSourceMaps: false,
-  // Optimize font loading
-  optimizeFonts: true,
   // Suppress webpack warnings from third-party dependencies
   webpack: (config, { isServer }) => {
     // Suppress the critical dependency warning from keyv (used by notion-client)
