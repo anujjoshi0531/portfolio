@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { v7 as uuidv7 } from "uuid";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -60,3 +61,16 @@ export const hexToHSL = (hex: string): string => {
 export const formatDate = (date: Date): string => {
   return new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" }).format(date);
 };
+
+export function getUserId() {
+  if (typeof window === "undefined") return null;
+
+  let userId = localStorage.getItem("portfolio-user-id");
+
+  if (!userId) {
+    userId = uuidv7();
+    localStorage.setItem("portfolio-user-id", userId);
+  }
+
+  return userId;
+}
