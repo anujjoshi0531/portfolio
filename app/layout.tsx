@@ -225,9 +225,9 @@ export default async function Layout({
             <Navbar />
             <main className="lg:mx-32 md:mx-16 my-12 sm:mx-8 mx-6 max-w-screen">
               {children}
-              <PopupChatbot />
-              <ThemePicker />
             </main>
+            <PopupChatbot />
+            <ThemePicker />
             <Footer />
             <Toaster richColors />
           </DarkProvider>

@@ -76,7 +76,7 @@ export default function ThemePicker() {
               className={cn(
                 "size-5 rounded-full cursor-pointer hover:scale-110 border border-border transition-all duration-150 flex items-center justify-center overflow-hidden",
                 currentTheme === hexToHSL(customColor) &&
-                  "ring-1 ring-primary ring-offset-1"
+                "ring-1 ring-primary ring-offset-1"
               )}
               onClick={handleCustomColorClick}
               aria-label="Choose custom color"

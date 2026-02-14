@@ -3,15 +3,16 @@
 import { config } from "@/lib/constant";
 import dynamic from "next/dynamic";
 import "chatui/dist/chatui.css";
-import { MessageCircleIcon } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { getUserId } from "@/lib/utils";
+import { MagnetBtn } from "@/components/animate/MagnetBtn";
 
 const PopupChatbot = dynamic(
   () => import("chatui").then((mod) => mod.PopupChatbot),
   { ssr: false }
 );
-  
+
 export default function ChatbotProvider() {
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -39,16 +40,20 @@ export default function ChatbotProvider() {
       placeholder="Ask me about my information..."
       stream={true}
       userId={userId}
+      buttonClassName="bg-transparent hover:bg-transparent shadow-none p-0 border-none hover:scale-100"
       buttonStyle={{
-        width: "45px",
-        height: "45px",
+        width: "auto",
+        height: "auto",
+        backgroundColor: "transparent",
+        boxShadow: "none",
       }}
       defaultOpen={false}
       width={450}
       height={600}
-      tooltip="Chat with AI"
     >
-      <MessageCircleIcon size={24} />
+      <MagnetBtn text="Chat with AI&nbsp;&nbsp;·&nbsp;&nbsp;ASK AI&nbsp;&nbsp;·&nbsp;&nbsp;Talk with AI&nbsp;&nbsp;·&nbsp;&nbsp;" size="xs" className="text-[12px]">
+        <Sparkles className="size-5 fill-background" />
+      </MagnetBtn>
     </PopupChatbot>
   );
 }
