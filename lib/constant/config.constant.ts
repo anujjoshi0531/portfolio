@@ -5,8 +5,7 @@ export const config = {
     GOOGLE_ANALYTICS_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || "G-XXXXXXXXXX",
     GOOGLE_VERIFICATION_ID: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION_ID || "XXXXXXXXXX",
     CHATBOT_URL: process.env.NEXT_PUBLIC_CHATBOT_URL || "http://localhost:8080",
-    CHATBOT_MODEL: process.env.NEXT_PUBLIC_CHATBOT_MODEL || "ollama",
-    CHATBOT_AGENT: process.env.NEXT_PUBLIC_CHATBOT_AGENT || "portfolio-agent",
+    CHATBOT_API_KEY: process.env.NEXT_PUBLIC_CHATBOT_API_KEY || "XXXXXXXXXX",
 
     // Server Config
     NOTION_DATABASE_ID: process.env.NOTION_DATABASE_ID || "XXXXXXXXXX",
@@ -20,5 +19,4 @@ export const config = {
     USER_MAIL: process.env.USER_MAIL || "XXXXXXXXXX",
     USER_NAME: process.env.USER_NAME || "XXXXXXXXXX",
     USER_URL: process.env.USER_URL || "https://anujjoshi.netlify.app",
-
 }    

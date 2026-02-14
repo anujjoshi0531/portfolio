@@ -24,12 +24,11 @@ export default function ChatbotProvider() {
   return (
     <PopupChatbot
       url={config.CHATBOT_URL}
-      model={config.CHATBOT_MODEL}
+      apiKey={config.CHATBOT_API_KEY}
       position="bottom-right"
       header={{
         show: true,
         title: "Portfolio Assistant",
-        subtitle: "Ask me anything",
         avatar: "/icon.webp",
         allowMaximize: true,
       }}
