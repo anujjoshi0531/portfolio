@@ -297,7 +297,7 @@ export default async function Layout({
         />
       </head>
       <body
-        className={`overflow-x-hidden ${poppins.className}`}
+        className={`${poppins.className}`}
         suppressHydrationWarning>
         <ThemeProvider>
           <DarkProvider
@@ -308,12 +308,14 @@ export default async function Layout({
             defaultTheme="dark">
             <NextTopLoader easing="ease" speed={200} initialPosition={0.08} showSpinner={false} color="#fff" />
             <Navbar />
-            <main className="lg:mx-32 md:mx-16 my-12 sm:mx-8 mx-6 max-w-screen">
-              {children}
-            </main>
+            <div className="overflow-x-clip flex flex-col min-h-[100dvh]">
+              <main className="lg:mx-32 md:mx-16 my-12 sm:mx-8 mx-6">
+                {children}
+              </main>
+              <Footer />
+            </div>
             <PopupChatbot />
             <ThemePicker />
-            <Footer />
             <Toaster richColors />
           </DarkProvider>
         </ThemeProvider>
