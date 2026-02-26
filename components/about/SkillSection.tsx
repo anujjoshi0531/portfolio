@@ -1,8 +1,8 @@
 "use client";
 
-import { SectionTemplate } from "@/components/global/template";
+import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { motion } from "framer-motion";
-import { childVariants, containerVariants } from "@/components/animate/animate";
+import { childVariants, containerVariants } from '@/lib/animate';
 import { skills } from "@/lib";
 
 interface SkillGroup {

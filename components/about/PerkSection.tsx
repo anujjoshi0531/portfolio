@@ -1,6 +1,6 @@
 import { FaCertificate, FaCode } from "react-icons/fa6";
 import { perkData } from "@/lib";
-import { Perk, PerkAnimation } from "@/components/global/perk";
+import { Perk, PerkAnimation } from '@/components/global/Perk';
 import { useEffect, useState, useRef } from "react";
 import { clientConfig } from "@/lib/constant/config.client";
 

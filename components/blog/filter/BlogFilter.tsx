@@ -18,9 +18,9 @@ import { SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { BlogFilterDate } from "./blog-filter-date";
-import { BlogFiltertag } from "./blog-tag";
-import { BlogSort } from "./blog-sort";
+import { BlogFilterDate } from './BlogFilterDate';
+import { BlogTag } from './BlogTag';
+import { BlogSort } from './BlogSort';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export const BlogFilter = ({ tags, categories }: { tags: string[], categories: string[] }) => {
@@ -47,7 +47,7 @@ export const BlogFilter = ({ tags, categories }: { tags: string[], categories: s
           <div className="space-y-6 py-2">
             {/* Tags Filter */}
             <div className="space-y-2">
-              <BlogFiltertag
+              <BlogTag
                 tags={tags}
                 value={getFilter("tags")}
                 onChange={(value) => setFilter({ tags: value })}

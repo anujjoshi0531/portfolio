@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { childVariants, containerVariants } from "@/components/animate/animate";
+import { childVariants, containerVariants } from '@/lib/animate';
 import PerkSection from "@/components/about/PerkSection";
+import { LinkPreview } from "@/components/animate/LinkPreview";
 
 interface AboutClientProps {
     totalProjects: number;
@@ -42,13 +43,13 @@ export default function AboutClient({ totalProjects }: AboutClientProps) {
                         Hello! My name is Anuj Joshi, and I am a passionate software engineer with a keen interest in Web Development and Machine Learning.
                     </p>
                     <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
-                        At <a className="link text-theme" target="_blank" rel="noopener noreferrer" href="https://limstir.vercel.app/" aria-label="LIMSTIR-DTU organization">LIMSTIR-DTU</a> and as a member of the Robotic Society at <a className="link text-theme" target="_blank" rel="noopener noreferrer" href="https://srdtu.vercel.app" aria-label="SR-DTU Robotic Society">SR-DTU</a>, I strive to craft sustainable solutions for global challenges.
+                        At <LinkPreview url="https://limstir.vercel.app/" className="link text-theme" aria-label="LIMSTIR-DTU organization">LIMSTIR-DTU</LinkPreview> and as a member of the Robotic Society at <LinkPreview url="https://srdtu.vercel.app" className="link text-theme" aria-label="SR-DTU Robotic Society">SR-DTU</LinkPreview>, I strive to craft sustainable solutions for global challenges.
                     </p>
                     <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
                         Additionally, I share my knowledge and passion with the world through my <a className="link text-theme" target="_blank" rel="noopener noreferrer" href="/blog" aria-label="View blog posts">blogs</a>, where I demonstrate how to build full-stack applications.
                     </p>
                     <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
-                        Currently, I&apos;m leading a project called <a className="link text-theme" target="_blank" rel="noopener noreferrer" href="https://netrai.netlify.app/" aria-label="Visit NetrAI project website">NetrAI</a>, a vision API SaaS that delivers cutting-edge tools like image colorization and super-resolution. Join me in this exciting endeavor to push the boundaries of computer vision technology!
+                        Currently, I&apos;m leading a project called <LinkPreview url="https://netrai.netlify.app/" className="link text-theme" aria-label="Visit NetrAI project website">NetrAI</LinkPreview>, a vision API SaaS that delivers cutting-edge tools like image colorization and super-resolution. Join me in this exciting endeavor to push the boundaries of computer vision technology!
                     </p>
                 </motion.div></motion.div>
             <PerkSection totalProjects={totalProjects} />

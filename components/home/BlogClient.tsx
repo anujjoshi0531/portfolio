@@ -1,13 +1,13 @@
 "use client"
-import { useCallback } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
-import BlogCard from "@/components/blog/blog-card"
+import BlogCard from '@/components/blog/BlogCard'
 import { MagnetBtn } from "@/components/animate/MagnetBtn"
 import { MdArrowOutward } from "react-icons/md"
 import { cn } from "@/lib"
 import { Card } from "@/components/ui/card"
-import { useScrollCarousel } from "@/hooks/use-scroll-carousel"
+import { useScrollCarousel } from '@/hooks/useScrollCarousel'
 
 const ScrollButton = ({
     direction,
@@ -69,6 +69,7 @@ interface BlogClientProps {
 }
 
 export default function BlogClient({ blogs }: BlogClientProps) {
+    const [hovered, setHovered] = useState<number | null>(null)
     const {
         currentIndex,
         canScrollLeft,
@@ -94,12 +95,18 @@ export default function BlogClient({ blogs }: BlogClientProps) {
                 {blogs.map((blog, index) => (
                     <div
                         key={blog.id}
-                        className="shrink-0 w-[350px] transform transition-all duration-300 hover:scale-[1.02]"
+                        className="shrink-0 w-[350px] transform transition-all duration-300"
                         style={{
                             animationDelay: `${index * 100}ms`,
                         }}
                     >
-                        <BlogCard key={blog.id} blog={blog} />
+                        <BlogCard
+                            key={blog.id}
+                            blog={blog}
+                            index={index}
+                            hovered={hovered}
+                            setHovered={setHovered}
+                        />
                     </div>
                 ))}
                 <div className="flex justify-center items-center min-w-[350px] p-4">

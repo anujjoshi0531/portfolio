@@ -1,7 +1,7 @@
 import { searchPages } from "@/lib/server/notion"
 import BlogClient from "./BlogClient"
 import { Suspense } from "react"
-import BlogCardSkeleton from "@/components/blog/blog-card-skeleton"
+import BlogCardSkeleton from '@/components/blog/BlogCardSkeleton'
 
 function BlogSkeleton() {
   return (

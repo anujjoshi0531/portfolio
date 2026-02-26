@@ -1,4 +1,4 @@
-import { PageTemplate } from "@/components/global/template"
+import { PageTemplate } from '@/components/global/SectionTemplate'
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import SVG404 from "@/components/site/SVG404"

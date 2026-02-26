@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-import { SectionTemplate } from "@/components/global/template";
+import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib";
 

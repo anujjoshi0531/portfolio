@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { PageTemplate } from "@/components/global/template";
+import { PageTemplate } from '@/components/global/SectionTemplate';
 
 export default function Loading() {
     return (

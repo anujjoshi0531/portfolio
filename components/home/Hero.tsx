@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { HeroSocial } from "@/components/global/social";
+import { HeroSocial } from '@/components/global/Social';
 import Image from "next/image";
 import { FaPaperPlane, FaLink } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import Typewriter from "@/components/animate/Typewriter";
-import { childVariants, containerVariants } from "@/components/animate/animate";
+import { childVariants, containerVariants } from '@/lib/animate';
 import { socialLinks } from "@/lib";
 import Link from "next/link";
 

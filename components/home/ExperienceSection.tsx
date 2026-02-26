@@ -3,7 +3,7 @@ import { extractPlainText } from "@/lib"
 import ExperienceClient from "./ExperienceClient"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
-import { SectionTemplate } from "@/components/global/template"
+import { SectionTemplate } from '@/components/global/SectionTemplate'
 
 function formatExperience(exp: NotionExperience) {
   return {

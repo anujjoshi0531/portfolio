@@ -10,11 +10,11 @@ import {
 } from "framer-motion";
 import { socialLinks } from "@/lib";
 import { TbHexagonLetterAFilled } from "react-icons/tb";
-import ModeToggle from "@/components/global/mode-toggle";
-import { SocialIcon } from "@/components/global/social";
-import { containerVars, menuVars, mobileLinkVars } from "@/components/animate/animate";
+import ModeToggle from '@/components/global/ModeToggle';
+import { SocialIcon } from '@/components/global/Social';
+import { containerVars, menuVars, mobileLinkVars } from '@/lib/animate';
 import Link from "next/link";
-import SearchButton from "@/components/site/search/search-button";
+import SearchButton from "@/components/site/search/SearchButton";
 import { Button } from "../ui/button";
 
 export default function Navbar() {

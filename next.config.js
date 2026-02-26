@@ -4,6 +4,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "api.microlink.io",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "drive.google.com",
         port: "",
         pathname: "/**",
@@ -67,7 +73,7 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: false,
   // Suppress webpack warnings from third-party dependencies
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
     // Suppress the critical dependency warning from keyv (used by notion-client)
     config.module = config.module || {};
     config.module.exprContextCritical = false;
@@ -79,6 +85,12 @@ const nextConfig = {
         message: /Critical dependency: the request of a dependency is an expression/,
       },
     ];
+
+    // Fix HMR WebSocket port mismatch in dev mode
+    if (dev && !isServer) {
+      config.output = config.output || {};
+      config.output.publicPath = '/_next/';
+    }
 
     return config;
   },

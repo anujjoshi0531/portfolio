@@ -2,11 +2,11 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState, useMemo } from "react";
-import { SectionTemplate } from "@/components/global/template";
+import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { FaGraduationCap } from "react-icons/fa";
 import { timeAgo } from "@/lib";
 import { Badge } from "../ui/badge";
-import Link from "next/link";
+import { LinkPreview } from "@/components/animate/LinkPreview";
 
 interface Education {
     id: string;
@@ -78,10 +78,10 @@ const EduCard = ({ edu }: { edu: Education }) => {
                                 {startAgo} - {endAgo}
                             </time>
                         </div>
-                        <Link href={edu.url || "#"} className="font-medium link text-sm my-1" aria-label={`Visit ${edu.institution} website`}>
+                        <LinkPreview url={edu.url || "#"} className="font-medium link text-sm my-1" aria-label={`Visit ${edu.institution} website`}>
                             {edu.institution},&nbsp;
                             <span>{edu.place}</span>
-                        </Link>
+                        </LinkPreview>
                     </div>
                 </div>
 

@@ -2,7 +2,8 @@
 
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { SocialLink } from "@/components/global/social";
+import { SocialLink } from '@/components/global/Social';
+import { LinkPreview } from "@/components/animate/LinkPreview";
 
 export default function ContactInfo() {
   return (
@@ -32,11 +33,10 @@ export default function ContactInfo() {
         </div>
         <div className="hover:-translate-y-1 duration-150">
           <p className="font-semibold">Location</p>
-          <SocialLink
-            title="New Delhi, India"
-            href="https://share.google/IqMNA0wxT6dyQ2fsS"
-            icon={FaMapMarkerAlt}
-          />
+          <LinkPreview url="https://share.google/IqMNA0wxT6dyQ2fsS" className="flex gap-2 items-center">
+            <FaMapMarkerAlt className="text-theme" />
+            <span className="link">New Delhi, India</span>
+          </LinkPreview>
         </div>
       </div>
     </motion.div>

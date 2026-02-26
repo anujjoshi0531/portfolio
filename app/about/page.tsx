@@ -1,4 +1,4 @@
-import { PageTemplate } from "@/components/global/template";
+import { PageTemplate } from '@/components/global/SectionTemplate';
 import AboutSection from "@/components/about/AboutSection";
 import EducationSection from "@/components/about/EducationSection";
 import SkillSection from "@/components/about/SkillSection";

@@ -5,9 +5,9 @@ import { Search } from "lucide-react"
 import { useKeyboardShortcut , useSearchData } from "@/components/site/search/hooks"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import TooltipComponent from "@/components/global/tooltip-component"
-import { SearchInput } from "./search-input"
-import { SearchResults } from "./search-results"
+import TooltipComponent from '@/components/global/TooltipComponent'
+import { SearchInput } from './SearchInput'
+import { SearchResults } from "./SearchResults"
 
 export default function SearchButton() {
   const [isOpen, setIsOpen] = useState(false)

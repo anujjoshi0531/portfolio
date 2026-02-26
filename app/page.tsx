@@ -1,6 +1,6 @@
 import Hero from "@/components/home/Hero";
 import AboutSection from "@/components/about/AboutSection";
-import { SectionTemplate } from "@/components/global/template";
+import { SectionTemplate } from '@/components/global/SectionTemplate';
 import ExperienceSection from "@/components/home/ExperienceSection";
 import ProjectSection from "@/components/home/ProjectSection";
 import BlogSection from "@/components/home/BlogSection";

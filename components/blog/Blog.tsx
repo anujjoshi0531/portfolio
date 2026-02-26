@@ -3,13 +3,13 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Grid, List, X } from "lucide-react";
-import BlogCard from "./blog-card";
-import { SearchInput } from "./search-input";
-import { BlogFilter } from "./filter/blog-filter";
-import { BlogPagination } from "./blog-pagination";
-import { PageTemplate } from "../global/template";
+import BlogCard from "./BlogCard";
+import { SearchInput } from './SearchInput';
+import { BlogFilter } from "./filter/BlogFilter";
+import { BlogPagination } from './BlogPagination';
+import { PageTemplate } from '../global/SectionTemplate';
 import NoWork from "../site/NoWork";
-import { useBlogFilters } from "@/hooks/use-blog-filters";
+import { useBlogFilters } from '@/hooks/useBlogFilters';
 
 interface BlogProps {
   posts: NotionBlogPage[];
@@ -31,6 +31,7 @@ export default function Blog({
   limit
 }: BlogProps) {
   const [layout, setLayout] = useState<"grid" | "list">("grid");
+  const [hovered, setHovered] = useState<number | null>(null);
   const {
     activeTags,
     activeDateFrom,
@@ -73,15 +74,18 @@ export default function Blog({
       );
     }
 
-    return posts.map((blog) => (
+    return posts.map((blog, i) => (
       <BlogCard
         key={blog.id}
         blog={blog}
         variant={layout === "grid" ? "vertical" : "horizontal"}
         className={layout === "grid" ? "" : "sm:h-[280px]"}
+        index={i}
+        hovered={hovered}
+        setHovered={setHovered}
       />
     ));
-  }, [posts, layout]);
+  }, [posts, layout, hovered, setHovered]);
 
   return (
     <>

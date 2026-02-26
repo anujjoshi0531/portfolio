@@ -7,13 +7,13 @@ import { useState, useMemo } from "react";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface BlogFiltertagProps {
+interface BlogTagProps {
   value: string;
   tags: string[];
   onChange: (value: string) => void;
 }
 
-export const BlogFiltertag: React.FC<BlogFiltertagProps> = ({
+export const BlogTag: React.FC<BlogTagProps> = ({
   value,
   tags,
   onChange,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import ErrorCard from "@/components/global/Error-Card";
+import ErrorCard from '@/components/global/ErrorCard';
 
 export default function BlogError({
     error,

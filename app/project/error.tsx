@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import ErrorCard from "@/components/global/Error-Card";
-import { PageTemplate } from "@/components/global/template";
+import ErrorCard from '@/components/global/ErrorCard';
+import { PageTemplate } from '@/components/global/SectionTemplate';
 
 export default function ProjectError({
     error,

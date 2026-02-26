@@ -1,8 +1,8 @@
 "use client"
 
-import { useMemo } from "react"
-import { PageTemplate } from "@/components/global/template"
-import ProjectCard from "@/components/global/project-card"
+import { useMemo, useState } from "react"
+import { PageTemplate } from '@/components/global/SectionTemplate'
+import ProjectCard from '@/components/global/ProjectCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import NoWork from "../site/NoWork"
 
@@ -12,6 +12,7 @@ interface ProjectPageClientProps {
 }
 
 export default function ProjectPageClient({ projects, types }: ProjectPageClientProps) {
+    const [hovered, setHovered] = useState<number | null>(null)
     const allProjects = useMemo(() => {
         if (!projects) return []
         return projects
@@ -26,8 +27,15 @@ export default function ProjectPageClient({ projects, types }: ProjectPageClient
         const filteredProjects = getFilteredProjects(categoryId)
         return filteredProjects.length > 0 ? (
             <div className="grid py-2 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {filteredProjects.map((project) => (
-                    <ProjectCard key={project.id} project={project} size={true} />
+                {filteredProjects.map((project, i) => (
+                    <ProjectCard
+                        key={project.id}
+                        project={project}
+                        size={true}
+                        index={i}
+                        hovered={hovered}
+                        setHovered={setHovered}
+                    />
                 ))}
             </div>
         ) : (

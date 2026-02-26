@@ -1,4 +1,4 @@
-import { PageTemplate } from "@/components/global/template";
+import { PageTemplate } from '@/components/global/SectionTemplate';
 import ContactForm from "@/components/contact/ContactForm";
 import ContactInfo from "@/components/contact/ContactInfo";
 import { Suspense } from "react";

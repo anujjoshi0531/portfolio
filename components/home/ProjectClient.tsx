@@ -1,10 +1,10 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { MagnetBtn } from "@/components/animate/MagnetBtn"
 import { motion, useTransform, useScroll } from "framer-motion"
 import { MdArrowOutward } from "react-icons/md"
-import ProjectCard from "../global/project-card"
+import ProjectCard from '../global/ProjectCard'
 import Link from "next/link"
 import { FileIcon } from "lucide-react"
 
@@ -14,6 +14,7 @@ interface ProjectClientProps {
 }
 
 export default function ProjectClient({ projects, className }: ProjectClientProps) {
+    const [hovered, setHovered] = useState<number | null>(null)
     const targetRef = useRef<HTMLElement>(null)
     const { scrollYProgress } = useScroll({
         target: targetRef,
@@ -36,7 +37,13 @@ export default function ProjectClient({ projects, className }: ProjectClientProp
         return (
             <>
                 {projects.map((project, index: number) => (
-                    <ProjectCard key={project.id || `project-${index}`} project={project} />
+                    <ProjectCard
+                        key={project.id || `project-${index}`}
+                        project={project}
+                        index={index}
+                        hovered={hovered}
+                        setHovered={setHovered}
+                    />
                 ))}
                 <div className="flex items-center justify-center my-auto mx-8 shrink-0">
                     <Link href="/project" className="block" aria-label="View all projects">

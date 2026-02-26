@@ -2,7 +2,7 @@ import { getEducation } from "@/lib/server/notion";
 import { extractPlainText } from "@/lib";
 import EducationClient from "./EducationClient";
 import { Suspense } from "react";
-import { SectionTemplate } from "@/components/global/template";
+import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { Skeleton } from "../ui/skeleton";
 import { Card } from "../ui/card";
 

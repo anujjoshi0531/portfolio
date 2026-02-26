@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSearch } from "@/hooks";
 import { useSearchDropdown } from "@/hooks";
-import { SearchResults } from "@/components/site/search/search-results";
+import { SearchResults } from "@/components/site/search/SearchResults";
 import { cn } from "@/lib";
 import { Search, XIcon, Loader2 } from "lucide-react";
 import React, { useRef, useState, useEffect, useCallback } from "react";

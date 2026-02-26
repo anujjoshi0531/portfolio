@@ -1,11 +1,12 @@
 "use client"
 
-import { SectionTemplate } from "@/components/global/template"
+import { SectionTemplate } from '@/components/global/SectionTemplate'
 import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn, timeAgo } from "@/lib"
 import { Award, ChevronRight } from "lucide-react"
+import { LinkPreview } from "@/components/animate/LinkPreview"
 
 interface FormattedExperience {
     company: string
@@ -142,10 +143,10 @@ function ExperienceContent({
                     {formattedExperience.end ? timeAgo(formattedExperience.end) : "Present"}
                 </time>
             </div>
-            <a href={formattedExperience.link} className="link cursor-pointer" target="_blank" rel="noopener noreferrer" aria-label={`Visit ${formattedExperience.company} website`}>
+            <LinkPreview url={formattedExperience.link} className="link cursor-pointer" aria-label={`Visit ${formattedExperience.company} website`}>
                 {formattedExperience.company}
                 {formattedExperience.place && <span>,&nbsp;{formattedExperience.place}</span>}
-            </a>
+            </LinkPreview>
             <ul className="list-none flex flex-col gap-1 mt-4 px-5">
                 {formattedExperience.description.map((desc: string, index: number) => (
                     <li key={index} className="custom-bullet">

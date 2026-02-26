@@ -2,7 +2,7 @@ import { getTestimonials } from "@/lib/server/notion";
 import { extractPlainText } from "@/lib";
 import TestimonialClient from "./TestimonialClient";
 import { Suspense } from "react";
-import { SectionTemplate } from "@/components/global/template";
+import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { Skeleton } from "../ui/skeleton";
 
 function TestimonialSkeleton() {

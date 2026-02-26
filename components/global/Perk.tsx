@@ -1,8 +1,9 @@
-import { containerVariants } from "@/components/animate/animate";
+import { containerVariants } from '@/lib/animate';
 import { motion } from "framer-motion";
 import { IconType } from "react-icons";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { LinkPreview } from "@/components/animate/LinkPreview";
 
 interface PerkProps {
   value?: string | number;
@@ -14,8 +15,23 @@ interface PerkProps {
 
 function Perk({ value, link, title, icon: Icon, subtitle }: PerkProps) {
   const perkText = `${value}+ ${title}`;
+  if (link) {
+    return (
+      <LinkPreview url={link} aria-label={`View ${perkText}`}>
+        <div className="p-4 text-center m-1 space-y-1 bg-muted/60 hover:bg-muted/80 rounded-md hover:scale-[1.02] transition-all duration-150 group">
+          {Icon && (
+            <Icon className="text-theme text-3xl md:text-4xl my-4 mx-auto group-hover:scale-110" />
+          )}
+          {subtitle && <Badge>{subtitle}</Badge>}
+          <div className="font-semibold mt-1 text-md md:text-lg tracking-[0.05rem] leading-5 text-nowrap capitalize">
+            {value}+ {title}
+          </div>
+        </div>
+      </LinkPreview>
+    );
+  }
   return (
-    <Link href={link || "#"} target={link ? "_blank" : "_self"} aria-label={link ? `View ${perkText}` : perkText}>
+    <Link href="#" target="_self" aria-label={perkText}>
       <div className="p-4 text-center m-1 space-y-1 bg-muted/60 hover:bg-muted/80 rounded-md hover:scale-[1.02] transition-all duration-150 group">
         {Icon && (
           <Icon className="text-theme text-3xl md:text-4xl my-4 mx-auto group-hover:scale-110" />
@@ -59,4 +75,4 @@ function PerkAnimation({
 }
 
 
-export {Perk, PerkSkeleton, PerkAnimation};
+export { Perk, PerkSkeleton, PerkAnimation };

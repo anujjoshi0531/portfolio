@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import NextTopLoader from 'nextjs-toploader';
 import { Metadata } from "next";
 import { PropsWithChildren } from "react";
-import ThemePicker from "@/components/global/theme-picker";
+import ThemePicker from '@/components/global/ThemePicker';
 import Navbar from "@/components/site/Navbar";
 import PopupChatbot from "@/components/providers/chatbot-provider";
 import Footer from "@/components/site/Footer";
@@ -201,7 +201,7 @@ export default async function Layout({
     : null;
 
   return (
-    <html suppressHydrationWarning lang="en" className="scroll-smooth">
+    <html suppressHydrationWarning lang="en" className="scroll-smooth overflow-x-hidden">
       <head>
         <link rel="shortcut icon" href="/icon.webp" type="image/x-icon" />
         {contestApiOrigin && (
@@ -297,7 +297,7 @@ export default async function Layout({
         />
       </head>
       <body
-        className={`${poppins.className}`}
+        className={`${poppins.className} overflow-x-hidden`}
         suppressHydrationWarning>
         <ThemeProvider>
           <DarkProvider
@@ -308,7 +308,7 @@ export default async function Layout({
             defaultTheme="dark">
             <NextTopLoader easing="ease" speed={200} initialPosition={0.08} showSpinner={false} color="#fff" />
             <Navbar />
-            <div className="overflow-x-clip flex flex-col min-h-[100dvh]">
+            <div className="overflow-x-hidden max-w-[100dvw] flex flex-col min-h-[100dvh]">
               <main className="lg:mx-32 md:mx-16 my-12 sm:mx-8 mx-6">
                 {children}
               </main>

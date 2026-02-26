@@ -1,7 +1,7 @@
 import { getProject, getProjectType } from "@/lib/server/notion"
 import ProjectPageClient from "./ProjectPageClient"
 import { Suspense } from "react"
-import { PageTemplate } from "@/components/global/template"
+import { PageTemplate } from '@/components/global/SectionTemplate'
 import { Skeleton } from "@/components/ui/skeleton"
 
 function ProjectPageSkeleton() {
