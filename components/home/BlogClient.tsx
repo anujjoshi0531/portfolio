@@ -1,5 +1,5 @@
 "use client"
-import { useRef, useEffect, useState, useCallback } from "react"
+import { useCallback } from "react"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
 import BlogCard from "@/components/blog/blog-card"
@@ -7,6 +7,7 @@ import { MagnetBtn } from "@/components/animate/MagnetBtn"
 import { MdArrowOutward } from "react-icons/md"
 import { cn } from "@/lib"
 import { Card } from "@/components/ui/card"
+import { useScrollCarousel } from "@/hooks/use-scroll-carousel"
 
 const ScrollButton = ({
     direction,
@@ -68,57 +69,14 @@ interface BlogClientProps {
 }
 
 export default function BlogClient({ blogs }: BlogClientProps) {
-    const [currentIndex, setCurrentIndex] = useState(0)
-    const [canScrollLeft, setCanScrollLeft] = useState(false)
-    const [canScrollRight, setCanScrollRight] = useState(true)
-    const scrollContainerRef = useRef<HTMLDivElement>(null)
-
-    const updateScrollButtons = useCallback(() => {
-        if (scrollContainerRef.current) {
-            const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
-            setCanScrollLeft(scrollLeft > 0)
-            setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
-        }
-    }, [])
-
-    const scroll = (direction: "left" | "right") => {
-        if (scrollContainerRef.current) {
-            const scrollAmount = 370
-            const newScrollLeft =
-                direction === "left"
-                    ? scrollContainerRef.current.scrollLeft - scrollAmount
-                    : scrollContainerRef.current.scrollLeft + scrollAmount
-
-            scrollContainerRef.current.scrollTo({
-                left: newScrollLeft,
-                behavior: "smooth",
-            })
-
-            const newIndex = Math.round(newScrollLeft / scrollAmount)
-            setCurrentIndex(Math.max(0, newIndex))
-        }
-    }
-
-    const scrollToIndex = (index: number) => {
-        if (scrollContainerRef.current) {
-            const scrollAmount = 370 * index * 2
-            scrollContainerRef.current.scrollTo({
-                left: scrollAmount,
-                behavior: "smooth",
-            })
-            setCurrentIndex(index * 2)
-        }
-    }
-
-    useEffect(() => {
-        const container = scrollContainerRef.current
-        if (container) {
-            container.addEventListener("scroll", updateScrollButtons)
-            updateScrollButtons()
-
-            return () => container.removeEventListener("scroll", updateScrollButtons)
-        }
-    }, [updateScrollButtons])
+    const {
+        currentIndex,
+        canScrollLeft,
+        canScrollRight,
+        scrollContainerRef,
+        scroll,
+        scrollToIndex
+    } = useScrollCarousel(370);
 
     const renderContent = () => {
         if (!blogs || blogs.length === 0) {

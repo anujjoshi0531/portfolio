@@ -61,10 +61,8 @@ type NotionEduProps = {
   };
 };
 
-async function EducationData() {
-  const data = await getEducation();
-
-  const education = (data as NotionEduProps[]).map((item) => ({
+function processEducation(data: NotionEduProps[]) {
+  const education = data.map((item) => ({
     id: item.id || Math.random().toString(),
     course: extractPlainText(item.properties?.Course?.title) || "Course not specified",
     institution: extractPlainText(item.properties?.Institution?.rich_text) || "Institution not specified",
@@ -78,11 +76,16 @@ async function EducationData() {
     url: item.properties?.URL?.url || "",
   }));
 
-  education.sort((a, b) => {
+  return education.sort((a, b) => {
     const dateA = a.start ? new Date(a.start).getTime() : 0;
     const dateB = b.start ? new Date(b.start).getTime() : 0;
     return dateB - dateA;
   });
+}
+
+async function EducationData() {
+  const data = await getEducation();
+  const education = processEducation(data as NotionEduProps[]);
 
   return <EducationClient education={education} />;
 }

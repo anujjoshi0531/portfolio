@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { SectionTemplate } from "@/components/global/template";
 import { FaGraduationCap } from "react-icons/fa";
 import { timeAgo } from "@/lib";
@@ -42,6 +42,9 @@ const EduCard = ({ edu }: { edu: Education }) => {
         return () => unsubscribe();
     }, [scrollYProgress, hasPassed]);
 
+    const startAgo = useMemo(() => edu.start ? timeAgo(new Date(edu.start)) : "", [edu.start]);
+    const endAgo = useMemo(() => edu.end ? timeAgo(new Date(edu.end)) : "Present", [edu.end]);
+
     return (
         <div
             ref={ref}
@@ -72,7 +75,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
                                 {edu.grade && <Badge>{edu.grade}</Badge>}
                             </h3>
                             <time className="text-xs text-muted-foreground">
-                                {timeAgo(new Date(edu.start))} - {timeAgo(new Date(edu.end))}
+                                {startAgo} - {endAgo}
                             </time>
                         </div>
                         <Link href={edu.url || "#"} className="font-medium link text-sm my-1" aria-label={`Visit ${edu.institution} website`}>

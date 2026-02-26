@@ -9,7 +9,7 @@ import { BlogFilter } from "./filter/blog-filter";
 import { BlogPagination } from "./blog-pagination";
 import { PageTemplate } from "../global/template";
 import NoWork from "../site/NoWork";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useBlogFilters } from "@/hooks/use-blog-filters";
 
 interface BlogProps {
   posts: NotionBlogPage[];
@@ -31,15 +31,14 @@ export default function Blog({
   limit
 }: BlogProps) {
   const [layout, setLayout] = useState<"grid" | "list">("grid");
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  // Get active filters from URL
-  const activeTags = searchParams.get("tags")?.split(",").filter(Boolean) || [];
-  const activeDateFrom = searchParams.get("published_gte");
-  const activeDateTo = searchParams.get("published_lte");
-
-  const hasActiveFilters = activeTags.length > 0 || activeDateFrom || activeDateTo;
+  const {
+    activeTags,
+    activeDateFrom,
+    activeDateTo,
+    hasActiveFilters,
+    removeFilter,
+    clearAllFilters,
+  } = useBlogFilters();
 
   // Calculate result range
   const startResult = totalCount > 0 ? (currentPage - 1) * limit + 1 : 0;
@@ -83,30 +82,6 @@ export default function Blog({
       />
     ));
   }, [posts, layout]);
-
-  const removeFilter = (key: string, value?: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (key === "tags" && value) {
-      const currentTags = params.get("tags")?.split(",").filter(Boolean) || [];
-      const newTags = currentTags.filter(tag => tag !== value);
-      if (newTags.length > 0) {
-        params.set("tags", newTags.join(","));
-      } else {
-        params.delete("tags");
-      }
-    } else {
-      params.delete(key);
-    }
-
-    // Reset to page 1 when filters change
-    params.delete("page");
-    router.push(`/blog?${params.toString()}`);
-  };
-
-  const clearAllFilters = () => {
-    router.push("/blog");
-  };
 
   return (
     <>

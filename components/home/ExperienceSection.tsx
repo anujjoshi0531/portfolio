@@ -48,9 +48,7 @@ function ExperienceSkeleton() {
   )
 }
 
-async function ExperienceData() {
-  const data = (await getExperience()) as unknown as NotionExperience[]
-
+function groupAndSortExperiences(data: NotionExperience[]) {
   const grouped: Record<string, ReturnType<typeof formatExperience>[]> = {}
   data.forEach((exp) => {
     const type = exp.properties?.Type?.select?.name || "Other"
@@ -58,7 +56,12 @@ async function ExperienceData() {
     grouped[type].push(formatExperience(exp))
   })
 
-  const sortedTypes = Object.keys(grouped).sort()
+  return { grouped, sortedTypes: Object.keys(grouped).sort() }
+}
+
+async function ExperienceData() {
+  const data = (await getExperience()) as unknown as NotionExperience[]
+  const { grouped, sortedTypes } = groupAndSortExperiences(data)
 
   return (
     <ExperienceClient

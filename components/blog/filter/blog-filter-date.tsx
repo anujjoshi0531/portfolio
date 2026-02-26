@@ -27,13 +27,16 @@ export const BlogFilterDate: React.FC<BlogFilterDateProps> = ({
   disableAfter,
   onChange,
 }) => {
-  const selected = value ? new Date(value) : undefined;
-  const from = disableBefore ? new Date(disableBefore) : new Date("01/01/1900");
-  const to = disableAfter ? new Date(disableAfter) : new Date("12/31/2050");
-  const disabled = {
+  const selected = React.useMemo(() => value ? new Date(value) : undefined, [value]);
+  const from = React.useMemo(() => disableBefore ? new Date(disableBefore) : new Date("01/01/1900"), [disableBefore]);
+  const to = React.useMemo(() => disableAfter ? new Date(disableAfter) : new Date("12/31/2050"), [disableAfter]);
+
+  const disabled = React.useMemo(() => ({
     after: disableAfter ? new Date(disableAfter) : new Date("12/31/2050"),
     before: disableBefore ? new Date(disableBefore) : new Date("01/01/1900"),
-  };
+  }), [disableAfter, disableBefore]);
+
+  const displayDateStr = React.useMemo(() => value ? new Date(value).toLocaleDateString() : "", [value]);
 
   const setSelectedDate = (date: Date) => {
     onChange(formatDate(date));
@@ -48,9 +51,9 @@ export const BlogFilterDate: React.FC<BlogFilterDateProps> = ({
             variant="secondary"
             size="sm"
             className="w-full justify-start"
-            aria-label={`${label} date${value ? `: ${new Date(value).toLocaleDateString()}` : " not selected"}`}>
+            aria-label={`${label} date${value ? `: ${displayDateStr}` : " not selected"}`}>
             <CalendarIcon />
-            {value ? new Date(value).toLocaleDateString() : <span>Select date</span>}
+            {value ? displayDateStr : <span>Select date</span>}
           </Button>
         </PopoverTrigger>
 
