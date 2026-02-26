@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ArrowDownWideNarrow, ChevronDown, Check } from "lucide-react"
+import { ChevronDown, Check } from "lucide-react"
 import { sortOptions } from "@/lib/client/data"
 
 interface BlogSortProps {
@@ -32,9 +32,9 @@ export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue =
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" 
-        className="rounded-md h-9 px-2 w-full justify-start"
-        size="sm" aria-label={`Sort blogs by ${selectedOption?.label?.toLowerCase() || "default"}`}>
+        <Button variant="secondary"
+          className="rounded-md h-9 px-2 w-full justify-start"
+          size="sm" aria-label={`Sort blogs by ${selectedOption?.label?.toLowerCase() || "default"}`}>
           {selectedOption?.icon && <selectedOption.icon />}
           {selectedOption?.label || "Sort by"}
           <ChevronDown className="ml-auto" />
@@ -48,7 +48,7 @@ export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue =
             className="cursor-pointer w-full">
             <span className="flex items-center gap-2 text-sm">
               <option.icon />
-              {option.label}              
+              {option.label}
             </span>
             {selectedValue === option.value && <Check />}
           </DropdownMenuItem>

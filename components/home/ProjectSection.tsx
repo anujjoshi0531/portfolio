@@ -19,7 +19,7 @@ function ProjectSkeleton() {
 
 async function ProjectData({ className }: { className?: string }) {
   const projects = await getProject()
-  return <ProjectClient projects={projects} className={className} />
+  return <ProjectClient projects={projects as unknown as NotionProjectPage[]} className={className} />
 }
 
 export default function ProjectSection({ className }: { className?: string }) {

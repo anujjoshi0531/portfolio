@@ -15,8 +15,9 @@ export const fetchPage = async (param: string) => {
   if (isUUID) {
     page = await notionClient.pages.retrieve({ page_id: param }).catch(() => null);
   } else {
+    if (!serverConfig.NOTION_DATABASE_ID) throw new Error("Missing NOTION_DATABASE_ID");
     const { results } = await notionClient.databases.query({
-      database_id: serverConfig.NOTION_DATABASE_ID!,
+      database_id: serverConfig.NOTION_DATABASE_ID,
       filter: {
         property: "Slug",
         rich_text: { equals: param },
@@ -52,6 +53,7 @@ export const buildFilter = ({
   isPublic?: boolean;
   category?: string;
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const baseFilter: any[] = [
     {
       property: "Public",
@@ -126,8 +128,9 @@ export const getPagesCount = async ({
   category?: string;
 }) => {
   const baseFilter = buildFilter({ query, tags, dateFilter, isPublic, category });
+  if (!serverConfig.NOTION_DATABASE_ID) throw new Error("Missing NOTION_DATABASE_ID");
   const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_DATABASE_ID!,
+    database_id: serverConfig.NOTION_DATABASE_ID,
     filter: {
       and: baseFilter,
     },
@@ -187,13 +190,14 @@ export const searchPages = async ({
   // Notion's max page_size is 100, so for large offsets we may need to paginate,
   // but this is still far fewer calls than the previous approach.
   const totalNeeded = page * limit;
-  const allResults: any[] = [];
+  const allResults: unknown[] = [];
   let startCursor: string | undefined = undefined;
 
   while (allResults.length < totalNeeded) {
     const batchSize = Math.min(100, totalNeeded - allResults.length);
+    if (!serverConfig.NOTION_DATABASE_ID) throw new Error("Missing NOTION_DATABASE_ID");
     const response = await notionClient.databases.query({
-      database_id: serverConfig.NOTION_DATABASE_ID!,
+      database_id: serverConfig.NOTION_DATABASE_ID,
       filter: {
         and: baseFilter,
       },
@@ -222,27 +226,30 @@ export const searchPages = async ({
 };
 
 export const getBlogFilters = async () => {
+  if (!serverConfig.NOTION_DATABASE_ID) throw new Error("Missing NOTION_DATABASE_ID");
   const database = await notionClient.databases.retrieve({
-    database_id: serverConfig.NOTION_DATABASE_ID!,
+    database_id: serverConfig.NOTION_DATABASE_ID,
   });
-  const tagsProperty = database.properties.Tags as any;
-  const categoriesProperty = database.properties.Category as any;
-  const tags = tagsProperty?.multi_select?.options.map((tag: any) => (tag.name)) || [];
-  const categories = categoriesProperty?.select?.options.map((option: any) => (option.name)) || [];
+  const tagsProperty = database.properties.Tags as { multi_select?: { options: { name: string }[] } };
+  const categoriesProperty = database.properties.Category as { select?: { options: { name: string }[] } };
+  const tags = tagsProperty?.multi_select?.options.map((tag) => (tag.name)) || [];
+  const categories = categoriesProperty?.select?.options.map((option) => (option.name)) || [];
   return { tags, categories };
 };
 
 export const getProjectType = async () => {
+  if (!serverConfig.NOTION_PROJECT_ID) throw new Error("Missing NOTION_PROJECT_ID");
   const database = await notionClient.databases.retrieve({
-    database_id: serverConfig.NOTION_PROJECT_ID!,
+    database_id: serverConfig.NOTION_PROJECT_ID,
   });
-  const typeProperty = database.properties.Category as any;
+  const typeProperty = database.properties.Category as { select?: { options: { id: string; name: string }[] } };
   return typeProperty.select?.options;
 };
 
 export const getProject = async () => {
+  if (!serverConfig.NOTION_PROJECT_ID) throw new Error("Missing NOTION_PROJECT_ID");
   const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_PROJECT_ID!,
+    database_id: serverConfig.NOTION_PROJECT_ID,
     sorts: [
       {
         property: "End",
@@ -254,8 +261,9 @@ export const getProject = async () => {
 };
 
 export const getExperience = async () => {
+  if (!serverConfig.NOTION_EXPERIENCE_ID) throw new Error("Missing NOTION_EXPERIENCE_ID");
   const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_EXPERIENCE_ID!,
+    database_id: serverConfig.NOTION_EXPERIENCE_ID,
     sorts: [
       {
         property: "End",
@@ -267,8 +275,9 @@ export const getExperience = async () => {
 };
 
 export const getEducation = async () => {
+  if (!serverConfig.NOTION_EDUCATION_ID) throw new Error("Missing NOTION_EDUCATION_ID");
   const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_EDUCATION_ID!,
+    database_id: serverConfig.NOTION_EDUCATION_ID,
     sorts: [
       {
         property: "End",
@@ -280,8 +289,9 @@ export const getEducation = async () => {
 };
 
 export const getTestimonials = async () => {
+  if (!serverConfig.NOTION_TESTIMONIAL_ID) throw new Error("Missing NOTION_TESTIMONIAL_ID");
   const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_TESTIMONIAL_ID!,
+    database_id: serverConfig.NOTION_TESTIMONIAL_ID,
     sorts: [
       {
         property: "Date",
@@ -293,8 +303,9 @@ export const getTestimonials = async () => {
 };
 
 export const getBlogs = async () => {
+  if (!serverConfig.NOTION_DATABASE_ID) throw new Error("Missing NOTION_DATABASE_ID");
   const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_DATABASE_ID!,
+    database_id: serverConfig.NOTION_DATABASE_ID,
     filter: {
       property: "Public",
       checkbox: { equals: true },

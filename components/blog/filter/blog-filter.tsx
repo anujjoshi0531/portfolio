@@ -16,8 +16,6 @@ import { useFilters } from "@/hooks";
 import { cn } from "@/lib";
 import { SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { BlogFilterDate } from "./blog-filter-date";
@@ -25,7 +23,7 @@ import { BlogFiltertag } from "./blog-tag";
 import { BlogSort } from "./blog-sort";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export const BlogFilter= ({tags, categories}: {tags: string[], categories: string[]}) => {
+export const BlogFilter = ({ tags, categories }: { tags: string[], categories: string[] }) => {
   const { count, getFilter, setFilter, saveFilters, clearFilters } =
     useFilters();
 
@@ -49,7 +47,7 @@ export const BlogFilter= ({tags, categories}: {tags: string[], categories: strin
           <div className="space-y-6 py-2">
             {/* Tags Filter */}
             <div className="space-y-2">
-              <BlogFiltertag 
+              <BlogFiltertag
                 tags={tags}
                 value={getFilter("tags")}
                 onChange={(value) => setFilter({ tags: value })}
@@ -73,12 +71,12 @@ export const BlogFilter= ({tags, categories}: {tags: string[], categories: strin
               />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
                 <Label className="flex text-muted-foreground" htmlFor="sort_by">Sort By</Label>
-                <BlogSort 
+                <BlogSort
                   defaultValue={getFilter("sort_by") || "published-descending"}
                   onSortChange={(value) => setFilter({ sort_by: value })}
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1"> 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
                 <Label className="flex text-muted-foreground" htmlFor="limit">Blogs Per Page</Label>
                 <Input
                   id="limit"

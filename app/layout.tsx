@@ -318,7 +318,9 @@ export default async function Layout({
           </DarkProvider>
         </ThemeProvider>
       </body>
-      <GoogleAnalytics gaId={clientConfig.GOOGLE_ANALYTICS_ID!} />
+      {clientConfig.GOOGLE_ANALYTICS_ID && (
+        <GoogleAnalytics gaId={clientConfig.GOOGLE_ANALYTICS_ID} />
+      )}
     </html>
   );
 }

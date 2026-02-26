@@ -45,10 +45,26 @@ function EducationSkeleton() {
   );
 }
 
+type NotionEduProps = {
+  id?: string;
+  properties?: {
+    Course?: { title?: NotionRichTextItem[] };
+    Institution?: { rich_text?: NotionRichTextItem[] };
+    Place?: { rich_text?: NotionRichTextItem[] };
+    Grade?: { rich_text?: NotionRichTextItem[] };
+    Description?: { rich_text?: NotionRichTextItem[] };
+    Start?: { date?: { start?: string } };
+    End?: { date?: { start?: string } };
+    Skills?: { multi_select?: NotionSelectOption[] };
+    Type?: { select?: NotionSelectOption };
+    URL?: { url?: string };
+  };
+};
+
 async function EducationData() {
   const data = await getEducation();
 
-  const education = (data as any[]).map((item: any) => ({
+  const education = (data as NotionEduProps[]).map((item) => ({
     id: item.id || Math.random().toString(),
     course: extractPlainText(item.properties?.Course?.title) || "Course not specified",
     institution: extractPlainText(item.properties?.Institution?.rich_text) || "Institution not specified",
@@ -57,12 +73,12 @@ async function EducationData() {
     description: extractPlainText(item.properties?.Description?.rich_text).split("\n").filter((line: string) => line.trim() !== "") || [],
     start: item.properties?.Start?.date?.start || "",
     end: item.properties?.End?.date?.start || "",
-    skills: item.properties?.Skills?.multi_select?.map((skill: any) => skill.name) || [],
+    skills: item.properties?.Skills?.multi_select?.map((skill) => skill.name) || [],
     type: item.properties?.Type?.select?.name || "",
     url: item.properties?.URL?.url || "",
   }));
 
-  education.sort((a: any, b: any) => {
+  education.sort((a, b) => {
     const dateA = a.start ? new Date(a.start).getTime() : 0;
     const dateB = b.start ? new Date(b.start).getTime() : 0;
     return dateB - dateA;

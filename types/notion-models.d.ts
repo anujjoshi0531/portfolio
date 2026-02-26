@@ -38,7 +38,7 @@ type NotionBlogPage = {
     id: string;
     created_time: string;
     last_edited_time: string;
-    cover?: { type: "external"; external: { url: string } } | null;
+    cover?: { type: "external" | "file"; external?: { url: string }; file?: { url: string } } | null;
     properties: {
         Name: { title: NotionRichTextItem[] };
         Description: { rich_text: NotionRichTextItem[] };
@@ -60,7 +60,7 @@ type NotionProjectPage = {
     id: string;
     created_time: string;
     last_edited_time: string;
-    cover?: { type: "external"; external: { url: string } } | null;
+    cover?: { type: "external" | "file"; external?: { url: string }; file?: { url: string } } | null;
     properties: {
         Name: { title: NotionRichTextItem[] };
         Description: { rich_text: NotionRichTextItem[] };

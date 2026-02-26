@@ -6,8 +6,8 @@ interface SearchResultsProps {
   className?: string;
   hasQuery: boolean
   query: string
-  searchResult: any
-  searchError: any
+  searchResult: unknown
+  searchError: unknown
   onClose: () => void
 }
 
@@ -17,11 +17,12 @@ export function SearchResults({ className, hasQuery, query, searchResult, search
       <div className="max-h-[500px] overflow-y-auto">
         {!hasQuery ? (
           <EmptyState message="Start typing to search pages..." />
-        ) : hasQuery && searchResult ? (
-          searchResult.results?.length > 0 ? (
+        ) : hasQuery && searchResult && Array.isArray((searchResult as { results?: unknown[] }).results) ? (
+          (searchResult as { results: unknown[] }).results.length > 0 ? (
             <div>
-              {searchResult.results.map((page: any) => (
-                <SearchResultItem key={page.id} page={page} onClose={onClose} />
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(searchResult as any).results.map((page: NotionBlogPage) => (
+                <SearchResultItem key={page.id} page={page as any} onClose={onClose} /> // eslint-disable-line @typescript-eslint/no-explicit-any
               ))}
             </div>
           ) : (
@@ -31,7 +32,8 @@ export function SearchResults({ className, hasQuery, query, searchResult, search
           <EmptyState variant="error" title="Search error" message="Please try again or contact support" />
         ) : null}
       </div>
-      {hasQuery && searchResult && searchResult.results && <SearchFooter count={searchResult.results.length || 0} />}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {hasQuery && searchResult && (searchResult as any).results && <SearchFooter count={(searchResult as any).results.length || 0} />}
     </div>
   )
 }

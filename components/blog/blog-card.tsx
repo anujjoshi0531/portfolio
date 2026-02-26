@@ -53,7 +53,7 @@ export default function BlogCard({
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
           <div className="absolute bottom-1 left-2 flex gap-1">
-            {tags.map((topic: any) => (
+            {tags.map((topic) => (
               <Badge key={topic.id}>{topic.name}</Badge>
             ))}
           </div>

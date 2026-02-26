@@ -6,8 +6,7 @@ import {
 } from "lucide-react"
 
 import { cn } from "@/lib"
-import { Button, buttonVariants } from "@/components/ui/button"
-import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
@@ -61,7 +60,7 @@ function PaginationLink({
       size={size}
       className={className}
       {...props}
-    >  
+    >
       {props.children}
     </Button>
   )

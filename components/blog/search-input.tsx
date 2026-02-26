@@ -39,7 +39,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   } = useSearchDropdown();
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [, setIsOpen] = useState(false);
   const value = String(propValue ?? term);
 
   // Sync dropdown query with input value
@@ -117,16 +117,16 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         </Button>
       </div>
       {hasQuery && (
-      <SearchResults
-        className="absolute -z-10 top-[calc(100%-40px)] pt-8 left-2 w-[calc(100%-20px)] bg-background border"
-        hasQuery={hasQuery}
-        query={dropdownQuery}
-        searchResult={searchResult}
-        searchError={searchError}
-        onClose={handleClose}
-      />
+        <SearchResults
+          className="absolute -z-10 top-[calc(100%-40px)] pt-8 left-2 w-[calc(100%-20px)] bg-background border"
+          hasQuery={hasQuery}
+          query={dropdownQuery}
+          searchResult={searchResult}
+          searchError={searchError}
+          onClose={handleClose}
+        />
       )}
     </div>
-      
+
   );
 };

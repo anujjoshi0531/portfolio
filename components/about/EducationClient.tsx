@@ -85,7 +85,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
                 {/* Description */}
                 {edu.description && edu.description.length > 0 && (
                     <ul className="list-none my-2 pl-5 text-sm text-muted-foreground">
-                        {edu.description.map((desc: any, index: number) => (
+                        {edu.description.map((desc: string, index: number) => (
                             <li key={index} className="custom-bullet">
                                 {desc}
                             </li>

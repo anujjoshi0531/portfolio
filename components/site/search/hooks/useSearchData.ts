@@ -6,8 +6,8 @@ import { useDebounce } from "@/hooks/useDebounce"
 export function useSearchData() {
   const [query, setQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [searchResult, setSearchResult] = useState<any>(null)
-  const [searchError, setSearchError] = useState<any>(null)
+  const [searchResult, setSearchResult] = useState<unknown>(null)
+  const [searchError, setSearchError] = useState<unknown>(null)
 
   const value = useDebounce<string>(query, 300)
   const hasQuery = useMemo(() => query.trim().length > 0, [query])
@@ -37,7 +37,7 @@ export function useSearchData() {
 
         const res = await result.json()
         setSearchResult(res)
-      } catch (error: any) {
+      } catch (error) {
         console.error("Search error:", error)
         setSearchError({ error: "Search failed" })
         setSearchResult(null)

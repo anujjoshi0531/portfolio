@@ -1,8 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useMemo, useState } from "react"
-import { childVariants, containerVariants } from "@/components/animate/animate"
+import { useMemo } from "react"
 import { PageTemplate } from "@/components/global/template"
 import ProjectCard from "@/components/global/project-card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"

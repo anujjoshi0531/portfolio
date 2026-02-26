@@ -5,8 +5,15 @@ import { FileIcon, Calendar, User } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { extractPlainText, timeAgo } from "@/lib"
 
+type SearchResultPage = NotionBlogPage & {
+  icon?: { emoji?: string };
+  properties: NotionBlogPage["properties"] & {
+    Type?: { select?: { name: string } };
+  }
+}
+
 interface SearchResultItemProps {
-  page: any
+  page: SearchResultPage
   onClose: () => void
 }
 
@@ -54,14 +61,14 @@ export const SearchResultItem = (function SearchResultItem({ page, onClose }: Se
             {publishedDate && (
               <div className="flex items-center gap-1">
                 <Calendar className="size-3" />
-                <span>{timeAgo(publishedDate)}</span>
+                <span>{timeAgo(new Date(publishedDate))}</span>
               </div>
             )}
           </div>
 
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mt-2">
-              {tags.map((tag: any) => (
+              {tags.map((tag) => (
                 <Badge key={tag.id} variant="outline">
                   {tag.name}
                 </Badge>

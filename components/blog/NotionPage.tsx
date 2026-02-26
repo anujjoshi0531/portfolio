@@ -66,6 +66,7 @@ const Modal = dynamic(
 )
 
 const propertyLastEditedTimeValue = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { block, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
@@ -76,6 +77,7 @@ const propertyLastEditedTimeValue = (
 }
 
 const propertyDateValue = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { data, schema, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
@@ -89,6 +91,7 @@ const propertyDateValue = (
 }
 
 const propertyTextValue = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { schema, pageHeader }: any,
   defaultFn: () => React.ReactNode
 ) => {
@@ -101,6 +104,7 @@ const propertyTextValue = (
 export function NotionPage({
   recordMap,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   recordMap: any
 }) {
   const components = React.useMemo<Partial<NotionComponents>>(

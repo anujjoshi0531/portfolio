@@ -9,7 +9,7 @@ import Link from "next/link"
 import { FileIcon } from "lucide-react"
 
 interface ProjectClientProps {
-    projects: any[]
+    projects: NotionProjectPage[]
     className?: string
 }
 
@@ -35,7 +35,7 @@ export default function ProjectClient({ projects, className }: ProjectClientProp
 
         return (
             <>
-                {projects.map((project: any, index: number) => (
+                {projects.map((project, index: number) => (
                     <ProjectCard key={project.id || `project-${index}`} project={project} />
                 ))}
                 <div className="flex items-center justify-center my-auto mx-8 shrink-0">
