@@ -13,6 +13,7 @@ import {
 
 type LinkPreviewProps = {
     children: React.ReactNode;
+    title?: string;
     url: string;
     className?: string;
     width?: number;
@@ -26,6 +27,7 @@ type LinkPreviewProps = {
 
 export const LinkPreview = ({
     children,
+    title,
     url,
     className,
     width = 200,
@@ -76,7 +78,7 @@ export const LinkPreview = ({
     return (
         <>
             {isMounted ? (
-                <div className="hidden">
+                <span className="hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={src}
@@ -84,7 +86,7 @@ export const LinkPreview = ({
                         height={height}
                         alt=""
                     />
-                </div>
+                </span>
             ) : null}
 
             <HoverCardPrimitive.Root
@@ -130,6 +132,8 @@ export const LinkPreview = ({
                             >
                                 <a
                                     href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="block p-1 bg-foreground border-[1px] border-transparent shadow rounded-lg hover:border-neutral-200 dark:hover:border-neutral-800"
                                     style={{ fontSize: 0 }}
                                 >
@@ -139,7 +143,7 @@ export const LinkPreview = ({
                                         width={width}
                                         height={height}
                                         className="rounded-lg"
-                                        alt=""
+                                        alt={title || ""}
                                     />
                                 </a>
                             </motion.div>

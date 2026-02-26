@@ -20,6 +20,7 @@ interface Education {
     skills: string[];
     type: string;
     url: string;
+    certificate: string;
 }
 
 const EduCard = ({ edu }: { edu: Education }) => {
@@ -59,54 +60,61 @@ const EduCard = ({ edu }: { edu: Education }) => {
             >
                 <FaGraduationCap className="text-2xl" />
             </motion.div>
-            {/* Card */}
-            <motion.div
-                className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] px-8 py-6 rounded-lg shadow-md transition-all bg-muted/40 border border-border group-hover:shadow-lg group-hover:shadow-theme/10"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+            {/* Card — entire card is a LinkPreview for edu.url */}
+            <LinkPreview
+                title={edu.institution}
+                url={edu.certificate || edu.url}
+                className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)]"
+                aria-label={`Visit ${edu.institution} website`}
             >
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
-                    <div className="flex-1">
-                        <div className="flex lg:flex-row flex-col justify-between lg:items-center">
-                            <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
-                                {edu.course}
-                                {edu.grade && <Badge>{edu.grade}</Badge>}
-                            </h3>
-                            <time className="text-xs text-muted-foreground">
-                                {startAgo} - {endAgo}
-                            </time>
+                <motion.div
+                    className="px-8 py-6 rounded-lg shadow-md transition-all bg-muted/40 border border-border group-hover:shadow-lg group-hover:shadow-theme/10"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    {/* Header */}
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
+                        <div className="flex-1">
+                            <div className="flex lg:flex-row flex-col justify-between lg:items-center">
+                                <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
+                                    {edu.course}
+                                    {edu.grade && <Badge>{edu.grade}</Badge>}
+                                </h3>
+                                <time className="text-xs text-muted-foreground">
+                                    {startAgo} - {endAgo}
+                                </time>
+                            </div>
+                            <LinkPreview title={edu.institution} url={edu.url || "#"} className="font-medium text-sm my-1 text-muted-foreground">
+                                {edu.institution},&nbsp;
+                                <span>{edu.place}</span>
+                            </LinkPreview>
                         </div>
-                        <LinkPreview url={edu.url || "#"} className="font-medium link text-sm my-1" aria-label={`Visit ${edu.institution} website`}>
-                            {edu.institution},&nbsp;
-                            <span>{edu.place}</span>
-                        </LinkPreview>
                     </div>
-                </div>
 
-                {/* Description */}
-                {edu.description && edu.description.length > 0 && (
-                    <ul className="list-none my-2 pl-5 text-sm text-muted-foreground">
-                        {edu.description.map((desc: string, index: number) => (
-                            <li key={index} className="custom-bullet">
-                                {desc}
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                    {/* Description */}
+                    {edu.description && edu.description.length > 0 && (
+                        <ul className="list-none my-2 pl-5 text-sm text-muted-foreground">
+                            {edu.description.map((desc: string, index: number) => (
+                                <li key={index} className="custom-bullet">
+                                    {desc}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
 
-                {/* Skills */}
-                {edu.skills && edu.skills.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-1">
-                        {edu.skills.map((skill, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                                {skill}
-                            </Badge>
-                        ))}
-                    </div>
-                )}
-            </motion.div>
+                    {/* Skills */}
+                    {edu.skills && edu.skills.length > 0 && (
+                        <div className="mt-4 flex flex-wrap gap-1">
+                            {edu.skills.map((skill, index) => (
+                                <Badge key={index} variant="outline" className="text-xs">
+                                    {skill}
+                                </Badge>
+                            ))}
+                        </div>
+                    )}
+                </motion.div>
+            </LinkPreview>
         </div>
     );
 };
@@ -129,7 +137,7 @@ export default function EducationClient({ education }: EducationClientProps) {
                 <div className="absolute inset-0 ml-5 -translate-x-1 md:mx-auto md:translate-x-0 translate-y-32 h-[72%] w-1 bg-muted" />
                 <motion.div
                     style={{ height: bgHeight }}
-                    className="absolute inset-0 ml-5 -translate-x-1 md:mx-auto md:translate-x-0 translate-y-16 max-h-[72%] w-1 bg-theme"
+                    className="absolute inset-0 ml-5 -translate-x-1 md:mx-auto md:translate-x-0 translate-y-32 max-h-[72%] w-1 bg-theme"
                 />
                 {education.map((edu, index) => <EduCard edu={edu} key={edu.id || index} />)}
             </div>

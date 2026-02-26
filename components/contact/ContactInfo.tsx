@@ -33,7 +33,7 @@ export default function ContactInfo() {
         </div>
         <div className="hover:-translate-y-1 duration-150">
           <p className="font-semibold">Location</p>
-          <LinkPreview url="https://share.google/IqMNA0wxT6dyQ2fsS" className="flex gap-2 items-center">
+          <LinkPreview title="New Delhi, India" url="https://share.google/IqMNA0wxT6dyQ2fsS" className="flex gap-2 items-center">
             <FaMapMarkerAlt className="text-theme" />
             <span className="link">New Delhi, India</span>
           </LinkPreview>

@@ -58,6 +58,7 @@ type NotionEduProps = {
     Skills?: { multi_select?: NotionSelectOption[] };
     Type?: { select?: NotionSelectOption };
     URL?: { url?: string };
+    Certificate?: { url?: string };
   };
 };
 
@@ -74,6 +75,7 @@ function processEducation(data: NotionEduProps[]) {
     skills: item.properties?.Skills?.multi_select?.map((skill) => skill.name) || [],
     type: item.properties?.Type?.select?.name || "",
     url: item.properties?.URL?.url || "",
+    certificate: item.properties?.Certificate?.url || "",
   }));
 
   return education.sort((a, b) => {

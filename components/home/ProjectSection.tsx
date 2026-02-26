@@ -5,7 +5,7 @@ import { Skeleton } from "../ui/skeleton"
 
 function ProjectSkeleton() {
   return (
-    <section className="relative h-[300vh]" aria-label="Projects showcase">
+    <section className="relative h-[100vh]" aria-label="Projects showcase">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
         <div className="flex gap-4">
           {Array.from({ length: 3 }).map((_, index) => (

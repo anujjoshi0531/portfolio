@@ -6,7 +6,7 @@ import Link from "next/link";
 import { memo } from "react";
 import { extractPlainText } from "@/lib";
 import { LinkPreview } from "@/components/animate/LinkPreview";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib";
 
 interface ProjectTag {
   id: string;
@@ -16,11 +16,8 @@ interface ProjectTag {
 interface ProjectCardProps {
   project: NotionProjectPage;
   size?: boolean;
-  /** FocusCard-style: index of this card in its sibling list */
   index?: number;
-  /** FocusCard-style: which sibling is currently hovered (-1 = none) */
   hovered?: number | null;
-  /** FocusCard-style: setter to track which card is hovered */
   setHovered?: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
@@ -71,6 +68,7 @@ const ProjectCard = ({
         {/* Action links */}
         <div className="absolute top-4 left-4 flex gap-3">
           <LinkPreview
+            title={title}
             url={githubUrl}
             className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
             aria-label={`View ${title} GitHub repository`}
@@ -78,6 +76,7 @@ const ProjectCard = ({
             <FaGithub />
           </LinkPreview>
           <LinkPreview
+            title={title}
             url={liveUrl}
             className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
             aria-label={`Visit ${title} live website`}

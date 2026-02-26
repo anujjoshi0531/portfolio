@@ -1,3 +1,5 @@
+import { LinkPreview } from "../animate/LinkPreview";
+
 interface HeroSocialProps {
   title: string;
   name: string;
@@ -7,11 +9,7 @@ interface HeroSocialProps {
 
 function HeroSocial({ title, name, href, icon: Icon }: HeroSocialProps) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group md:flex items-center justify-center gap-2 hover:scale-105 transition-all duration-150 md:text-left text-center">
+    <LinkPreview url={href} title={title} className="group md:flex items-center justify-center gap-2 hover:scale-105 transition-all duration-150 md:text-left text-center">
       {Icon && (
         <Icon className="text-theme text-2xl md:text-3xl group-hover:text-primary my-2 mx-auto" />
       )}
@@ -19,7 +17,7 @@ function HeroSocial({ title, name, href, icon: Icon }: HeroSocialProps) {
         <p className="font-bold text-sm md:text-md">{title}</p>
         <p className="text-xs">{name}</p>
       </div>
-    </a>
+    </LinkPreview>
   );
 }
 
@@ -32,15 +30,14 @@ interface SocialIconProps {
 
 function SocialIcon({ href, title, children }: SocialIconProps) {
   return (
-    <a
+    <button
       className="group relative isolate rounded-full p-2 transition-all shrink-0 before:absolute before:inset-px before:-z-10 before:rounded-full before:transition-all before:duration-500  hover:before:inset-full bg-background hover:bg-primary hover:text-background before:bg-background"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
       aria-label={title}
       title={title}>
-      {children}
-    </a>
+      <LinkPreview url={href} title={title}>
+        {children}
+      </LinkPreview>
+    </button>
   );
 }
 

@@ -111,7 +111,7 @@ export default function BlogCard({
               </Avatar>
               <span className="text-xs">{author || "User"}</span>
             </div>
-            <time className="text-xs" dateTime={blog.created_time ? new Date(blog.created_time).toISOString() : undefined}>
+            <time className="text-xs" dateTime={blog.created_time ? new Date(blog.created_time).toISOString() : undefined} suppressHydrationWarning>
               {timeAgo(blog.created_time as unknown as Date)}
             </time>
           </CardContent>
