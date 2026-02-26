@@ -32,7 +32,7 @@ function TestimonialSkeleton() {
   );
 }
 
-function transformNotionData(notionData: any[]) {
+function transformNotionData(notionData: NotionTestimonialPage[]) {
   return notionData.map((item) => ({
     id: item.id,
     name: extractPlainText(item.properties.Name.rich_text) || "Anonymous",
@@ -49,7 +49,7 @@ function transformNotionData(notionData: any[]) {
 
 async function TestimonialData() {
   const data = await getTestimonials();
-  const testimonials = transformNotionData(data);
+  const testimonials = transformNotionData(data as unknown as NotionTestimonialPage[]);
 
   return <TestimonialClient testimonials={testimonials} />;
 }

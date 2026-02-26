@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic'
-import Image from 'next/legacy/image'
+import Image from 'next/image'
 import Link from 'next/link'
 import { formatDate } from 'notion-utils'
 import * as React from 'react'
@@ -121,11 +121,11 @@ export function NotionPage({
   // Get the first block to determine page type
   const keys = Object.keys(recordMap?.block || {})
   const block = recordMap?.block?.[keys[0]]?.value
-  const {theme} = useTheme()
+  const { theme } = useTheme()
   if (!block) {
     return <NotFound />
   }
-  
+
   return (
     <NotionRenderer
       components={components}

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { config } from "@/lib/constant";
+import { clientConfig } from "@/lib/constant/config.client";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "Anuj Joshi",
     description:
       "Portfolio of Anuj Joshi — a full-stack developer, AI/ML engineer, and Web3 & Robotics enthusiast from DTU. Featuring projects, blogs, open-source work, UI experiments & research in modern technologies.",
-    
+
     start_url: "/",
     scope: "/",
     display: "standalone",
@@ -79,7 +79,7 @@ export default function manifest(): MetadataRoute.Manifest {
     related_applications: [
       {
         platform: "webapp",
-        url: config.BASE_URL,
+        url: clientConfig.BASE_URL,
       }
     ],
     prefer_related_applications: false,

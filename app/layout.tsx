@@ -11,7 +11,7 @@ import Navbar from "@/components/site/Navbar";
 import PopupChatbot from "@/components/providers/chatbot-provider";
 import Footer from "@/components/site/Footer";
 import { GoogleAnalytics } from '@next/third-parties/google'
-import { config } from "@/lib/constant";
+import { clientConfig } from "@/lib/constant/config.client";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,7 +23,7 @@ const poppins = Poppins({
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL(config.BASE_URL),
+  metadataBase: new URL(clientConfig.BASE_URL),
 
   // Basic Information
   applicationName: "Anuj Joshi - Portfolio",
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "Anuj Joshi",
-      url: config.BASE_URL
+      url: clientConfig.BASE_URL
     }
   ],
   creator: "Anuj Joshi",
@@ -110,7 +110,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Anuj Joshi - Portfolio",
     description: "Discover the innovative portfolio of Anuj Joshi, a skilled Computer Science Engineer from DTU specializing in full-stack web development, AI/ML, Web3, and robotics. Featuring cutting-edge projects, insightful technical blogs, and open-source contributions that showcase expertise in modern web technologies and emerging tech trends.",
-    url: config.BASE_URL,
+    url: clientConfig.BASE_URL,
     siteName: "Anuj Joshi - Portfolio",
     locale: "en_US",
     type: "website",
@@ -166,9 +166,9 @@ export const metadata: Metadata = {
 
   // Canonical URL
   alternates: {
-    canonical: config.BASE_URL,
+    canonical: clientConfig.BASE_URL,
     languages: {
-      "x-default": config.BASE_URL
+      "x-default": clientConfig.BASE_URL
     }
   },
 
@@ -178,7 +178,7 @@ export const metadata: Metadata = {
 
   // Verification
   verification: {
-    google: config.GOOGLE_VERIFICATION_ID,
+    google: clientConfig.GOOGLE_VERIFICATION_ID,
   },
 
   other: {
@@ -196,8 +196,8 @@ export const metadata: Metadata = {
 export default async function Layout({
   children,
 }: PropsWithChildren) {
-  const contestApiOrigin = config.CONTEST_API
-    ? new URL(config.CONTEST_API).origin
+  const contestApiOrigin = clientConfig.CONTEST_API
+    ? new URL(clientConfig.CONTEST_API).origin
     : null;
 
   return (
@@ -210,6 +210,91 @@ export default async function Layout({
             <link rel="dns-prefetch" href={contestApiOrigin} />
           </>
         )}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Anuj Joshi",
+              url: clientConfig.BASE_URL,
+              jobTitle: "Full Stack Developer",
+              sameAs: [
+                "https://github.com/anujjoshi0531",
+                "https://www.linkedin.com/in/anujjoshi0531",
+                "https://x.com/anujjoshi3105"
+              ]
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              url: clientConfig.BASE_URL,
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${clientConfig.BASE_URL}/?q={search_term_string}`,
+                "query-input": "required name=search_term_string"
+              }
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Home",
+                  item: clientConfig.BASE_URL
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "About",
+                  item: `${clientConfig.BASE_URL}/about`
+                },
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  name: "Project",
+                  item: `${clientConfig.BASE_URL}/project`
+                },
+                {
+                  "@type": "ListItem",
+                  position: 4,
+                  name: "Blog",
+                  item: `${clientConfig.BASE_URL}/blog`
+                },
+                {
+                  "@type": "ListItem",
+                  position: 5,
+                  name: "Contact",
+                  item: `${clientConfig.BASE_URL}/contact`
+                }
+              ]
+            }),
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var savedColor = localStorage.getItem("themeColor");
+                if (savedColor) {
+                  document.documentElement.style.setProperty("--theme", savedColor);
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body
         className={`overflow-x-hidden ${poppins.className}`}
@@ -233,7 +318,7 @@ export default async function Layout({
           </DarkProvider>
         </ThemeProvider>
       </body>
-      <GoogleAnalytics gaId={config.GOOGLE_ANALYTICS_ID!} />
+      <GoogleAnalytics gaId={clientConfig.GOOGLE_ANALYTICS_ID!} />
     </html>
   );
 }

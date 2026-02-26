@@ -1,10 +1,8 @@
-import { IconType } from "react-icons";
-
 interface HeroSocialProps {
   title: string;
   name: string;
   href: string;
-  icon?: IconType;
+  icon?: React.ComponentType<{ className?: string }>;
 }
 
 function HeroSocial({ title, name, href, icon: Icon }: HeroSocialProps) {
@@ -49,7 +47,7 @@ function SocialIcon({ href, title, children }: SocialIconProps) {
 interface SocialLinkProps {
   title: string;
   href: string;
-  icon?: IconType;
+  icon?: React.ComponentType<{ className?: string }>;
 }
 function SocialLink({ title, href, icon: Icon }: SocialLinkProps) {
   return (

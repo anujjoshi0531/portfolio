@@ -1,4 +1,3 @@
-"use client";
 import { PageTemplate } from "@/components/global/template";
 import ContactForm from "@/components/contact/ContactForm";
 import ContactInfo from "@/components/contact/ContactInfo";

@@ -1,6 +1,6 @@
 "use client";
 
-import { config } from "@/lib/constant";
+import { clientConfig } from "@/lib/constant/config.client";
 import dynamic from "next/dynamic";
 import "chatui/dist/chatui.css";
 import { Sparkles } from "lucide-react";
@@ -24,8 +24,8 @@ export default function ChatbotProvider() {
 
   return (
     <PopupChatbot
-      url={config.CHATBOT_URL}
-      apiKey={config.CHATBOT_API_KEY}
+      url={clientConfig.CHATBOT_URL}
+      apiKey={clientConfig.CHATBOT_API_KEY}
       position="bottom-right"
       header={{
         show: true,

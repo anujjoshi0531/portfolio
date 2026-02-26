@@ -1,15 +1,13 @@
-"use client"
-
 import { PageTemplate } from "@/components/global/template"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import SVG404 from "@/components/site/SVG404"
+import GoBackButton from "@/components/site/GoBackButton"
 
 export default function NotFound() {
   return (
     <>
-    <PageTemplate />
+      <PageTemplate />
       <div className="min-h-[80vh] flex items-center justify-center px-4">
         <div className="text-center space-y-8 max-w-2xl mx-auto">
           {/* 404 Illustration */}
@@ -39,13 +37,10 @@ export default function NotFound() {
                 Go Home
               </Link>
             </Button>
-            <Button variant="secondary" onClick={() => window.history.back()} className="min-w-[140px]" aria-label="Go back to previous page">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Go Back
-            </Button>
+            <GoBackButton />
           </div>
 
-            </div>
+        </div>
       </div>
     </>
 

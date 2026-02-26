@@ -6,19 +6,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+});
+
 export const timeAgo = (
   timestamp: Date | null
 ): string => {
   if (!timestamp) return "Never";
 
-  const diff = Date.now() - new Date(timestamp).getTime();
+  const date = new Date(timestamp);
+  const diff = Date.now() - date.getTime();
 
   if (diff < 1000) return "Just now";
   if (diff < 60000) return `${Math.floor(diff / 1000)} seconds ago`;
   if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
   if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+  if (diff < 2592000000) return `${Math.floor(diff / 86400000)} days ago`;
 
-  return new Date(timestamp).toLocaleDateString();
+  return dateFormatter.format(date);
 };
 
 export const extractPlainText = (richText: any): string =>

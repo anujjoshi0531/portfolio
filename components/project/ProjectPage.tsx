@@ -45,7 +45,7 @@ async function ProjectPageData() {
     getProjectType(),
   ])
 
-  return <ProjectPageClient projects={projects} types={types || []} />
+  return <ProjectPageClient projects={projects as unknown as NotionProjectPage[]} types={(types || []) as unknown as NotionProjectType[]} />
 }
 
 export default function ProjectPage() {

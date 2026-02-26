@@ -4,7 +4,6 @@ import {
   FaGithub,
   FaInstagram,
   FaJs,
-  FaLinkedin,
   FaNodeJs,
   FaPython,
   FaReact,
@@ -33,31 +32,41 @@ import {
   SiGeeksforgeeks,
 } from "react-icons/si";
 
-export const socialLinks = [
+/**
+ * Single source of truth for all social links.
+ * `icon` is an IconType (component reference, not JSX) so it can be rendered
+ * either as <Icon /> (Navbar/Footer) or passed to HeroSocial as a prop.
+ */
+export const socialLinks: SocialLinkEntry[] = [
   {
     title: "GitHub",
+    name: "@Anujjoshi3105",
     href: "https://github.com/Anujjoshi3105/",
-    icon: <FaGithub />,
+    icon: FaGithub,
   },
   {
     title: "LinkedIn",
+    name: "@Anujjoshi3105",
     href: "https://www.linkedin.com/in/anujjoshi3105/",
-    icon: <FaLinkedin />,
+    icon: FaLinkedinIn,
   },
   {
     title: "X (Twitter)",
+    name: "@Anujjoshi3105",
     href: "https://x.com/anujjoshi3105",
-    icon: <FaXTwitter />,
+    icon: FaXTwitter,
   },
   {
     title: "Telegram",
+    name: "@Anujjoshi3105",
     href: "https://t.me/anujjoshi3105/",
-    icon: <FaTelegram />,
+    icon: FaTelegram,
   },
   {
     title: "Instagram",
+    name: "@Anujjoshi3105",
     href: "https://www.instagram.com/anujjoshi3105/",
-    icon: <FaInstagram />,
+    icon: FaInstagram,
   },
 ];
 export const skills = [
@@ -195,26 +204,8 @@ export const perkData = [
     rating: 900,
   },
 ];
-export const socialLink = [
-  {
-    title: "LinkedIn",
-    name: "@Anujjoshi3105",
-    link: "https://www.linkedin.com/in/anujjoshi3105/",
-    icon: FaLinkedinIn,
-  },
-  {
-    title: "Twitter",
-    name: "@Anujjoshi3105",
-    link: "https://x.com/AnujJoshi3105/",
-    icon: FaXTwitter,
-  },
-  {
-    title: "Telegram",
-    name: "@Anujjoshi3105",
-    link: "https://t.me/anujjoshi3105/",
-    icon: FaTelegram,
-  },
-];
+// `socialLink` has been removed — use `socialLinks` (the unified array) instead.
+// Hero.tsx filters to LinkedIn, X, and Telegram using .filter().
 
 export const sortOptions = [
   {

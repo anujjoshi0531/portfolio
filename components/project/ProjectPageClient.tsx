@@ -9,8 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import NoWork from "../site/NoWork"
 
 interface ProjectPageClientProps {
-    projects: any[]
-    types: any[]
+    projects: NotionProjectPage[]
+    types: NotionProjectType[]
 }
 
 export default function ProjectPageClient({ projects, types }: ProjectPageClientProps) {
@@ -21,14 +21,14 @@ export default function ProjectPageClient({ projects, types }: ProjectPageClient
 
     const getFilteredProjects = (categoryId: string) => {
         if (categoryId === "-1") return allProjects
-        return allProjects.filter((project: any) => project?.properties?.Category?.select?.id === categoryId)
+        return allProjects.filter((project) => project?.properties?.Category?.select?.id === categoryId)
     }
 
     const renderProjectCards = (categoryId: string) => {
         const filteredProjects = getFilteredProjects(categoryId)
         return filteredProjects.length > 0 ? (
             <div className="grid py-2 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {filteredProjects.map((project: any) => (
+                {filteredProjects.map((project) => (
                     <ProjectCard key={project.id} project={project} size={true} />
                 ))}
             </div>
@@ -54,7 +54,7 @@ export default function ProjectPageClient({ projects, types }: ProjectPageClient
                         >
                             All
                         </TabsTrigger>
-                        {types?.map((type: any) => (
+                        {types?.map((type) => (
                             <TabsTrigger
                                 key={type.id}
                                 value={type.id}
@@ -68,7 +68,7 @@ export default function ProjectPageClient({ projects, types }: ProjectPageClient
 
                     <TabsContent value="-1">{renderProjectCards("-1")}</TabsContent>
 
-                    {types?.map((type: any) => (
+                    {types?.map((type) => (
                         <TabsContent key={type.id} value={type.id}>
                             {renderProjectCards(type.id)}
                         </TabsContent>

@@ -19,7 +19,7 @@ async function BlogData({ tags }: { tags?: string[] }) {
     tags,
   })
 
-  return <BlogClient blogs={data.results} />
+  return <BlogClient blogs={data.results as unknown as NotionBlogPage[]} />
 }
 
 export default function BlogSection({ tags }: { tags?: string[] }) {

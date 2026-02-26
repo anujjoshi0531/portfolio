@@ -2,12 +2,15 @@ import { FaCertificate, FaCode } from "react-icons/fa6";
 import { perkData } from "@/lib";
 import { Perk, PerkAnimation } from "@/components/global/perk";
 import { useEffect, useState, useRef } from "react";
-import { config } from "@/lib/constant";
+import { clientConfig } from "@/lib/constant/config.client";
 
-export default function PerkSection() {
+interface PerkSectionProps {
+  totalProjects: number;
+}
+
+export default function PerkSection({ totalProjects }: PerkSectionProps) {
   const [loading, setLoading] = useState(true);
   const [ratings, setRatings] = useState<Record<string, PerkRating>>({});
-  const [totalProjects, setTotalProjects] = useState(0);
   const experienceYears = new Date().getFullYear() - 2022;
   const sectionRef = useRef<HTMLDivElement>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -39,23 +42,13 @@ export default function PerkSection() {
 
   async function fetchData() {
     try {
-      const projectsRes = await fetch("/api/project", {
-        headers: {
-          'Cache-Control': 'max-age=3600',
-        },
-      }).then((res) => res.json()).catch((err) => {
-        console.error("Error fetching projects:", err);
-        return [];
-      });
-      setTotalProjects(projectsRes?.length || 0);
-
       const ratingPromises = perkData.map((perk) =>
         fetch(
-          `${config.CONTEST_API}/${perk.platform}?username=${perk.username}`,
+          `${clientConfig.CONTEST_API}/${perk.platform}?username=${perk.username}`,
           { next: { revalidate: 3600 } }
         )
           .then((res) => {
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            if (!res.ok) return null;
             return res.json();
           })
           .catch((err) => {
@@ -64,16 +57,15 @@ export default function PerkSection() {
           })
       );
 
-      Promise.allSettled(ratingPromises).then((results) => {
-        const fetchedRatings = perkData.reduce((acc, perk, idx) => {
-          const result = results[idx];
-          if (result.status === 'fulfilled' && result.value) {
-            acc[perk.platform.toLowerCase()] = result.value;
-          }
-          return acc;
-        }, {} as Record<string, PerkRating>);
-        setRatings(fetchedRatings);
-      });
+      const results = await Promise.allSettled(ratingPromises);
+      const fetchedRatings = perkData.reduce((acc, perk, idx) => {
+        const result = results[idx];
+        if (result.status === 'fulfilled' && result.value) {
+          acc[perk.platform.toLowerCase()] = result.value;
+        }
+        return acc;
+      }, {} as Record<string, PerkRating>);
+      setRatings(fetchedRatings);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {

@@ -85,16 +85,8 @@ export default function ExperienceClient({ groupedExperiences, types }: Experien
                                     }
                                     aria-label="Next experience"
                                     className={cn(
-                                        "cursor-pointer transform font-bold bg-primary",
-                                        "ring-2 ring-primary border-2 rounded-full p-1 border-background hover:text-primary duration-150",
-                                        "top-1/2 left-0 -translate-x-2 -translate-y-1/2 z-10 group",
-                                        "size-8 rounded-full",
-                                        "bg-primary/80 backdrop-blur-md",
-                                        "shadow-lg",
-                                        "hover:bg-primary",
-                                        "disabled:opacity-0",
-                                        "transition-all duration-300 ease-out",
-                                        "hover:scale-110 active:scale-95",
+                                        "navButtonStyles group",
+                                        "top-1/2 left-0 -translate-x-2 -translate-y-1/2 size-8"
                                     )}
                                 >
                                     <ChevronRight className="size-5 mx-auto text-background transition-colors duration-300" />
@@ -150,7 +142,7 @@ function ExperienceContent({
                     {formattedExperience.end ? timeAgo(formattedExperience.end) : "Present"}
                 </time>
             </div>
-            <a href={formattedExperience.link} className="link cursor-pointer" target="_blank" rel="noopener noreferrer">
+            <a href={formattedExperience.link} className="link cursor-pointer" target="_blank" rel="noopener noreferrer" aria-label={`Visit ${formattedExperience.company} website`}>
                 {formattedExperience.company}
                 {formattedExperience.place && <span>,&nbsp;{formattedExperience.place}</span>}
             </a>

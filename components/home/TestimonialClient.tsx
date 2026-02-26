@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { SectionTemplate } from "@/components/global/template";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib";
 
 interface Testimonial {
     id: string;
@@ -96,7 +97,7 @@ export default function TestimonialClient({ testimonials }: TestimonialClientPro
                     onClick={handlePrev}
                     disabled={testimonials.length === 0}
                     aria-label="Previous testimonial"
-                    className="[grid-area:nav-left] hidden sm:block group before:absolute before:inset-px before:transition-all before:duration-300 before:-z-10 before:rounded-full hover:before:inset-full before:bg-primary rounded-full w-10 h-10 shrink-0 relative isolate bg-background md:mt-4 m-auto text-background text-2xl transition-all delay-300 hover:bg-background border-primary border-2"
+                    className={cn("navButtonClasses group", "[grid-area:nav-left]")}
                 >
                     <FaAngleLeft className="m-auto text-background group-hover:text-primary" />
                 </button>
@@ -113,7 +114,7 @@ export default function TestimonialClient({ testimonials }: TestimonialClientPro
                     onClick={handleNext}
                     disabled={testimonials.length === 0}
                     aria-label="Next testimonial"
-                    className="[grid-area:nav-right] hidden sm:block group before:absolute before:inset-px before:transition-all before:duration-300 before:-z-10 before:rounded-full hover:before:inset-full before:bg-primary rounded-full w-10 h-10 shrink-0 relative isolate bg-background md:mt-4 m-auto text-background text-2xl transition-all delay-300 hover:bg-background border-primary border-2"
+                    className={cn("navButtonClasses group", "[grid-area:nav-right]")}
                 >
                     <FaAngleRight className="m-auto text-background group-hover:text-primary" />
                 </button>

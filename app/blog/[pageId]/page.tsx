@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
       openGraph: {
         title: "Page Not Found",
         description: "The requested page does not exist.",
-        type: "website",
+        type: "article",
         url: `/blog/${pageId}`,
         images: [
           {
@@ -43,7 +43,8 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
     };
   }
 
-  const props = (data as any).properties || {};
+  const page = data as unknown as NotionBlogPage;
+  const props = page.properties;
   const title = extractPlainText(props.Name?.title) || "Untitled";
   const description = extractPlainText(props.Description?.rich_text) || "No description available.";
   const image = props.Thumbnail?.url || `/opengraph-image.webp`;
@@ -59,7 +60,7 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
     openGraph: {
       title,
       description,
-      type: "website",
+      type: "article",
       url: `/blog/${slug}`,
       images: [
         {
@@ -87,13 +88,40 @@ export default async function page({ params }: {
   const { pageId } = await params;
   const { data, recordMap } = await fetchPage(pageId);
   if (validate(pageId)) {
-    const slug = extractPlainText((data as any)?.properties?.Slug?.rich_text);
+    const page = data as unknown as NotionBlogPage;
+    const slug = extractPlainText(page?.properties?.Slug?.rich_text);
     if (slug) redirect(`/blog/${slug}`);
   }
   if (!data) return <NotFound />;
 
-  const tags = (data as any)?.properties?.Tags?.multi_select?.map((tag: any) => tag.name);
+  const page = data as unknown as NotionBlogPage;
+  const tags = page?.properties?.Tags?.multi_select?.map((tag) => tag.name);
+
+  const title = extractPlainText(page?.properties?.Name?.title) || "Untitled";
+  const description = extractPlainText(page?.properties?.Description?.rich_text) || "";
+  const image = page?.properties?.Thumbnail?.url || `/opengraph-image.webp`;
+  const datePublished = page?.created_time || new Date().toISOString();
+  const dateModified = page?.last_edited_time || datePublished;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description: description,
+    image: image,
+    datePublished: datePublished,
+    dateModified: dateModified,
+    author: {
+      "@type": "Person",
+      name: "Anuj Joshi",
+    }
+  };
+
   return <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
     <NotionPage recordMap={recordMap} />
     <BlogSection tags={tags} />
   </>;

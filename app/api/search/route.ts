@@ -17,17 +17,3 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
-  try {
-    const res = await searchPages({});
-    return Response.json(res);
-  } catch (error) {
-    console.error('Error in search-notion (GET):', error)
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-  }
-}

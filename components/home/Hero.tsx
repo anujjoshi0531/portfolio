@@ -7,7 +7,7 @@ import { FaPaperPlane, FaLink } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import Typewriter from "@/components/animate/Typewriter";
 import { childVariants, containerVariants } from "@/components/animate/animate";
-import { socialLink } from "@/lib";
+import { socialLinks } from "@/lib";
 import Link from "next/link";
 
 export default function Hero() {
@@ -73,7 +73,8 @@ export default function Hero() {
             <motion.div variants={childVariants}>
               <Link
                 href="/resume.pdf"
-                target="_blank">
+                target="_blank"
+                rel="noopener noreferrer">
                 <Button variant="secondary" aria-label="Download resume (opens in new tab)">
                   <FaLink />
                   Resume
@@ -89,16 +90,18 @@ export default function Hero() {
           initial="hidden"
           whileInView="visible"
           className="flex justify-center items-center lg:gap-20 gap-10">
-          {socialLink.map(({ title, name, link, icon }) => (
-            <motion.div variants={childVariants} key={title}>
-              <HeroSocial
-                title={title}
-                name={name}
-                href={link}
-                icon={icon}
-              />
-            </motion.div>
-          ))}
+          {socialLinks
+            .filter((l) => ["LinkedIn", "X (Twitter)", "Telegram"].includes(l.title))
+            .map(({ title, name, href, icon }) => (
+              <motion.div variants={childVariants} key={title}>
+                <HeroSocial
+                  title={title}
+                  name={name}
+                  href={href}
+                  icon={icon}
+                />
+              </motion.div>
+            ))}
         </motion.div>
       </div>
     </div>

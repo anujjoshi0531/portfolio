@@ -22,16 +22,8 @@ const ScrollButton = ({
         disabled={disabled}
         aria-label={`Scroll blog posts ${direction}`}
         className={cn(
-            "cursor-pointer transform font-bold bg-primary",
-            "ring-2 ring-primary border-2 rounded-full p-1 border-background hover:text-primary duration-150",
-            "absolute top-1/2 -translate-y-1/2 z-10 group",
-            "size-12 rounded-full",
-            "bg-primary/80 backdrop-blur-md",
-            "shadow-lg",
-            "hover:bg-primary",
-            "disabled:opacity-0",
-            "transition-all duration-300 ease-out",
-            "hover:scale-110 active:scale-95",
+            "navButtonStyles group",
+            "absolute top-1/2 -translate-y-1/2 size-12",
             direction === "left" ? "-left-6" : "-right-6",
         )}
     >
@@ -72,7 +64,7 @@ const ScrollIndicator = ({
 )
 
 interface BlogClientProps {
-    blogs: any[]
+    blogs: NotionBlogPage[]
 }
 
 export default function BlogClient({ blogs }: BlogClientProps) {

@@ -82,11 +82,14 @@ export default function Navbar() {
               <motion.div
                 variants={mobileLinkVars}
                 className="my-2 sm:my-4 flex space-x-6 sm:text-lg md:text-2xl">
-                {socialLinks.map((link, index) => (
-                  <SocialIcon key={index} href={link.href} title={link.title}>
-                    {link.icon}
-                  </SocialIcon>
-                ))}
+                {socialLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <SocialIcon key={link.title} href={link.href} title={link.title}>
+                      <Icon />
+                    </SocialIcon>
+                  );
+                })}
               </motion.div>
             </motion.div>
           </motion.div>
@@ -160,10 +163,10 @@ export default function Navbar() {
                 transition: { type: "spring", stiffness: 300 },
               },
             }}>
-              <div className="flex space-x-2">
-                <ModeToggle />
-                <SearchButton />
-              </div>
+            <div className="flex space-x-2">
+              <ModeToggle />
+              <SearchButton />
+            </div>
           </motion.div>
         </motion.div>
 
@@ -171,7 +174,7 @@ export default function Navbar() {
         <div className="lg:hidden flex items-center space-x-2">
           <SearchButton />
           <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
-            <FaBars/>
+            <FaBars />
           </Button>
         </div>
       </motion.header>

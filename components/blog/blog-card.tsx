@@ -6,8 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface BlogCardProps {
-  key: number | string;
-  blog: any;
+  blog: NotionBlogPage;
   variant?: "vertical" | "horizontal";
   className?: string;
 }
@@ -25,9 +24,8 @@ export default function BlogCard({
   const tags = blog.properties.Tags?.multi_select || [];
   const author = extractPlainText(blog.properties.Author?.rich_text) || "Unknown Author";
 
-  return (    
-  <Link
-  key={blog.id}
+  return (
+    <Link
       href={`/blog/${slug}`}
       className={cn(
         "block w-full transition-transform duration-300 p-1",
@@ -35,7 +33,6 @@ export default function BlogCard({
       )}
       aria-label={`Read blog post: ${title}`}>
       <Card
-      key={blog.id}
         className={cn(
           "group overflow-hidden transition-colors duration-300 flex h-full",
           isVertical ? "flex-col pt-0" : "flex-col sm:flex-row py-0"
@@ -49,7 +46,7 @@ export default function BlogCard({
           )}>
           <Image
             src={thumbnail}
-            alt={blog.id}
+            alt={title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-110"
@@ -73,7 +70,7 @@ export default function BlogCard({
               </CardTitle>
             </CardHeader>
             <CardContent className={cn("mb-2 text-sm text-muted-foreground", isVertical && "line-clamp-3 h-16")}>
-                {description}
+              {description}
             </CardContent>
           </div>
           <CardContent className="flex items-center justify-between text-muted-foreground text-xs font-medium">
@@ -87,7 +84,7 @@ export default function BlogCard({
                   {author.charAt(0) || "U"}
                 </AvatarFallback>
               </Avatar>
-                <span className="text-xs">{author || "User"}</span>
+              <span className="text-xs">{author || "User"}</span>
             </div>
             <time className="text-xs" dateTime={blog.created_time ? new Date(blog.created_time).toISOString() : undefined}>
               {timeAgo(blog.created_time as unknown as Date)}

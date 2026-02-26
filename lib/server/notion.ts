@@ -1,11 +1,11 @@
 import { Client } from "@notionhq/client";
 import { NotionAPI } from "notion-client";
 import { validate } from "uuid";
-import { config } from "../constant";
+import { serverConfig } from "../constant/config.server";
 
 export const notion = new NotionAPI();
 export const notionClient = new Client({
-  auth: config.NOTION_TOKEN,
+  auth: serverConfig.NOTION_TOKEN,
 });
 
 export const fetchPage = async (param: string) => {
@@ -16,7 +16,7 @@ export const fetchPage = async (param: string) => {
     page = await notionClient.pages.retrieve({ page_id: param }).catch(() => null);
   } else {
     const { results } = await notionClient.databases.query({
-      database_id: config.NOTION_DATABASE_ID!,
+      database_id: serverConfig.NOTION_DATABASE_ID!,
       filter: {
         property: "Slug",
         rich_text: { equals: param },
@@ -127,7 +127,7 @@ export const getPagesCount = async ({
 }) => {
   const baseFilter = buildFilter({ query, tags, dateFilter, isPublic, category });
   const { results } = await notionClient.databases.query({
-    database_id: config.NOTION_DATABASE_ID!,
+    database_id: serverConfig.NOTION_DATABASE_ID!,
     filter: {
       and: baseFilter,
     },
@@ -159,75 +159,71 @@ export const searchPages = async ({
   category?: string;
 }) => {
   const baseFilter = buildFilter({ query, tags, dateFilter, isPublic, category });
-  
+
   const parseSort = (sortParam: string) => {
     const [property, direction] = sortParam.split("-");
-    const validDirection = direction === "ascending" || direction === "descending" 
+    const validDirection = direction === "ascending" || direction === "descending"
       ? direction as "ascending" | "descending"
       : "descending";
-    
+
     const propertyMap: Record<string, string> = {
       "published": "Published",
       "name": "Name",
       "updated": "Updated",
     };
-    
+
     const notionProperty = propertyMap[property?.toLowerCase()] || "Published";
-    
+
     return {
       property: notionProperty,
       direction: validDirection,
     };
   };
-  
+
   const sortConfig = parseSort(sort_by);
-  
-  // Calculate how many pages to skip
-  const pagesToSkip = Math.max(0, (page - 1));
-  let startCursor: string | undefined = undefined;
   const sorts = [sortConfig];
-  
-  if (pagesToSkip > 0) {
-    let currentPage = 1;
-    while (currentPage < page) {
-      const skipPage = await notionClient.databases.query({
-        database_id: config.NOTION_DATABASE_ID!,
-        filter: {
-          and: baseFilter,
-        },
-        sorts,
-        start_cursor: startCursor,
-        page_size: limit,
-      });
-      
-      if (!skipPage.has_more || !skipPage.next_cursor) {
-        // No more pages, return empty result
-        return {
-          results: [],
-          has_more: false,
-          next_cursor: null,
-        };
-      }
-      
-      startCursor = skipPage.next_cursor;
-      currentPage++;
+
+  // Fetch all results up to the end of the requested page in a single query.
+  // Notion's max page_size is 100, so for large offsets we may need to paginate,
+  // but this is still far fewer calls than the previous approach.
+  const totalNeeded = page * limit;
+  const allResults: any[] = [];
+  let startCursor: string | undefined = undefined;
+
+  while (allResults.length < totalNeeded) {
+    const batchSize = Math.min(100, totalNeeded - allResults.length);
+    const response = await notionClient.databases.query({
+      database_id: serverConfig.NOTION_DATABASE_ID!,
+      filter: {
+        and: baseFilter,
+      },
+      sorts,
+      start_cursor: startCursor,
+      page_size: batchSize,
+    });
+
+    allResults.push(...response.results);
+
+    if (!response.has_more || !response.next_cursor) {
+      break;
     }
+    startCursor = response.next_cursor;
   }
-  
-  return await notionClient.databases.query({
-    database_id: config.NOTION_DATABASE_ID!,
-    filter: {
-      and: baseFilter,
-    },
-    sorts,
-    start_cursor: startCursor,
-    page_size: limit,
-  });
+
+  // Slice the results for the requested page
+  const startIndex = (page - 1) * limit;
+  const pageResults = allResults.slice(startIndex, startIndex + limit);
+
+  return {
+    results: pageResults,
+    has_more: allResults.length > startIndex + limit || (startCursor !== undefined),
+    next_cursor: null, // Cursor-based pagination is not exposed to the client
+  };
 };
 
 export const getBlogFilters = async () => {
   const database = await notionClient.databases.retrieve({
-    database_id: config.NOTION_DATABASE_ID!,
+    database_id: serverConfig.NOTION_DATABASE_ID!,
   });
   const tagsProperty = database.properties.Tags as any;
   const categoriesProperty = database.properties.Category as any;
@@ -238,7 +234,7 @@ export const getBlogFilters = async () => {
 
 export const getProjectType = async () => {
   const database = await notionClient.databases.retrieve({
-    database_id: config.NOTION_PROJECT_ID!,
+    database_id: serverConfig.NOTION_PROJECT_ID!,
   });
   const typeProperty = database.properties.Category as any;
   return typeProperty.select?.options;
@@ -246,7 +242,7 @@ export const getProjectType = async () => {
 
 export const getProject = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: config.NOTION_PROJECT_ID!,
+    database_id: serverConfig.NOTION_PROJECT_ID!,
     sorts: [
       {
         property: "End",
@@ -259,7 +255,7 @@ export const getProject = async () => {
 
 export const getExperience = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: config.NOTION_EXPERIENCE_ID!,
+    database_id: serverConfig.NOTION_EXPERIENCE_ID!,
     sorts: [
       {
         property: "End",
@@ -272,7 +268,7 @@ export const getExperience = async () => {
 
 export const getEducation = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: config.NOTION_EDUCATION_ID!,
+    database_id: serverConfig.NOTION_EDUCATION_ID!,
     sorts: [
       {
         property: "End",
@@ -285,7 +281,7 @@ export const getEducation = async () => {
 
 export const getTestimonials = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: config.NOTION_TESTIMONIAL_ID!,
+    database_id: serverConfig.NOTION_TESTIMONIAL_ID!,
     sorts: [
       {
         property: "Date",
@@ -298,7 +294,7 @@ export const getTestimonials = async () => {
 
 export const getBlogs = async () => {
   const { results } = await notionClient.databases.query({
-    database_id: config.NOTION_DATABASE_ID!,
+    database_id: serverConfig.NOTION_DATABASE_ID!,
     filter: {
       property: "Public",
       checkbox: { equals: true },

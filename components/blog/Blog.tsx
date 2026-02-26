@@ -12,7 +12,7 @@ import NoWork from "../site/NoWork";
 import { useSearchParams, useRouter } from "next/navigation";
 
 interface BlogProps {
-  posts: any;
+  posts: NotionBlogPage[];
   tags: string[];
   categories: string[];
   totalPages: number;
@@ -21,32 +21,32 @@ interface BlogProps {
   limit: number;
 }
 
-export default function Blog({ 
-  posts, 
-  tags, 
+export default function Blog({
+  posts,
+  tags,
   categories,
-  totalPages, 
-  currentPage, 
+  totalPages,
+  currentPage,
   totalCount,
-  limit 
+  limit
 }: BlogProps) {
   const [layout, setLayout] = useState<"grid" | "list">("grid");
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   // Get active filters from URL
   const activeTags = searchParams.get("tags")?.split(",").filter(Boolean) || [];
   const activeDateFrom = searchParams.get("published_gte");
   const activeDateTo = searchParams.get("published_lte");
-  
+
   const hasActiveFilters = activeTags.length > 0 || activeDateFrom || activeDateTo;
-  
+
   // Calculate result range
   const startResult = totalCount > 0 ? (currentPage - 1) * limit + 1 : 0;
   const endResult = Math.min(currentPage * limit, totalCount);
-  
+
   // Memoize the grid columns class
-  const gridCols = useMemo(() => 
+  const gridCols = useMemo(() =>
     layout === "grid" ? "md:grid-cols-2 lg:grid-cols-3" : "",
     [layout]
   );
@@ -73,11 +73,11 @@ export default function Blog({
         </div>
       );
     }
-    
-    return posts.map((blog: any) => (
+
+    return posts.map((blog) => (
       <BlogCard
         key={blog.id}
-        blog={blog as NotionPage}
+        blog={blog}
         variant={layout === "grid" ? "vertical" : "horizontal"}
         className={layout === "grid" ? "" : "sm:h-[280px]"}
       />
@@ -86,7 +86,7 @@ export default function Blog({
 
   const removeFilter = (key: string, value?: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     if (key === "tags" && value) {
       const currentTags = params.get("tags")?.split(",").filter(Boolean) || [];
       const newTags = currentTags.filter(tag => tag !== value);
@@ -98,7 +98,7 @@ export default function Blog({
     } else {
       params.delete(key);
     }
-    
+
     // Reset to page 1 when filters change
     params.delete("page");
     router.push(`/blog?${params.toString()}`);
@@ -111,7 +111,7 @@ export default function Blog({
   return (
     <>
       <PageTemplate title="Recent Blogs" subtitle="Insights, Tutorials and Tech Trends" />
-      
+
       {/* Search and Controls */}
       <div className="flex w-full justify-between gap-2 items-center flex-wrap">
         <div className="w-full max-w-xl md:max-w-2xl mb-4">
@@ -123,9 +123,9 @@ export default function Blog({
             variant="secondary"
             size="icon"
             className="hidden md:inline-flex"
-            onClick={() => setLayout(layout === "grid" ? "list" : "grid")} 
+            onClick={() => setLayout(layout === "grid" ? "list" : "grid")}
             aria-label={`Switch blog layout to ${layout === "grid" ? "list" : "grid"} view`}>
-            {layout === "grid" ? <List /> : <Grid />} 
+            {layout === "grid" ? <List /> : <Grid />}
           </Button>
         </div>
       </div>
@@ -134,34 +134,34 @@ export default function Blog({
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-2 mb-4">
           {activeTags.map((tag) => (
-              <Button
-                key={tag}
-                size="sm"  
-                onClick={() => removeFilter("tags", tag)}
-                aria-label={`Remove ${tag} filter`}
-              >{tag}
-                <X />
-              </Button>
+            <Button
+              key={tag}
+              size="sm"
+              onClick={() => removeFilter("tags", tag)}
+              aria-label={`Remove ${tag} filter`}
+            >{tag}
+              <X />
+            </Button>
           ))}
           {activeDateFrom && (
-              <Button
-                size="sm"  
-                onClick={() => removeFilter("published_gte")}
-                aria-label="Remove date from filter"
-              >
-                From: {new Date(activeDateFrom).toLocaleDateString()}
-                <X />
-              </Button>
+            <Button
+              size="sm"
+              onClick={() => removeFilter("published_gte")}
+              aria-label="Remove date from filter"
+            >
+              From: {new Date(activeDateFrom).toLocaleDateString()}
+              <X />
+            </Button>
           )}
           {activeDateTo && (
-              <Button
-                size="sm"  
-                onClick={() => removeFilter("published_lte")}
-                aria-label="Remove date to filter"
-              >
-                To: {new Date(activeDateTo).toLocaleDateString()}
-                <X />
-              </Button>
+            <Button
+              size="sm"
+              onClick={() => removeFilter("published_lte")}
+              aria-label="Remove date to filter"
+            >
+              To: {new Date(activeDateTo).toLocaleDateString()}
+              <X />
+            </Button>
           )}
           <Button
             variant="secondary"

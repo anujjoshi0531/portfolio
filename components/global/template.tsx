@@ -29,8 +29,8 @@ const SectionTemplate: React.FC<TemplateProps> = React.memo(({
           visible: { opacity: 1, x: 0 },
           hidden: { opacity: 0, x: -50 },
         }}>
-        <h1 className="text-4xl font-bold mb-2">{title}</h1>
-        <h2 className="font-medium text-theme">{subtitle}</h2>
+        <h2 className="text-4xl font-bold mb-2">{title}</h2>
+        <h3 className="font-medium text-theme">{subtitle}</h3>
       </motion.div>
       <motion.div
         className="my-16 px-2 mx-auto"

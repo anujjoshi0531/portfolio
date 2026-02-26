@@ -44,11 +44,11 @@
 
   @keyframes animateIcon {
     0% {
-      top: 0;
+      transform: translateY(0);
     }
 
     100% {
-      top: 90%;
+      transform: translateY(200%);
     }
   }
 
@@ -114,11 +114,11 @@
 
   @keyframes lf {
     0% {
-      left: 200%;
+      transform: translateX(200%);
     }
 
     100% {
-      left: -200%;
+      transform: translateX(-200%);
       opacity: 0;
     }
   }
@@ -262,6 +262,14 @@
 
   .custom-bullet {
     @apply relative before:content-['▹'] before:absolute before:left-[-20px] before:top-[6px] before:text-theme before:leading-[12px];
+  }
+
+  .navButtonStyles {
+    @apply cursor-pointer transform font-bold bg-primary ring-2 ring-primary border-2 rounded-full p-1 border-background hover:text-primary duration-150 z-10 bg-primary/80 backdrop-blur-md shadow-lg hover:bg-primary disabled:opacity-0 transition-all ease-out hover:scale-110 active:scale-95;
+  }
+
+  .navButtonClasses {
+    @apply hidden sm:block before:absolute before:inset-px before:transition-all before:duration-300 before:-z-10 before:rounded-full hover:before:inset-full before:bg-primary rounded-full w-10 h-10 shrink-0 relative isolate bg-background md:mt-4 m-auto text-background text-2xl transition-all delay-300 hover:bg-background border-primary border-2;
   }
 }
 
