@@ -1,21 +1,9 @@
-import dynamic from "next/dynamic";
 import { PageTemplate } from "@/components/global/template";
-
-const ExperienceSection = dynamic(() => import("@/components/home/ExperienceSection"), {
-  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
-});
-const AboutSection = dynamic(() => import("@/components/about/AboutSection"), {
-  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
-});
-const EducationSection = dynamic(() => import("@/components/about/EducationSection"), {
-  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
-});
-const SkillSection = dynamic(() => import("@/components/about/SkillSection"), {
-  loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" />,
-});
-const QuoteSection = dynamic(() => import("@/components/about/QuoteSection"), {
-  loading: () => <div className="h-32 animate-pulse bg-muted rounded-lg" />,
-});
+import AboutSection from "@/components/about/AboutSection";
+import EducationSection from "@/components/about/EducationSection";
+import SkillSection from "@/components/about/SkillSection";
+import ExperienceSection from "@/components/home/ExperienceSection";
+import QuoteSection from "@/components/about/QuoteSection";
 
 export default async function AboutPage() {
   return (
