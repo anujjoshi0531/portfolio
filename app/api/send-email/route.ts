@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
 import { sendToRecipient, sendThankYouEmail } from "@/lib/server/mail";
+import { z } from "zod";
 
 // Basic in-memory rate limiting
 const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
 const RATE_LIMIT = 5; // Max emails per IP
 const TIME_WINDOW = 60 * 60 * 1000; // 1 hour
+
+const EmailSchema = z.object({
+  name: z.string().max(100),
+  email: z.string().email().max(255),
+  message: z.string().max(5000),
+});
 
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") || "unknown";
@@ -24,20 +31,27 @@ export async function POST(request: Request) {
     rateLimitMap.set(ip, { count: 1, timestamp: now });
   }
 
-  const body = await request.json().catch(() => ({}));
-  const { name, email, message } = body;
+  // 1. Strict Request Body Size Limit
+  const rawBody = await request.text();
+  if (rawBody.length > 10000) { // Reject if body exceeds ~10KB
+    return NextResponse.json({ error: "Payload Too Large" }, { status: 413 });
+  }
 
-  // Validation
-  if (!name || typeof name !== "string" || name.length > 100) {
-    return NextResponse.json({ error: "Invalid name." }, { status: 400 });
+  // 2. Parse JSON
+  let body: unknown;
+  try {
+    body = JSON.parse(rawBody);
+  } catch (error) {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email || !emailRegex.test(email) || email.length > 255) {
-    return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
+
+  // 3. Schema Validation with Zod
+  const parsed = EmailSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid input data", details: parsed.error.format() }, { status: 400 });
   }
-  if (!message || typeof message !== "string" || message.length > 5000) {
-    return NextResponse.json({ error: "Invalid message." }, { status: 400 });
-  }
+
+  const { name, email, message } = parsed.data;
 
   // HTML sanitization
   const escapeHTML = (str: string) =>

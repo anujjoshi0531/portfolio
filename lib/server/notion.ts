@@ -68,18 +68,22 @@ export const buildFilter = ({
     });
   }
   if (query) {
-    baseFilter.push({
-      or: [
-        {
-          property: "Name",
-          rich_text: { contains: query },
-        },
-        {
-          property: "Description",
-          rich_text: { contains: query },
-        },
-      ],
-    });
+    const sanitizeQuery = (q: string) => q.replace(/[^a-zA-Z0-9 -]/g, "").slice(0, 100);
+    const safeQuery = sanitizeQuery(query);
+    if (safeQuery) {
+      baseFilter.push({
+        or: [
+          {
+            property: "Name",
+            rich_text: { contains: safeQuery },
+          },
+          {
+            property: "Description",
+            rich_text: { contains: safeQuery },
+          },
+        ],
+      });
+    }
   }
 
   if (tags?.length) {
@@ -246,13 +250,13 @@ export const getProjectType = async () => {
   return typeProperty.select?.options;
 };
 
-export const getProject = async () => {
-  if (!serverConfig.NOTION_PROJECT_ID) throw new Error("Missing NOTION_PROJECT_ID");
+export const fetchCollection = async (dbId: string | undefined, sortProp: string, dbName: string) => {
+  if (!dbId) throw new Error(`Missing ${dbName}`);
   const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_PROJECT_ID,
+    database_id: dbId,
     sorts: [
       {
-        property: "End",
+        property: sortProp,
         direction: "descending",
       },
     ],
@@ -260,47 +264,13 @@ export const getProject = async () => {
   return results;
 };
 
-export const getExperience = async () => {
-  if (!serverConfig.NOTION_EXPERIENCE_ID) throw new Error("Missing NOTION_EXPERIENCE_ID");
-  const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_EXPERIENCE_ID,
-    sorts: [
-      {
-        property: "End",
-        direction: "descending",
-      },
-    ],
-  });
-  return results;
-};
+export const getProject = () => fetchCollection(serverConfig.NOTION_PROJECT_ID, "End", "NOTION_PROJECT_ID");
 
-export const getEducation = async () => {
-  if (!serverConfig.NOTION_EDUCATION_ID) throw new Error("Missing NOTION_EDUCATION_ID");
-  const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_EDUCATION_ID,
-    sorts: [
-      {
-        property: "End",
-        direction: "descending",
-      },
-    ],
-  });
-  return results;
-};
+export const getExperience = () => fetchCollection(serverConfig.NOTION_EXPERIENCE_ID, "End", "NOTION_EXPERIENCE_ID");
 
-export const getTestimonials = async () => {
-  if (!serverConfig.NOTION_TESTIMONIAL_ID) throw new Error("Missing NOTION_TESTIMONIAL_ID");
-  const { results } = await notionClient.databases.query({
-    database_id: serverConfig.NOTION_TESTIMONIAL_ID,
-    sorts: [
-      {
-        property: "Date",
-        direction: "descending",
-      },
-    ],
-  });
-  return results;
-};
+export const getEducation = () => fetchCollection(serverConfig.NOTION_EDUCATION_ID, "End", "NOTION_EDUCATION_ID");
+
+export const getTestimonials = () => fetchCollection(serverConfig.NOTION_TESTIMONIAL_ID, "Date", "NOTION_TESTIMONIAL_ID");
 
 export const getBlogs = async () => {
   if (!serverConfig.NOTION_DATABASE_ID) throw new Error("Missing NOTION_DATABASE_ID");
