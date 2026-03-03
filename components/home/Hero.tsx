@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { childVariants, containerVariants } from '@/lib/animate';
 import { socialLinks } from "@/lib";
 import Link from "next/link";
-import { FlipWords } from "@/components/animate/flip-words";
+import { FlipWords } from "@/components/animate/FlipWords";
 
 export default function Hero() {
   return (
