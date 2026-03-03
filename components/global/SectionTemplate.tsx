@@ -11,6 +11,41 @@ interface TemplateProps {
   className?: string;
 }
 
+const headerVariants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.4, ease: "easeOut" },
+  },
+};
+
+const contentVariants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
+const pageContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, ease: "easeOut" },
+  },
+};
+
+const pageChildVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
+};
+
 const SectionTemplate: React.FC<TemplateProps> = React.memo(({
   title,
   subtitle,
@@ -20,27 +55,23 @@ const SectionTemplate: React.FC<TemplateProps> = React.memo(({
 }) => {
   return (
     <section className={`w-full pt-8 ${className}`} id={id}>
+      {(title || subtitle) && (
+        <motion.div
+          className="border-l-[2.5px] border-theme px-4 mt-8 mb-10 select-none"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={headerVariants}>
+          {title && <h2 className="text-4xl font-bold mb-1">{title}</h2>}
+          {subtitle && <p className="font-medium text-theme">{subtitle}</p>}
+        </motion.div>
+      )}
       <motion.div
-        className="border-l-[2.5px] border-theme px-4 my-12 select-none"
+        className="mb-16 px-2 mx-auto"
         initial="hidden"
         whileInView="visible"
-        transition={{ duration: 0.1 }}
-        variants={{
-          visible: { opacity: 1, x: 0 },
-          hidden: { opacity: 0, x: -50 },
-        }}>
-        <h2 className="text-4xl font-bold mb-2">{title}</h2>
-        <h3 className="font-medium text-theme">{subtitle}</h3>
-      </motion.div>
-      <motion.div
-        className="my-16 px-2 mx-auto"
-        initial="hidden"
-        whileInView="visible"
-        transition={{ duration: 0.5 }}
-        variants={{
-          visible: { opacity: 1, y: 0 },
-          hidden: { opacity: 0, y: 80 },
-        }}>
+        viewport={{ once: true, margin: "-80px" }}
+        variants={contentVariants}>
         {children}
       </motion.div>
     </section>
@@ -53,46 +84,35 @@ const PageTemplate: React.FC<TemplateProps> = React.memo(({
   children,
 }) => {
   return (
-    <>
-      {/* Background section */}
-      <div className="absolute -z-10 h-2/5 min-h-[280px] w-screen bg-muted inset-0"></div>
+    <div className="relative left-1/2 -translate-x-1/2 w-screen flex flex-col justify-end min-h-[280px] -mt-12 mb-10 px-6 sm:px-8 md:px-16 lg:px-32">
+      {/* Full-bleed muted background */}
+      <div className="absolute inset-0 bg-muted" aria-hidden="true" />
 
-      {/* Content section */}
+      {/* Text pinned to bottom */}
       <motion.div
-        className="h-2/5 min-h-[140px] flex flex-col justify-end py-4"
+        className="relative pb-8 md:pt-24 pt-16 flex flex-col"
         initial="hidden"
-        whileInView="visible"
-        transition={{ staggerChildren: 0.1 }}
-        variants={{
-          visible: { opacity: 1 },
-          hidden: { opacity: 0 },
-        }}>
+        animate="visible"
+        variants={pageContainerVariants}>
         <motion.h1
           className="text-4xl md:text-5xl font-bold mb-1 sm:mb-2"
-          variants={{
-            visible: { opacity: 1, y: 0 },
-            hidden: { opacity: 0, y: -20 },
-          }}
-          transition={{ duration: 0.2 }}>
+          variants={pageChildVariants}>
           {title}
         </motion.h1>
-        <motion.h2
-          className="font-medium text-lg md:text-xl text-theme"
-          variants={{
-            visible: { opacity: 1, y: 0 },
-            hidden: { opacity: 0, y: -20 },
-          }}
-          transition={{ duration: 0.4 }}>
-          {subtitle}
-          {children}
-        </motion.h2>
+        {(subtitle || children) && (
+          <motion.p
+            className="font-medium text-lg md:text-xl text-theme"
+            variants={pageChildVariants}>
+            {subtitle}
+            {children}
+          </motion.p>
+        )}
       </motion.div>
-    </>
+    </div>
   );
 });
 
-// Add display names for better debugging
-SectionTemplate.displayName = 'SectionTemplate';
-PageTemplate.displayName = 'PageTemplate';
+SectionTemplate.displayName = "SectionTemplate";
+PageTemplate.displayName = "PageTemplate";
 
 export { SectionTemplate, PageTemplate };

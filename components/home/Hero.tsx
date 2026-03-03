@@ -5,14 +5,14 @@ import { HeroSocial } from '@/components/global/Social';
 import Image from "next/image";
 import { FaPaperPlane, FaLink } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
-import Typewriter from "@/components/animate/Typewriter";
 import { childVariants, containerVariants } from '@/lib/animate';
 import { socialLinks } from "@/lib";
 import Link from "next/link";
+import { FlipWords } from "@/components/animate/flip-words";
 
 export default function Hero() {
   return (
-    <div className="flex lg:flex-row-reverse flex-col items-center justify-between gap-4">
+    <div className="flex lg:flex-row-reverse flex-col items-center justify-between gap-4 pt-20">
       {/* Profile Image */}
       <motion.div
         className="bg-theme/80 lg:max-w-[60vw] w-fit min-w-[150px] min-h-[150px] max-h-[80vh] object-cover rounded-full overflow-hidden animate-profile"
@@ -49,8 +49,8 @@ export default function Hero() {
             <motion.h2
               variants={childVariants}
               className="overflow-hidden whitespace-nowrap">
-              <Typewriter
-                texts={["A Fullstack Developer", "A Machine Learning Enthusiast", "Tech Enthusiast"]}
+              <FlipWords
+                words={["A Fullstack Developer", "A Machine Learning Enthusiast", "Software Development Engineer", "Problem Solver at Scale", "Building AI-Powered Systems"]}
                 className="h-8 font-medium text-[1rem] sm:text-[1.5rem] md:text-2xl"
               />
             </motion.h2>
@@ -91,7 +91,7 @@ export default function Hero() {
           whileInView="visible"
           className="flex justify-center items-center lg:gap-20 gap-10">
           {socialLinks
-            .filter((l) => ["LinkedIn", "X (Twitter)", "Telegram"].includes(l.title))
+            .filter((l) => ["LinkedIn", "Twitter", "Telegram"].includes(l.title))
             .map(({ title, name, href, icon }) => (
               <motion.div variants={childVariants} key={title}>
                 <HeroSocial

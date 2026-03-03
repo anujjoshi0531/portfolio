@@ -51,7 +51,7 @@ export const socialLinks: SocialLinkEntry[] = [
     icon: FaLinkedinIn,
   },
   {
-    title: "X (Twitter)",
+    title: "Twitter",
     name: "@Anujjoshi3105",
     href: "https://x.com/anujjoshi3105",
     icon: FaXTwitter,

@@ -7,6 +7,7 @@ import { Sparkles } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { getUserId } from "@/lib/utils";
 import { MagnetBtn } from "@/components/animate/MagnetBtn";
+import Logo from "../site/Logo";
 
 const PopupChatbot = dynamic(
   () => import("chatui").then((mod) => mod.PopupChatbot),
@@ -51,8 +52,11 @@ export default function ChatbotProvider() {
       width={450}
       height={600}
     >
-      <MagnetBtn text="Chat with AI&nbsp;&nbsp;·&nbsp;&nbsp;ASK AI&nbsp;&nbsp;·&nbsp;&nbsp;Talk with AI&nbsp;&nbsp;·&nbsp;&nbsp;" size="xs" className="text-[12px]">
-        <Sparkles className="size-5 fill-background" />
+      <MagnetBtn text="Chat with AI&nbsp;&nbsp;·&nbsp;&nbsp;ASK AI&nbsp;&nbsp;·&nbsp;&nbsp;Talk with AI&nbsp;&nbsp;·&nbsp;&nbsp;" size="xs" className="text-[12px] group">
+        <div className="relative flex items-center justify-center size-10">
+          <Logo className="group-hover:opacity-100 opacity-0 absolute transition-all duration-500" />
+          <Sparkles className="size-5 fill-background group-hover:opacity-0 transition-all duration-500" />
+        </div>
       </MagnetBtn>
     </PopupChatbot>
   );

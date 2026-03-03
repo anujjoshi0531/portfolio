@@ -9,13 +9,13 @@ import {
   useScroll,
 } from "framer-motion";
 import { socialLinks } from "@/lib";
-import { TbHexagonLetterAFilled } from "react-icons/tb";
 import ModeToggle from '@/components/global/ModeToggle';
 import { SocialIcon } from '@/components/global/Social';
 import { containerVars, menuVars, mobileLinkVars } from '@/lib/animate';
 import Link from "next/link";
 import SearchButton from "@/components/site/search/SearchButton";
 import { Button } from "../ui/button";
+import Logo from "./Logo";
 
 export default function Navbar() {
   const navLinks = [
@@ -44,7 +44,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Mobile Menu */}
+      {/* Mobile Full-screen Menu */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -52,7 +52,7 @@ export default function Navbar() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="origin-top fixed z-100 top-0 left-0 h-screen w-screen bg-muted text-center font-semibold uppercase">
+            className="origin-top fixed z-[100] top-0 left-0 h-screen w-screen bg-muted text-center font-semibold uppercase">
             <button
               className="absolute right-10 top-8 cursor-pointer text-2xl active:scale-75"
               onClick={toggleMenu}
@@ -95,89 +95,95 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Desktop Menu */}
-      <motion.header
+
+      <motion.div
         variants={{
-          visible: { y: 0 },
-          hidden: { y: "-100%" },
+          visible: { y: 0, opacity: 1 },
+          hidden: { y: "-150%", opacity: 0 },
         }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="h-24 flex items-center justify-between p-4 lg:px-16 lg:py-2 sticky top-0 z-10 backdrop-blur-md">
-        {/* Logo with spring animation */}
-        <motion.div
-          variants={{
-            initial: { scale: 0 },
-            animate: {
-              scale: 1,
-              transition: { type: "spring", stiffness: 300 },
-            },
-          }}
-          initial="initial"
-          animate="animate">
-          <Link href="/" aria-label="Go to homepage">
-            <TbHexagonLetterAFilled className="text-5xl font-bold hover:text-theme hover:scale-110 duration-150 transition-all" />
-          </Link>
-        </motion.div>
+        className="fixed top-0 left-1/2 -translate-x-1/2 z-[100] w-screen  backdrop-blur-[200px]"
+      >
+        <header className="flex items-center justify-between p-4 py-6 lg:px-6 w-[95%] mx-auto">
 
-        {/* Desktop Navigation Links */}
-        <motion.div
-          className="hidden lg:flex justify-center items-center space-x-9 uppercase font-semibold"
-          variants={{
-            initial: { opacity: 0 },
-            animate: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.2,
-                when: "beforeChildren",
+          {/* Logo */}
+          <motion.div
+            variants={{
+              initial: { scale: 0 },
+              animate: {
+                scale: 1,
+                transition: { type: "spring", stiffness: 300 },
               },
-            },
-          }}
-          initial="initial"
-          animate="animate">
-          {navLinks.map((link) => (
+            }}
+            initial="initial"
+            animate="animate">
+            <Link href="/" aria-label="Go to homepage">
+              <Logo className="bg-primary/50 rounded-full" />
+            </Link>
+          </motion.div>
+
+          {/* Desktop Navigation Links */}
+          <motion.nav
+            className="hidden lg:flex justify-center items-center space-x-7 uppercase font-semibold text-sm"
+            variants={{
+              initial: { opacity: 0 },
+              animate: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                  when: "beforeChildren",
+                },
+              },
+            }}
+            initial="initial"
+            animate="animate">
+            {navLinks.map((link) => (
+              <motion.div
+                key={link.href}
+                variants={{
+                  initial: { y: -8, opacity: 0 },
+                  animate: {
+                    y: 0,
+                    opacity: 1,
+                    transition: { type: "spring", stiffness: 300 },
+                  },
+                }}>
+                <Link
+                  href={link.href}
+                  className="link tracking-wide font-semibold">
+                  {link.title}
+                </Link>
+              </motion.div>
+            ))}
+
+            {/* Actions */}
             <motion.div
-              key={link.href}
               variants={{
-                initial: { scale: 0.9 },
+                initial: { y: -8, opacity: 0 },
                 animate: {
-                  scale: 1,
+                  y: 0,
+                  opacity: 1,
                   transition: { type: "spring", stiffness: 300 },
                 },
               }}>
-              <Link
-                href={link.href}
-                className="link">
-                {link.title}
-              </Link>
+              <div className="flex items-center space-x-2">
+                <ModeToggle />
+                <SearchButton />
+              </div>
             </motion.div>
-          ))}
+          </motion.nav>
 
-          {/* Mode Toggle */}
-          <motion.div
-            variants={{
-              initial: { scale: 0.9, opacity: 0 },
-              animate: {
-                scale: 1,
-                opacity: 1,
-                transition: { type: "spring", stiffness: 300 },
-              },
-            }}>
-            <div className="flex space-x-2">
-              <ModeToggle />
-              <SearchButton />
-            </div>
-          </motion.div>
-        </motion.div>
+          {/* Mobile Actions */}
+          <div className="lg:hidden flex items-center space-x-2">
+            <SearchButton />
+            <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
+              <FaBars />
+            </Button>
+          </div>
 
-        {/* Mobile Menu Icon */}
-        <div className="lg:hidden flex items-center space-x-2">
-          <SearchButton />
-          <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
-            <FaBars />
-          </Button>
-        </div>
-      </motion.header>
+        </header>
+      </motion.div>
     </>
   );
 }
