@@ -2,35 +2,19 @@
 
 import { motion } from "framer-motion";
 import { HeroSocial } from '@/components/global/Social';
-import Image from "next/image";
 import { FaPaperPlane, FaLink } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import { childVariants, containerVariants } from '@/lib/animate';
 import { socialLinks } from "@/lib";
 import Link from "next/link";
 import { FlipWords } from "@/components/animate/FlipWords";
+import HeroImage from "./HeroImage";
 
 export default function Hero() {
   return (
     <div className="flex lg:flex-row-reverse flex-col items-center justify-between gap-4 pt-20">
       {/* Profile Image */}
-      <motion.div
-        className="bg-theme/80 lg:max-w-[60vw] w-fit min-w-[150px] min-h-[150px] max-h-[80vh] object-cover rounded-full overflow-hidden animate-profile"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible">
-        <motion.div variants={childVariants}>
-          <Image
-            priority
-            src="/avatar.webp"
-            alt="Anuj Joshi"
-            width={500}
-            height={500}
-            className="object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-            sizes="(max-width: 768px) 150px, (max-width: 1024px) 300px, 500px"
-          />
-        </motion.div>
-      </motion.div>
+      <HeroImage />
 
       {/* Profile Text */}
       <div className="space-y-12 translate-y-8">

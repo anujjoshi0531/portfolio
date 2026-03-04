@@ -3,7 +3,6 @@
 import { SectionTemplate } from '@/components/global/SectionTemplate'
 import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { cn, timeAgo } from "@/lib"
 import { Award, ChevronRight } from "lucide-react"
 import { LinkPreview } from "@/components/animate/LinkPreview"
@@ -75,9 +74,7 @@ export default function ExperienceClient({ groupedExperiences, types }: Experien
                             <ExperienceContent
                                 key={`${selectedType}-${currentExperienceIndex}`}
                                 formattedExperience={currentExperience}
-                                handleCertificateDownload={() => {
-                                    if (currentExperience.certificate) window.open(currentExperience.certificate, "_blank", "noopener,noreferrer")
-                                }}
+
                             />
                             <div className="w-full absolute top-[40%] left-0 right-0 flex justify-end">
                                 <button
@@ -122,10 +119,8 @@ export default function ExperienceClient({ groupedExperiences, types }: Experien
 
 function ExperienceContent({
     formattedExperience,
-    handleCertificateDownload,
 }: {
     formattedExperience: FormattedExperience
-    handleCertificateDownload: () => void
 }) {
     return (
         <div className="h-max duration-200 space-y-2">

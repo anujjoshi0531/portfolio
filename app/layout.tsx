@@ -1,5 +1,6 @@
 import { Poppins } from "next/font/google";
 import "@/styles/globals.css";
+import "@/styles/sprite.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { DarkProvider } from "@/components/providers/dark-provider";
 import { Toaster } from "@/components/ui/sonner";

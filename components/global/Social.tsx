@@ -48,14 +48,13 @@ interface SocialLinkProps {
 }
 function SocialLink({ title, href, icon: Icon }: SocialLinkProps) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+    <LinkPreview
+      url={href}
+      title={title}
       className="flex gap-2 items-center">
       {Icon && <Icon className="text-theme" />}
       <span className="link">{title}</span>
-    </a>
+    </LinkPreview>
   );
 }
 export { HeroSocial, SocialIcon, SocialLink };

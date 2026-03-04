@@ -41,6 +41,9 @@
   --animate-profile: profile 8s ease-in-out infinite 1s;
   --animate-quote: quote 8s infinite;
   --animate-typing-dot-bounce: typing-dot-bounce 1.25s ease-out infinite;
+  --animate-avatar-float: avatar-float 3s ease-in-out infinite;
+  --animate-loading-bar: loading-bar 2s ease-in-out infinite;
+  --animate-dot-pulse: dot-pulse 1.4s ease-in-out infinite;
 
   @keyframes animateIcon {
     0% {
@@ -178,6 +181,44 @@
 
     20% {
       transform: translateY(-0.25rem);
+    }
+  }
+
+  @keyframes avatar-float {
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  @keyframes loading-bar {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    60%,
+    100% {
+      transform: translateX(200%);
+    }
+  }
+
+  @keyframes dot-pulse {
+
+    0%,
+    80%,
+    100% {
+      transform: scale(0.6);
+      opacity: 0.4;
+    }
+
+    40% {
+      transform: scale(1);
+      opacity: 1;
     }
   }
 }

@@ -4,7 +4,6 @@ import { SectionTemplate } from '@/components/global/SectionTemplate';
 import ExperienceSection from "@/components/home/ExperienceSection";
 import ProjectSection from "@/components/home/ProjectSection";
 import BlogSection from "@/components/home/BlogSection";
-import QuoteSection from "@/components/about/QuoteSection";
 import TestimonialSection from "@/components/home/TestimonialSection";
 
 export default async function Page() {
@@ -19,7 +18,6 @@ export default async function Page() {
       <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories" id="blogs">
         <BlogSection />
       </SectionTemplate>
-      <QuoteSection />
       <TestimonialSection />
     </main>
   );

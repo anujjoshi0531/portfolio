@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useLayoutEffect } from "react"
+import { useRef, useState } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { MdArrowOutward } from "react-icons/md"
 import { FileIcon } from "lucide-react"

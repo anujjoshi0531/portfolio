@@ -41,7 +41,7 @@ export async function POST(request: Request) {
   let body: unknown;
   try {
     body = JSON.parse(rawBody);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 

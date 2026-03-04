@@ -18,7 +18,7 @@ export default function ContactInfo() {
         <div className="hover:-translate-y-1 duration-150">
           <p className="font-semibold">Phone</p>
           <SocialLink
-            title="+91 981118 XXXX"
+            title="+91 98111 84995"
             href="tel:+919811184995"
             icon={FaPhoneAlt}
           />

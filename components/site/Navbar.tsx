@@ -119,7 +119,7 @@ export default function Navbar() {
             initial="initial"
             animate="animate">
             <Link href="/" aria-label="Go to homepage">
-              <Logo className="bg-primary/50 rounded-full" />
+              <Logo className="bg-primary/80 rounded-full hover:border-theme border-2" />
             </Link>
           </motion.div>
 

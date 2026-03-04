@@ -1,0 +1,151 @@
+/* ─────────────────────────────────────────────────────────────
+   Sprite Animation System
+   ──────────────────────────────────────────────────────────────
+   Layout:  .sprite-wrap contains three stacked image layers.
+   Control: JS adds/removes .is-talking / .is-blinking classes.
+   Rendering: CSS @keyframes handle per-frame timing.
+
+   Layer order (bottom → top):
+     1. .sprite-base  – always-visible base image (in normal flow)
+     2. .sprite-talk  – mouth-open overlay  (z-index 1)
+     3. .sprite-blink – blink overlay       (z-index 2, wins over talk)
+   ───────────────────────────────────────────────────────────── */
+
+/* Container — sized by the base image; clips overlay overflow */
+.sprite-wrap {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    /* prevents overlay frames escaping the wrap */
+}
+
+/* ── Base image ─────────────────────────────────────────────── */
+/* Sits in normal flow → gives .sprite-wrap its natural size.
+   All overlay frames use position:absolute and fill this size. */
+.sprite-base {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* ── Shared overlay frame ───────────────────────────────────── */
+/* No min-height / min-width here — overlays must match base size
+   exactly so they align pixel-for-pixel when shown. */
+.sprite-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 0;
+    will-change: opacity;
+    /* GPU composited, no layout cost */
+}
+
+/* ── Talk overlay (z above base) ───────────────────────────── */
+.sprite-talk {
+    z-index: 1;
+}
+
+.sprite-wrap.is-talking .sprite-talk {
+    animation: sprite-talk 600ms steps(1, end) infinite;
+}
+
+/* 0–49%  → mouth open  (opacity 1)
+   50–100% → mouth closed (base shows through) */
+@keyframes sprite-talk {
+
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+/* ── Blink overlay (z above talk — always wins) ─────────────── */
+.sprite-blink {
+    z-index: 2;
+}
+
+.sprite-wrap.is-blinking .sprite-blink {
+    animation: sprite-blink 160ms steps(1, end) forwards;
+}
+
+/* 0–49%  → eyes open   (transparent)
+   50–100% → eyes closed (blink frame visible) */
+@keyframes sprite-blink {
+
+    0%,
+    49% {
+        opacity: 0;
+    }
+
+    50%,
+    100% {
+        opacity: 1;
+    }
+}
+
+/* ── Yawn overlay ─────────────────────────── */
+.sprite-yawn {
+    z-index: 3;
+    transition: opacity 300ms ease;
+}
+
+.sprite-wrap.is-yawning .sprite-yawn {
+    opacity: 1;
+}
+
+/* ── Poke overlays (highest z) ─────────────── */
+.sprite-poke {
+    z-index: 4;
+}
+
+.sprite-wrap.is-poking .sprite-poke1 {
+    animation: poke-switch-1 300ms steps(1, end) infinite;
+}
+
+.sprite-wrap.is-poking .sprite-poke2 {
+    animation: poke-switch-2 300ms steps(1, end) infinite;
+}
+
+@keyframes poke-switch-1 {
+
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes poke-switch-2 {
+
+    0%,
+    49% {
+        opacity: 0;
+    }
+
+    50%,
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Hide underlying layers when poking to prevent them from showing through transparency */
+.sprite-wrap.is-poking .sprite-base,
+.sprite-wrap.is-poking .sprite-talk,
+.sprite-wrap.is-poking .sprite-blink,
+.sprite-wrap.is-poking .sprite-yawn {
+    opacity: 0 !important;
+    animation: none !important;
+    transition: none !important;
+}

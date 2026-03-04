@@ -167,21 +167,16 @@ export default function Logo({ className }: { className?: string }) {
     }, []);
 
     return (
-        <div className={cn("flex items-center gap-2", className)}>
-            <div
-                ref={avatarRef}
-                className="relative overflow-hidden rounded-full shrink-0"
-                style={{ width: 40, height: 40 }}
-            >
-                <Image
-                    src={src}
-                    alt="Logo avatar"
-                    width={40}
-                    height={40}
-                    priority
-                    className="object-cover rounded-full"
-                />
-            </div>
+        <div
+            ref={avatarRef}
+            className={cn("relative overflow-hidden rounded-full shrink-0 size-12", className)}>
+            <Image
+                src={src}
+                alt="Logo avatar"
+                fill
+                priority
+                className="object-cover rounded-full"
+            />
         </div>
     );
 }

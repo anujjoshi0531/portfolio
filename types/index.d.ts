@@ -244,7 +244,7 @@ type SocialLinkEntry = {
 };
 
 type PerkRating = {
-    rating: string | number;
+    rating: number;
     level: string;
 };
 
