@@ -57,12 +57,14 @@ export default function HeroImage() {
     const [shaking, setShaking] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
     const [isYawning, setIsYawning] = useState(false);
-    const [isPoking, setIsPoking] = useState(false);
+    const [activePoke, setActivePoke] = useState<number>(0);
 
     const spriteRef = useRef<HTMLDivElement>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const progressRef = useRef<HTMLInputElement | null>(null);
     const clickCountRef = useRef(0);
+    const maxPokesRef = useRef<number>(Math.floor(Math.random() * 2) + 5);
+    const pokeTypeRef = useRef<number | null>(null);
     const stateRef = useRef({ isHovered: false });
 
     const blinkTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -163,9 +165,17 @@ export default function HeroImage() {
     }, []);
 
     const triggerPoke = () => {
-        setIsPoking(true);
+        let nextPoke = 1;
+        if (pokeTypeRef.current === null) {
+            nextPoke = Math.random() > 0.5 ? 1 : 2;
+        } else {
+            nextPoke = pokeTypeRef.current === 1 ? 2 : 1;
+        }
+        pokeTypeRef.current = nextPoke;
+        setActivePoke(nextPoke);
+
         if (pokeTimerRef.current) clearTimeout(pokeTimerRef.current);
-        pokeTimerRef.current = setTimeout(() => setIsPoking(false), 600);
+        pokeTimerRef.current = setTimeout(() => setActivePoke(0), 600);
     };
 
     const handleMouseEnter = () => {
@@ -196,27 +206,38 @@ export default function HeroImage() {
 
     const handleClick = () => {
         if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-        clickTimerRef.current = setTimeout(() => (clickCountRef.current = 0), 2000);
+        clickTimerRef.current = setTimeout(() => {
+            clickCountRef.current = 0;
+            maxPokesRef.current = Math.floor(Math.random() * 2) + 5;
+        }, 3000);
         clickCountRef.current += 1;
 
-        triggerPoke();
-
-        if (clickCountRef.current === 1) {
-            if (audioRef.current) {
-                audioRef.current.currentTime = 0;
-                audioRef.current.play().catch(() => { });
-                setMessage(HOVER_LINES[0]);
-                setTalking(spriteRef.current, true);
+        if (clickCountRef.current < maxPokesRef.current) {
+            triggerPoke();
+            if (clickCountRef.current === 1) {
+                if (audioRef.current) {
+                    audioRef.current.currentTime = 0;
+                    audioRef.current.play().catch(() => { });
+                    setMessage(HOVER_LINES[0]);
+                    setTalking(spriteRef.current, true);
+                } else {
+                    setMessage(HOVER_LINES[Math.floor(Math.random() * HOVER_LINES.length)]);
+                }
             } else {
-                setMessage(HOVER_LINES[Math.floor(Math.random() * HOVER_LINES.length)]);
+                setMessage(ANGRY_MESSAGES[Math.floor(Math.random() * ANGRY_MESSAGES.length)]);
             }
-        } else if (clickCountRef.current >= 2) {
+        } else {
+            const finalPoke = Math.random() > 0.5 ? 1 : 2;
+            setActivePoke(finalPoke);
+            if (pokeTimerRef.current) clearTimeout(pokeTimerRef.current);
+
             setMessage(ANGRY_MESSAGES[Math.floor(Math.random() * ANGRY_MESSAGES.length)]);
             setShaking(true);
 
             if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
             shakeTimerRef.current = setTimeout(() => {
                 setShaking(false);
+                setActivePoke(0);
                 setMessage(stateRef.current.isHovered
                     ? HOVER_LINES[Math.floor(Math.random() * HOVER_LINES.length)]
                     : DEFAULT_MESSAGE);
@@ -253,7 +274,7 @@ export default function HeroImage() {
                  *   4. sprite-yawn  — yawn overlay
                  *   5. sprite-poke  — poke overlays
                  */}
-                <div ref={spriteRef} className={`sprite-wrap w-full h-full ${isYawning ? "is-yawning" : ""} ${isPoking ? "is-poking" : ""}`}>
+                <div ref={spriteRef} className={`sprite-wrap w-full h-full ${isYawning ? "is-yawning" : ""} ${activePoke > 0 ? "is-poking-" + activePoke : ""}`}>
                     {/* Layer 1 – base (Next.js Image for SEO + priority loading) */}
                     <Image
                         priority
@@ -384,17 +405,17 @@ export default function HeroImage() {
                         transition={{ duration: 0.3 }}
                         className="absolute z-20 pointer-events-none bottom-[5%] right-[2%] md:-right-4 md:bottom-[15%]"
                     >
-                        <div className="relative flex items-center gap-3 bg-background/90 backdrop-blur-md text-foreground px-4 py-2.5 md:px-5 md:py-3 rounded-full shadow-2xl border border-border/50 group">
+                        <div className="relative flex items-center gap-2 bg-background/90 backdrop-blur-md text-foreground px-4 py-2 rounded-full shadow-2xl border border-border/50 group">
                             {/* Glowing Ring Effect on the badge */}
                             <div className="absolute inset-0 rounded-full border-[2px] border-theme/50 opacity-20" style={{ animationDuration: '3s' }} />
 
                             {/* Inner Dot */}
                             <div className="relative flex h-3 w-3">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-theme opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-3 w-3 bg-theme"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-theme opacity-75" />
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-theme" />
                             </div>
 
-                            <span className="relative z-10 text-xs md:text-sm font-medium tracking-wide whitespace-nowrap">Hover here</span>
+                            <span className="relative z-10 text-xs font-medium tracking-wide whitespace-nowrap">Hover here</span>
                         </div>
                     </motion.div>
                 )}
@@ -411,11 +432,16 @@ export default function HeroImage() {
                         transition={{ duration: 0.18 }}
                         className="absolute right-[50%] translate-x-1/2 md:translate-x-0 bottom-0 md:right-[70%] md:top-[72%] md:-translate-y-1/2 translate-y-10 z-20 pointer-events-none"
                     >
-                        <div className="relative backdrop-blur-sm font-semibold px-4 py-2 rounded-xl transition-all duration-300 shadow-lg whitespace-pre-line text-sm w-max max-w-[280px] text-center text-muted-foreground bg-muted">
-                            {/* Bubble Tail */}
-                            <span className="absolute md:opacity-100 opacity-0 right-[-7px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[7px] border-b-[7px] border-l-[9px] border-t-transparent border-b-transparent transition-all duration-300 border-l-muted" />
-                            {message}
-                        </div>
+                        {(() => {
+                            const isAngry = ANGRY_MESSAGES.includes(message);
+                            return (
+                                <div className={`relative backdrop-blur-sm font-semibold px-4 py-2 rounded-xl transition-all duration-300 shadow-lg whitespace-pre-line text-sm w-max max-w-[280px] text-center ${isAngry ? "text-destructive-foreground bg-destructive" : "text-muted-foreground bg-muted"}`}>
+                                    {/* Bubble Tail */}
+                                    <span className={`absolute md:opacity-100 opacity-0 right-[-7px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[7px] border-b-[7px] border-l-[9px] border-t-transparent border-b-transparent transition-all duration-300 ${isAngry ? "border-l-destructive" : "border-l-muted"}`} />
+                                    {message}
+                                </div>
+                            );
+                        })()}
                     </motion.div>
                 )}
             </AnimatePresence>

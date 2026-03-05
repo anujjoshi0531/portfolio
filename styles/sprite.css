@@ -106,45 +106,23 @@
     z-index: 4;
 }
 
-.sprite-wrap.is-poking .sprite-poke1 {
-    animation: poke-switch-1 300ms steps(1, end) infinite;
+.sprite-wrap.is-poking-1 .sprite-poke1 {
+    opacity: 1;
 }
 
-.sprite-wrap.is-poking .sprite-poke2 {
-    animation: poke-switch-2 300ms steps(1, end) infinite;
-}
-
-@keyframes poke-switch-1 {
-
-    0%,
-    49% {
-        opacity: 1;
-    }
-
-    50%,
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes poke-switch-2 {
-
-    0%,
-    49% {
-        opacity: 0;
-    }
-
-    50%,
-    100% {
-        opacity: 1;
-    }
+.sprite-wrap.is-poking-2 .sprite-poke2 {
+    opacity: 1;
 }
 
 /* Hide underlying layers when poking to prevent them from showing through transparency */
-.sprite-wrap.is-poking .sprite-base,
-.sprite-wrap.is-poking .sprite-talk,
-.sprite-wrap.is-poking .sprite-blink,
-.sprite-wrap.is-poking .sprite-yawn {
+.sprite-wrap.is-poking-1 .sprite-base,
+.sprite-wrap.is-poking-1 .sprite-talk,
+.sprite-wrap.is-poking-1 .sprite-blink,
+.sprite-wrap.is-poking-1 .sprite-yawn,
+.sprite-wrap.is-poking-2 .sprite-base,
+.sprite-wrap.is-poking-2 .sprite-talk,
+.sprite-wrap.is-poking-2 .sprite-blink,
+.sprite-wrap.is-poking-2 .sprite-yawn {
     opacity: 0 !important;
     animation: none !important;
     transition: none !important;
