@@ -202,7 +202,7 @@ export default async function Layout({
     : null;
 
   return (
-    <html suppressHydrationWarning lang="en" className="scroll-smooth overflow-x-hidden">
+    <html suppressHydrationWarning lang="en" className="scroll-smooth overflow-x-clip">
       <head>
         <link rel="shortcut icon" href="/icon.webp" type="image/x-icon" />
         {contestApiOrigin && (
@@ -298,7 +298,7 @@ export default async function Layout({
         />
       </head>
       <body
-        className={`${poppins.className} overflow-x-hidden`}
+        className={`${poppins.className} overflow-x-clip`}
         suppressHydrationWarning>
         <ThemeProvider>
           <DarkProvider
@@ -309,7 +309,7 @@ export default async function Layout({
             defaultTheme="dark">
             <NextTopLoader easing="ease" speed={200} initialPosition={0.08} showSpinner={false} color="#fff" />
             <Navbar />
-            <div className="overflow-x-hidden max-w-[100dvw] flex flex-col min-h-[100dvh]">
+            <div className="overflow-x-clip max-w-[100dvw] flex flex-col min-h-[100dvh]">
               <main className="lg:mx-32 md:mx-16 my-12 sm:mx-8 mx-6">
                 {children}
               </main>

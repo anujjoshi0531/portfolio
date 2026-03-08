@@ -5,6 +5,7 @@ import { extractPlainText } from "@/lib";
 import { fetchPage } from "@/lib/server/notion";
 import { redirect } from "next/navigation";
 import { validate } from "uuid";
+import ShareAndReact from "@/components/blog/ShareAndReact";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -117,12 +118,21 @@ export default async function page({ params }: {
     }
   };
 
-  return <>
+  return <div className="pt-16">
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
+
+    {/* Floating interaction bar on the left */}
+    <ShareAndReact title={title} />
+
     <NotionPage recordMap={recordMap} />
-    <BlogSection tags={tags} />
-  </>;
+
+    {/* Up Next / Related Articles */}
+    <div className="my-16 sm:my-20">
+      <h3 className="text-2xl sm:text-3xl font-bold font-heading text-center mb-8">More Related Articles</h3>
+      <BlogSection tags={tags} />
+    </div>
+  </div>;
 }

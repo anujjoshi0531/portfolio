@@ -11,6 +11,7 @@ import {
 } from 'react-notion-x'
 import NotFound from '@/app/not-found'
 import { useTheme } from 'next-themes';
+import { ReadingProgress } from './ReadingProgress';
 
 const Code = dynamic(async () => {
   const m = await import('react-notion-x/build/third-party/code')
@@ -131,18 +132,21 @@ export function NotionPage({
   }
 
   return (
-    <NotionRenderer
-      components={components}
-      recordMap={recordMap}
-      previewImages={!!recordMap.preview_images}
-      showCollectionViewDropdown={true}
-      showTableOfContents={true}
-      minTableOfContentsItems={3}
-      fullPage={true}
-      disableHeader={true}
-      isImageZoomable={true}
-      darkMode={theme === 'dark'}
-      isLinkCollectionToUrlProperty={true}
-    />
+    <>
+      <ReadingProgress recordMap={recordMap} />
+      <NotionRenderer
+        components={components}
+        recordMap={recordMap}
+        previewImages={!!recordMap.preview_images}
+        showCollectionViewDropdown={true}
+        showTableOfContents={true}
+        minTableOfContentsItems={3}
+        fullPage={true}
+        disableHeader={true}
+        isImageZoomable={true}
+        darkMode={theme === 'dark'}
+        isLinkCollectionToUrlProperty={true}
+      />
+    </>
   )
 }

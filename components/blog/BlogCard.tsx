@@ -49,7 +49,8 @@ export default function BlogCard({
     >
       <Card
         className={cn(
-          "group overflow-hidden transition-colors duration-300 flex h-full",
+          "group overflow-hidden transition-all duration-300 flex h-full",
+          "hover:shadow-xl hover:-translate-y-1",
           isVertical ? "flex-col pt-0" : "flex-col sm:flex-row py-0",
           isOtherHovered && "blur-sm scale-[0.98]"
         )}>
@@ -57,8 +58,8 @@ export default function BlogCard({
           className={cn(
             "relative overflow-hidden",
             isVertical
-              ? "aspect-video w-full"
-              : "aspect-video w-full sm:w-2/5 sm:aspect-square"
+              ? "aspect-video w-full rounded-t-lg"
+              : "aspect-video w-full sm:w-2/5 sm:aspect-square rounded-l-lg sm:rounded-r-none"
           )}>
           <Image
             src={thumbnail}

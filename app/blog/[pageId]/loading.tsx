@@ -1,13 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import GoBackButton from "@/components/site/GoBackButton";
 
 export default function Loading() {
     return (
         <div className="max-w-4xl mx-auto px-4 md:px-8 mt-4 md:mt-12 w-full animate-in fade-in duration-500">
-            {/* Header Tools */}
-            <div className="flex justify-between items-center mb-8">
-                <GoBackButton />
-            </div>
 
             {/* Hero Image */}
             <Skeleton className="w-full h-[250px] md:h-[400px] mb-12" />
