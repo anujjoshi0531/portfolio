@@ -98,14 +98,14 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
     if (!isMounted) return null;
 
     return (
-        <div className="fixed z-40 flex flex-row gap-2 xl:gap-4 bottom-6 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-md border rounded-full p-2 shadow-lg items-center">
+        <div className="fixed z-40 flex flex-row gap-2 bottom-6 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-md border rounded-full p-2 shadow-lg items-center">
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                     <button
-                        className="p-3 rounded-full transition-colors text-muted-foreground hover:bg-theme/10 hover:text-theme relative"
+                        className="p-2 rounded-full transition-colors text-muted-foreground hover:bg-theme/10 hover:text-theme relative"
                         aria-label="Send Feedback"
                     >
-                        <FaMessage size={20} />
+                        <FaMessage size={18} />
                     </button>
                 </DialogTrigger>
 
@@ -167,26 +167,26 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
             {/* Share Buttons */}
             <button
                 onClick={() => handleShare("twitter")}
-                className="p-3 text-muted-foreground hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 rounded-full transition-colors"
+                className="p-2 text-muted-foreground hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 rounded-full transition-colors"
                 aria-label="Share on Twitter"
             >
-                <FaTwitter size={20} />
+                <FaTwitter size={18} />
             </button>
 
             <button
                 onClick={() => handleShare("linkedin")}
-                className="p-3 text-muted-foreground hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 rounded-full transition-colors"
+                className="p-2 text-muted-foreground hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 rounded-full transition-colors"
                 aria-label="Share on LinkedIn"
             >
-                <FaLinkedin size={20} />
+                <FaLinkedin size={18} />
             </button>
 
             <button
                 onClick={() => handleShare("copy")}
-                className="p-3 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors"
+                className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors"
                 aria-label="Copy link"
             >
-                <FaLink size={20} />
+                <FaLink size={18} />
             </button>
         </div>
     );

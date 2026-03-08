@@ -137,12 +137,12 @@ export default function ContactForm() {
           </LabelInputContainer>
 
           <LabelInputContainer>
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email">Email</Label>
             <input
               id="email"
               name="email"
               type="email"
-              placeholder="Email Address"
+              placeholder="Email"
               value={formData.email}
               onChange={handleChange}
               className={inputBase}
