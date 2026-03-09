@@ -63,7 +63,7 @@ export async function POST(request: Request) {
   try {
     await Promise.all([
       sendToRecipient(safeName, email, safeMessage),
-      sendThankYouEmail(safeName, email),
+      sendThankYouEmail(safeName, email, safeMessage),
     ]);
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -52,7 +52,7 @@ function SocialLink({ title, href, icon: Icon }: SocialLinkProps) {
       url={href}
       title={title}
       className="flex gap-2 items-center">
-      {Icon && <Icon className="text-theme" />}
+      {Icon && <Icon className="text-theme size-4" />}
       <span className="link">{title}</span>
     </LinkPreview>
   );

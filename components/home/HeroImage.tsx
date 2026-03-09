@@ -9,7 +9,7 @@ import { Volume2Icon, VolumeXIcon } from "lucide-react";
 const DEFAULT_MESSAGE = "";
 
 const HOVER_LINES = [
-    "Hey there! I'm Anuj Joshi ðŸ‘‹",
+    "Hey there! I'm Anuj Joshi",
     "A software dev who loves building fast interfaces.",
     "I focus on modern and interactive web experiences.",
     "Feel free to explore my portfolio.",

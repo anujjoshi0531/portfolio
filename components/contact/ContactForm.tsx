@@ -176,7 +176,7 @@ export default function ContactForm() {
           {isLoading ? (
             <>
               <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-              Sendingâ€¦
+              Sending
             </>
           ) : (
             "Submit"
