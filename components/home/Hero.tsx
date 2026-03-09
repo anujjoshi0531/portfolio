@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { HeroSocial } from '@/components/global/Social';
-import { FaPaperPlane, FaLink } from "react-icons/fa6";
+import { Send, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { childVariants, containerVariants } from '@/lib/animate';
 import { socialLinks } from "@/lib";
@@ -19,57 +19,57 @@ export default function Hero() {
       {/* Profile Text */}
       <div className="space-y-12 translate-y-8">
         <div className="md:space-y-8 md:py-12 sm:py-5 px-2 mx-auto md:mx-0">
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             className="space-y-2 md:space-y-4 select-none">
-            <motion.h1
+            <m.h1
               variants={childVariants}
               className="text-nowrap font-bold text-[2rem] sm:text-[3rem] md:text-6xl">
               Hi, I&apos;m&nbsp;
               <span className="text-theme">Anuj Joshi</span>
-            </motion.h1>
-            <motion.h2
+            </m.h1>
+            <m.h2
               variants={childVariants}
               className="overflow-hidden whitespace-nowrap">
               <FlipWords
                 words={["A Fullstack Developer", "A Machine Learning Enthusiast", "Software Development Engineer", "Problem Solver at Scale", "Building AI-Powered Systems"]}
                 className="h-8 font-medium text-[1rem] sm:text-[1.5rem] md:text-2xl"
               />
-            </motion.h2>
-          </motion.div>
+            </m.h2>
+          </m.div>
 
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             className="flex flex-wrap gap-5 py-10 justify-center lg:justify-start">
-            <motion.div variants={childVariants}>
+            <m.div variants={childVariants}>
               <Link href="/contact" passHref>
                 <Button aria-label="Go to contact page">
-                  <FaPaperPlane />
+                  <Send className="size-4" />
                   Contact Me
                 </Button>
               </Link>
-            </motion.div>
+            </m.div>
 
-            <motion.div variants={childVariants}>
+            <m.div variants={childVariants}>
               <Link
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer">
                 <Button variant="secondary" aria-label="Download resume (opens in new tab)">
-                  <FaLink />
+                  <Link2 className="size-4" />
                   Resume
                 </Button>
               </Link>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         </div>
 
         {/* Social Links */}
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -77,16 +77,16 @@ export default function Hero() {
           {socialLinks
             .filter((l) => ["LinkedIn", "Twitter", "Telegram"].includes(l.title))
             .map(({ title, name, href, icon }) => (
-              <motion.div variants={childVariants} key={title}>
+              <m.div variants={childVariants} key={title}>
                 <HeroSocial
                   title={title}
                   name={name}
                   href={href}
                   icon={icon}
                 />
-              </motion.div>
+              </m.div>
             ))}
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );

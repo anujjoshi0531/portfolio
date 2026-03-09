@@ -9,7 +9,7 @@ import { BlogFilter } from "./filter/BlogFilter";
 import { BlogPagination } from './BlogPagination';
 import { PageTemplate } from '../global/SectionTemplate';
 import NoWork from "../site/NoWork";
-import { useBlogFilters } from '@/hooks/useBlogFilters';
+import { useFilters } from '@/hooks';
 
 interface BlogProps {
   posts: NotionBlogPage[];
@@ -39,7 +39,7 @@ export default function Blog({
     hasActiveFilters,
     removeFilter,
     clearAllFilters,
-  } = useBlogFilters();
+  } = useFilters();
 
   // Calculate result range
   const startResult = totalCount > 0 ? (currentPage - 1) * limit + 1 : 0;

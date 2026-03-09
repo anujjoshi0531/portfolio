@@ -4,7 +4,7 @@ import Link from "next/link"
 import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
 import BlogCard from '@/components/blog/BlogCard'
 import { MagnetBtn } from "@/components/animate/MagnetBtn"
-import { MdArrowOutward } from "react-icons/md"
+import { ArrowUpRight } from "lucide-react"
 import { cn } from "@/lib"
 import { Card } from "@/components/ui/card"
 import { useScrollCarousel } from '@/hooks/useScrollCarousel'
@@ -113,7 +113,7 @@ export default function BlogClient({ blogs }: BlogClientProps) {
                     <Link href="/blog" className="relative" aria-label="View all blog posts">
                         <MagnetBtn text="READ MORE &#183;READ MORE &#183;READ MORE &#183;READ MORE &#183;">
                             <div className="flex items-center space-x-2">
-                                <MdArrowOutward />
+                                <ArrowUpRight className="size-5" />
                             </div>
                         </MagnetBtn>
                     </Link>

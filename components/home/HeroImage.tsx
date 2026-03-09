@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { containerVariants } from "@/lib/animate";
@@ -9,7 +9,7 @@ import { Volume2Icon, VolumeXIcon } from "lucide-react";
 const DEFAULT_MESSAGE = "";
 
 const HOVER_LINES = [
-    "Hey there! I'm Anuj Joshi 👋",
+    "Hey there! I'm Anuj Joshi ðŸ‘‹",
     "A software dev who loves building fast interfaces.",
     "I focus on modern and interactive web experiences.",
     "Feel free to explore my portfolio.",
@@ -18,7 +18,7 @@ const HOVER_LINES = [
     "If something catches your interest...",
     "...I'd love to hear from you!",
     "Want to collaborate or ask a question?",
-    "Just say hello — feel free to reach out.",
+    "Just say hello â€” feel free to reach out.",
     "Thanks for visiting and enjoy exploring!",
 ];
 
@@ -255,8 +255,8 @@ export default function HeroImage() {
 
     return (
         <div className="relative flex items-center w-fit">
-            {/* ── Avatar ── */}
-            <motion.div
+            {/* â”€â”€ Avatar â”€â”€ */}
+            <m.div
                 className="relative bg-theme/80 lg:max-w-[60vw] w-fit min-w-[150px] min-h-[150px] max-h-[80vh] object-cover rounded-full overflow-hidden animate-profile cursor-pointer"
                 variants={shaking ? SHAKE_VARIANTS : containerVariants}
                 initial={shaking ? "idle" : "hidden"}
@@ -267,15 +267,15 @@ export default function HeroImage() {
                 onClick={handleClick}
             >
                 {/*
-                 * Sprite stack — managed by sprite.css:
-                 *   1. sprite-base  — always visible
-                 *   2. sprite-talk  — mouth-open
-                 *   3. sprite-blink — blink overlay
-                 *   4. sprite-yawn  — yawn overlay
-                 *   5. sprite-poke  — poke overlays
+                 * Sprite stack â€” managed by sprite.css:
+                 *   1. sprite-base  â€” always visible
+                 *   2. sprite-talk  â€” mouth-open
+                 *   3. sprite-blink â€” blink overlay
+                 *   4. sprite-yawn  â€” yawn overlay
+                 *   5. sprite-poke  â€” poke overlays
                  */}
                 <div ref={spriteRef} className={`sprite-wrap w-full h-full ${isYawning ? "is-yawning" : ""} ${activePoke > 0 ? "is-poking-" + activePoke : ""}`}>
-                    {/* Layer 1 – base (Next.js Image for SEO + priority loading) */}
+                    {/* Layer 1 â€“ base (Next.js Image for SEO + priority loading) */}
                     <Image
                         priority
                         src="/hero/1.png"
@@ -285,7 +285,7 @@ export default function HeroImage() {
                         className="sprite-base object-cover"
                         sizes="(max-width:768px) 360px, (max-width:1024px) 360px, 500px"
                     />
-                    {/* Layer 2 – mouth open (talk): plain img — no Next.js wrapper overhead */}
+                    {/* Layer 2 â€“ mouth open (talk): plain img â€” no Next.js wrapper overhead */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/hero/open.png"
@@ -295,7 +295,7 @@ export default function HeroImage() {
                         fetchPriority="low"
                         className="sprite-talk sprite-frame object-cover"
                     />
-                    {/* Layer 3 – blink (eyes half-closed): same, plain img */}
+                    {/* Layer 3 â€“ blink (eyes half-closed): same, plain img */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/hero/2.png"
@@ -305,7 +305,7 @@ export default function HeroImage() {
                         fetchPriority="low"
                         className="sprite-blink sprite-frame object-cover"
                     />
-                    {/* Layer 4 – yawn overlay: highest z */}
+                    {/* Layer 4 â€“ yawn overlay: highest z */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/hero/yawn.png"
@@ -315,7 +315,7 @@ export default function HeroImage() {
                         fetchPriority="low"
                         className="sprite-yawn sprite-frame object-cover"
                     />
-                    {/* Layer 5 – poke overlays: highest z */}
+                    {/* Layer 5 â€“ poke overlays: highest z */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/talk/poke1.png"
@@ -339,7 +339,7 @@ export default function HeroImage() {
                 {/* Audio Controls */}
                 <AnimatePresence>
                     {isHovered && (
-                        <motion.div
+                        <m.div
                             key="audio-controls"
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -390,15 +390,15 @@ export default function HeroImage() {
                                     [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110
                                     [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:bg-foreground [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110"
                             />
-                        </motion.div>
+                        </m.div>
                     )}
                 </AnimatePresence>
-            </motion.div>
+            </m.div>
 
             {/* Action Indicator (Premium Badge) */}
             <AnimatePresence>
                 {!isHovered && !isYawning && !shaking && !message && (
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, scale: 0.9, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 10 }}
@@ -417,14 +417,14 @@ export default function HeroImage() {
 
                             <span className="relative z-10 text-xs font-medium tracking-wide whitespace-nowrap">Hover here</span>
                         </div>
-                    </motion.div>
+                    </m.div>
                 )}
             </AnimatePresence>
 
             {/* Speech Bubble */}
             <AnimatePresence mode="wait">
                 {message && !isYawning && (
-                    <motion.div
+                    <m.div
                         key={message}
                         initial={{ opacity: 0, scale: 0.88, y: 6 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -442,7 +442,7 @@ export default function HeroImage() {
                                 </div>
                             );
                         })()}
-                    </motion.div>
+                    </m.div>
                 )}
             </AnimatePresence>
 

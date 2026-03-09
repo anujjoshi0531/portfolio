@@ -2,7 +2,8 @@
 
 import { useState, useRef, useCallback, useEffect } from "react"
 import { Search } from "lucide-react"
-import { useKeyboardShortcut , useSearchData } from "@/components/site/search/hooks"
+import { useKeyboardShortcut } from "@/components/site/search/hooks"
+import { useSearch } from "@/hooks/useSearch"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import TooltipComponent from '@/components/global/TooltipComponent'
@@ -13,7 +14,17 @@ export default function SearchButton() {
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { query, setQuery, isLoading, searchResult, searchError, hasQuery } = useSearchData()
+  const {
+    term: query,
+    setTerm: setQuery,
+    isLoading,
+    searchResult,
+    searchError,
+    hasQuery
+  } = useSearch({
+    syncUrl: false,
+    enableFetch: true
+  })
 
   useKeyboardShortcut(() => setIsOpen(true), isOpen)
 

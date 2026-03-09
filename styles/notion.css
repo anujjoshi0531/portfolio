@@ -1,3 +1,15 @@
+.notion-title,
+.notion-h1,
+.notion-h2,
+.notion-h3,
+.notion-h4,
+.notion-h5,
+.notion-h6,
+.notion-h,
+.font-heading {
+  font-family: var(--font-playfair), serif;
+}
+
 :root {
   --notion-font: ui-sans-serif, system-ui, apple-system, BlinkMacSystemFont,
     'Segoe UI', Helvetica, 'Apple Color Emoji', Arial, sans-serif,
@@ -3793,22 +3805,22 @@ svg.notion-page-icon {
   font-size: 1.15em !important;
   line-height: 1.7 !important;
   color: hsl(var(--primary) / 0.8) !important;
-  border-left: 3px solid hsl(var(--primary) / 0.35) !important;
+  border-left: 3px solid hsl(var(--theme) / 0.35) !important;
   border-radius: 0 8px 8px 0 !important;
   padding: 0.85em 1.4em !important;
   margin: 1.8em 0 !important;
-  background: hsl(var(--primary) / 0.035) !important;
+  background: hsl(var(--theme) / 0.035) !important;
   transition: border-left-color 0.2s ease, background 0.2s ease;
 }
 
 .notion-quote:hover {
-  border-left-color: hsl(var(--primary) / 0.65) !important;
-  background: hsl(var(--primary) / 0.055) !important;
+  border-left-color: hsl(var(--theme) / 0.65) !important;
+  background: hsl(var(--theme) / 0.055) !important;
 }
 
 .dark-mode .notion-quote {
-  background: hsl(var(--primary) / 0.05) !important;
-  color: hsl(var(--primary) / 0.75) !important;
+  background: hsl(var(--theme) / 0.05) !important;
+  color: hsl(var(--theme) / 0.75) !important;
 }
 
 /* --- Small/meta text --- */

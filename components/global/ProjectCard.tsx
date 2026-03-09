@@ -1,4 +1,4 @@
-import { FaGithub, FaGlobe } from "react-icons/fa";
+import { Github, Globe } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -73,7 +73,7 @@ const ProjectCard = ({
             className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
             aria-label={`View ${title} GitHub repository`}
           >
-            <FaGithub />
+            <Github className="size-5" />
           </LinkPreview>
           <LinkPreview
             title={title}
@@ -81,7 +81,7 @@ const ProjectCard = ({
             className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
             aria-label={`Visit ${title} live website`}
           >
-            <FaGlobe />
+            <Globe className="size-5" />
           </LinkPreview>
         </div>
 

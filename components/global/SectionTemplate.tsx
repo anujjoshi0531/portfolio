@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import React, { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 interface TemplateProps {
   title?: string;
@@ -56,7 +56,7 @@ const SectionTemplate: React.FC<TemplateProps> = React.memo(({
   return (
     <section className={`w-full pt-8 ${className}`} id={id}>
       {(title || subtitle) && (
-        <motion.div
+        <m.div
           className="border-l-[2.5px] border-theme px-4 mt-8 mb-10 select-none"
           initial="hidden"
           whileInView="visible"
@@ -64,16 +64,16 @@ const SectionTemplate: React.FC<TemplateProps> = React.memo(({
           variants={headerVariants}>
           {title && <h2 className="text-4xl font-bold mb-1">{title}</h2>}
           {subtitle && <p className="font-medium text-theme">{subtitle}</p>}
-        </motion.div>
+        </m.div>
       )}
-      <motion.div
+      <m.div
         className="mb-16 px-2 mx-auto"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-80px" }}
         variants={contentVariants}>
         {children}
-      </motion.div>
+      </m.div>
     </section>
   );
 });
@@ -89,25 +89,25 @@ const PageTemplate: React.FC<TemplateProps> = React.memo(({
       <div className="absolute inset-0 bg-muted" aria-hidden="true" />
 
       {/* Text pinned to bottom */}
-      <motion.div
+      <m.div
         className="relative pb-8 md:pt-24 pt-16 flex flex-col"
         initial="hidden"
         animate="visible"
         variants={pageContainerVariants}>
-        <motion.h1
+        <m.h1
           className="text-4xl md:text-5xl font-bold mb-1 sm:mb-2"
           variants={pageChildVariants}>
           {title}
-        </motion.h1>
+        </m.h1>
         {(subtitle || children) && (
-          <motion.p
+          <m.p
             className="font-medium text-lg md:text-xl text-theme"
             variants={pageChildVariants}>
             {subtitle}
             {children}
-          </motion.p>
+          </m.p>
         )}
-      </motion.div>
+      </m.div>
     </div>
   );
 });

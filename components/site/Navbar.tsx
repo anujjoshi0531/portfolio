@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import { FaBars, FaX } from "react-icons/fa6";
+import { Menu, X } from "lucide-react";
 import {
   AnimatePresence,
-  motion,
+  m,
   useMotionValueEvent,
   useScroll,
 } from "framer-motion";
@@ -47,7 +47,7 @@ export default function Navbar() {
       {/* Mobile Full-screen Menu */}
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             variants={menuVars}
             initial="initial"
             animate="animate"
@@ -58,28 +58,28 @@ export default function Navbar() {
               onClick={toggleMenu}
               aria-label="Close menu"
             >
-              <FaX />
+              <X className="size-5" />
             </button>
-            <motion.div
+            <m.div
               variants={containerVars}
               initial="initial"
               animate="open"
               exit="initial"
               className="flex flex-col justify-center items-center h-full gap-6 sm:gap-8 md:gap-10 text-xl sm:text-2xl lg:text-3xl">
               {navLinks.map((link) => (
-                <motion.div
+                <m.div
                   key={link.href}
                   variants={mobileLinkVars}
                   className="tracking-wide hover:text-theme">
                   <Link href={link.href} onClick={closeMenu}>
                     {link.title}
                   </Link>
-                </motion.div>
+                </m.div>
               ))}
-              <motion.div variants={mobileLinkVars}>
+              <m.div variants={mobileLinkVars}>
                 <ModeToggle />
-              </motion.div>
-              <motion.div
+              </m.div>
+              <m.div
                 variants={mobileLinkVars}
                 className="my-2 sm:my-4 flex space-x-6 sm:text-lg md:text-2xl">
                 {socialLinks.map((link) => {
@@ -90,13 +90,13 @@ export default function Navbar() {
                     </SocialIcon>
                   );
                 })}
-              </motion.div>
-            </motion.div>
-          </motion.div>
+              </m.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
 
-      <motion.div
+      <m.div
         variants={{
           visible: { y: 0, opacity: 1 },
           hidden: { y: "-150%", opacity: 0 },
@@ -108,7 +108,7 @@ export default function Navbar() {
         <header className="flex items-center justify-between p-4 py-6 lg:px-6 w-[95%] mx-auto">
 
           {/* Logo */}
-          <motion.div
+          <m.div
             variants={{
               initial: { scale: 0 },
               animate: {
@@ -121,10 +121,10 @@ export default function Navbar() {
             <Link href="/" aria-label="Go to homepage">
               <Logo className="bg-primary/80 rounded-full hover:border-theme border-2" />
             </Link>
-          </motion.div>
+          </m.div>
 
           {/* Desktop Navigation Links */}
-          <motion.nav
+          <m.nav
             className="hidden lg:flex justify-center items-center space-x-7 uppercase font-semibold text-sm"
             variants={{
               initial: { opacity: 0 },
@@ -139,7 +139,7 @@ export default function Navbar() {
             initial="initial"
             animate="animate">
             {navLinks.map((link) => (
-              <motion.div
+              <m.div
                 key={link.href}
                 variants={{
                   initial: { y: -8, opacity: 0 },
@@ -154,11 +154,11 @@ export default function Navbar() {
                   className="link tracking-wide font-semibold">
                   {link.title}
                 </Link>
-              </motion.div>
+              </m.div>
             ))}
 
             {/* Actions */}
-            <motion.div
+            <m.div
               variants={{
                 initial: { y: -8, opacity: 0 },
                 animate: {
@@ -171,19 +171,19 @@ export default function Navbar() {
                 <ModeToggle />
                 <SearchButton />
               </div>
-            </motion.div>
-          </motion.nav>
+            </m.div>
+          </m.nav>
 
           {/* Mobile Actions */}
           <div className="lg:hidden flex items-center space-x-2">
             <SearchButton />
             <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
-              <FaBars />
+              <Menu className="size-5" />
             </Button>
           </div>
 
         </header>
-      </motion.div>
+      </m.div>
     </>
   );
 }

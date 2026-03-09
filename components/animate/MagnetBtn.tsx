@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { cn } from "@/lib";
 import { ReactNode, useRef, useState } from "react";
 
@@ -42,7 +42,7 @@ export function MagnetBtn({ text, size = "md", children, className }: MagnetBtnP
   const { x, y } = position;
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       onMouseMove={handleMouse}
       onMouseLeave={reset}
@@ -80,6 +80,6 @@ export function MagnetBtn({ text, size = "md", children, className }: MagnetBtnP
           </textPath>
         </text>
       </svg>
-    </motion.div>
+    </m.div>
   );
 }

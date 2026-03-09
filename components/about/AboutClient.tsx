@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { childVariants, containerVariants } from '@/lib/animate';
 import PerkSection from "@/components/about/PerkSection";
 import { LinkPreview } from "@/components/animate/LinkPreview";
@@ -13,12 +13,12 @@ interface AboutClientProps {
 export default function AboutClient({ totalProjects }: AboutClientProps) {
     return (
         <>
-            <motion.div
+            <m.div
                 initial="hidden"
                 whileInView="visible"
                 variants={containerVariants}
                 className="mb-5 justify-center items-center flex-col lg:grid lg:grid-cols-5 lg:gap-56">
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, x: 0 }}
                     whileInView={{ opacity: 1, x: 5 }}
                     transition={{ duration: 1, ease: "easeInOut" }}
@@ -35,8 +35,8 @@ export default function AboutClient({ totalProjects }: AboutClientProps) {
                             sizes="(max-width: 640px) 225px, 400px"
                         />
                     </div>
-                </motion.div>
-                <motion.div
+                </m.div>
+                <m.div
                     className="flex flex-col gap-4 lg:col-span-3"
                     variants={childVariants}>
                     <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
@@ -51,7 +51,7 @@ export default function AboutClient({ totalProjects }: AboutClientProps) {
                     <p className="md:mr-0 mr-[10%] tracking-[0.08rem] leading-[1.6rem] font-[450]">
                         Currently, I&apos;m leading a project called <LinkPreview title="Netrai" url="https://netrai.netlify.app/" className="link text-theme" aria-label="Visit NetrAI project website">NetrAI</LinkPreview>, a vision API SaaS that delivers cutting-edge tools like image colorization and super-resolution. Join me in this exciting endeavor to push the boundaries of computer vision technology!
                     </p>
-                </motion.div></motion.div>
+                </m.div></m.div>
             <PerkSection totalProjects={totalProjects} />
         </>
     );

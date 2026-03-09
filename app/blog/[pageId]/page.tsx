@@ -4,8 +4,11 @@ import BlogSection from "@/components/home/BlogSection";
 import { extractPlainText } from "@/lib";
 import { fetchPage } from "@/lib/server/notion";
 import { redirect } from "next/navigation";
-import { validate } from "uuid";
-import ShareAndReact from "@/components/blog/ShareAndReact";
+import dynamic from "next/dynamic";
+
+const ShareAndReact = dynamic(() => import("@/components/blog/ShareAndReact"), {
+  loading: () => null,
+});
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -88,7 +91,7 @@ export default async function page({ params }: {
 }) {
   const { pageId } = await params;
   const { data, recordMap } = await fetchPage(pageId);
-  if (validate(pageId)) {
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(pageId)) {
     const page = data as unknown as NotionBlogPage;
     const slug = extractPlainText(page?.properties?.Slug?.rich_text);
     if (slug) redirect(`/blog/${slug}`);

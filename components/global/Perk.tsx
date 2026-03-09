@@ -1,6 +1,6 @@
-import { containerVariants } from '@/lib/animate';
-import { motion, useMotionValue, useSpring, useInView } from "framer-motion";
-import { IconType } from "react-icons";
+﻿import { containerVariants } from '@/lib/animate';
+import { m, useMotionValue, useSpring, useInView } from "framer-motion";
+import { type LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { LinkPreview } from "@/components/animate/LinkPreview";
@@ -10,7 +10,7 @@ interface PerkProps {
   value?: number;
   link?: string;
   title: string;
-  icon?: IconType;
+  icon?: LucideIcon | React.ComponentType<{ className?: string }>;
   subtitle?: string;
 }
 
@@ -87,14 +87,14 @@ function PerkAnimation({
   className: string;
 }) {
   return (
-    <motion.div
+    <m.div
       initial="hidden"
       whileInView="visible"
       variants={containerVariants}
       className={className}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 

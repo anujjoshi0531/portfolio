@@ -1,28 +1,13 @@
-"use client";
+﻿"use client";
 
 import { FormEvent, useState } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-/* ---------- tiny helpers (Aceternity-style) ---------- */
+import { Label } from "@/components/ui/label";
 
-function Label({
-  htmlFor,
-  children,
-}: {
-  htmlFor: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label
-      htmlFor={htmlFor}
-      className="block text-sm font-semibold text-foreground mb-2"
-    >
-      {children}
-    </label>
-  );
-}
+/* ---------- tiny helpers (Aceternity-style) ---------- */
 
 function LabelInputContainer({
   children,
@@ -102,7 +87,7 @@ export default function ContactForm() {
   };
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 80, damping: 18 }}
@@ -120,10 +105,10 @@ export default function ContactForm() {
       />
 
       <form onSubmit={handleSubmit} className="relative flex flex-col gap-5">
-        {/* Row 1 – Name + Email */}
+        {/* Row 1 â€“ Name + Email */}
         <div className="flex flex-col sm:flex-row gap-4">
           <LabelInputContainer>
-            <Label htmlFor="name">Full name</Label>
+            <Label htmlFor="name" className="mb-2">Full name</Label>
             <input
               id="name"
               name="name"
@@ -137,7 +122,7 @@ export default function ContactForm() {
           </LabelInputContainer>
 
           <LabelInputContainer>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="mb-2">Email</Label>
             <input
               id="email"
               name="email"
@@ -152,9 +137,9 @@ export default function ContactForm() {
           </LabelInputContainer>
         </div>
 
-        {/* Row 2 – Company */}
+        {/* Row 2 â€“ Company */}
         <LabelInputContainer>
-          <Label htmlFor="company">Company</Label>
+          <Label htmlFor="company" className="mb-2">Company</Label>
           <input
             id="company"
             name="company"
@@ -165,9 +150,9 @@ export default function ContactForm() {
           />
         </LabelInputContainer>
 
-        {/* Row 3 – Message */}
+        {/* Row 3 â€“ Message */}
         <LabelInputContainer>
-          <Label htmlFor="message">Message</Label>
+          <Label htmlFor="message" className="mb-2">Message</Label>
           <textarea
             id="message"
             name="message"
@@ -191,7 +176,7 @@ export default function ContactForm() {
           {isLoading ? (
             <>
               <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-              Sending…
+              Sendingâ€¦
             </>
           ) : (
             "Submit"
@@ -199,6 +184,6 @@ export default function ContactForm() {
           <BottomGradient />
         </button>
       </form>
-    </motion.div>
+    </m.div>
   );
 }

@@ -3,11 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSearch } from "@/hooks";
-import { useSearchDropdown } from "@/hooks";
 import { SearchResults } from "@/components/site/search/SearchResults";
 import { cn } from "@/lib";
 import { Search, XIcon, Loader2 } from "lucide-react";
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useCallback } from "react";
 
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   auto?: boolean;
@@ -26,30 +25,30 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   loading = false,
   ...props
 }) => {
-  const { term, clearSearch, handleChange, handleKeyDown } = useSearch(
-    auto,
-    searchPath
-  );
   const {
-    query: dropdownQuery,
-    setQuery: setDropdownQuery,
+    term,
+    setTerm,
+    clearSearch,
+    handleChange,
+    handleKeyDown,
+    isLoading,
     searchResult,
     searchError,
-    hasQuery,
-  } = useSearchDropdown();
+    hasQuery
+  } = useSearch({
+    auto,
+    searchPath,
+    enableFetch: true,
+    syncUrl: true
+  });
+
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [, setIsOpen] = useState(false);
   const value = String(propValue ?? term);
 
-  // Sync dropdown query with input value
-  useEffect(() => {
-    setDropdownQuery(value);
-  }, [value, setDropdownQuery]);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleChange(event);
-    setDropdownQuery(event.target.value);
   };
 
   const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -68,7 +67,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     clearSearch();
-    setDropdownQuery("");
     setIsOpen(false);
   };
 
@@ -106,10 +104,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         <Button
           type="submit"
           className="absolute right-0 top-0 h-14 w-16 bg-theme hover:bg-theme/80 rounded-l-none rounded-r-full flex items-center justify-center transition-all"
-          disabled={loading}
-          aria-label={loading ? "Searching blogs" : "Search blogs"}
+          disabled={loading || isLoading}
+          aria-label={loading || isLoading ? "Searching blogs" : "Search blogs"}
         >
-          {loading ? (
+          {loading || isLoading ? (
             <Loader2 className="animate-spin text-white" />
           ) : (
             <Search className="text-white" />
@@ -120,7 +118,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         <SearchResults
           className="absolute -z-10 top-[calc(100%-40px)] pt-8 left-2 w-[calc(100%-20px)] bg-background border"
           hasQuery={hasQuery}
-          query={dropdownQuery}
+          query={term}
           searchResult={searchResult}
           searchError={searchError}
           onClose={handleClose}

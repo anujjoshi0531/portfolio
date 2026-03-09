@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { m, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';
-import { FaGraduationCap } from "react-icons/fa";
+import { GraduationCap } from "lucide-react";
 import { timeAgo } from "@/lib";
 import { Badge } from "../ui/badge";
 import { LinkPreview } from "@/components/animate/LinkPreview";
@@ -52,22 +52,22 @@ const EduCard = ({ edu }: { edu: Education }) => {
             className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
         >
             {/* Icon */}
-            <motion.div
+            <m.div
                 className={`md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative isolate rounded-full p-2 transition-all duration-150 shrink-0 ${hasPassed
                     ? "bg-theme text-muted scale-110 shadow-lg shadow-theme"
                     : "bg-muted text-theme"
                     }`}
             >
-                <FaGraduationCap className="text-2xl" />
-            </motion.div>
-            {/* Card — entire card is a LinkPreview for edu.url */}
+                <GraduationCap className="size-6" />
+            </m.div>
+            {/* Card â€” entire card is a LinkPreview for edu.url */}
             <LinkPreview
                 title={edu.institution}
                 url={edu.certificate || edu.url}
                 className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)]"
                 aria-label={`Visit ${edu.institution} website`}
             >
-                <motion.div
+                <m.div
                     className="px-8 py-6 rounded-lg shadow-md transition-all bg-muted/40 border border-border group-hover:shadow-lg group-hover:shadow-theme/10"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -113,7 +113,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
                             ))}
                         </div>
                     )}
-                </motion.div>
+                </m.div>
             </LinkPreview>
         </div>
     );
@@ -135,7 +135,7 @@ export default function EducationClient({ education }: EducationClientProps) {
         <SectionTemplate title="Academics" subtitle="My Academic Journey" id="education">
             <div ref={ref} className="space-y-20 relative">
                 <div className="absolute inset-0 ml-5 -translate-x-1 md:mx-auto md:translate-x-0 translate-y-32 h-[72%] w-1 bg-muted" />
-                <motion.div
+                <m.div
                     style={{ height: bgHeight }}
                     className="absolute inset-0 ml-5 -translate-x-1 md:mx-auto md:translate-x-0 translate-y-32 max-h-[72%] w-1 bg-theme"
                 />

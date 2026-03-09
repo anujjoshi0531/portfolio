@@ -39,13 +39,41 @@ export const useFilters = (pathname: string = "/blog") => {
       }
       return acc;
     }, {} as Record<string, string>);
-    
+
     const query = new URLSearchParams(filteredParams);
     setFilters({});
     router.replace(`${pathname}?${query.toString()}`);
   };
 
   const count = Object.values(filters).filter((v) => v).length;
+
+  // ── Derived active-filter state (replaces useBlogFilters) ──
+  const activeTags = searchParams.get("tags")?.split(",").filter(Boolean) ?? [];
+  const activeDateFrom = searchParams.get("published_gte") ?? null;
+  const activeDateTo = searchParams.get("published_lte") ?? null;
+  const hasActiveFilters = activeTags.length > 0 || !!activeDateFrom || !!activeDateTo;
+
+  const removeFilter = (key: string, value?: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (key === "tags" && value) {
+      const newTags = (params.get("tags")?.split(",").filter(Boolean) ?? []).filter(
+        (tag) => tag !== value
+      );
+      if (newTags.length > 0) {
+        params.set("tags", newTags.join(","));
+      } else {
+        params.delete("tags");
+      }
+    } else {
+      params.delete(key);
+    }
+    params.delete("page");
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const clearAllFilters = () => {
+    router.push(pathname);
+  };
 
   return {
     filters,
@@ -54,5 +82,12 @@ export const useFilters = (pathname: string = "/blog") => {
     setFilter,
     saveFilters,
     clearFilters,
+    // Active filter reads + mutations (replaces useBlogFilters)
+    activeTags,
+    activeDateFrom,
+    activeDateTo,
+    hasActiveFilters,
+    removeFilter,
+    clearAllFilters,
   };
 };

@@ -1,4 +1,4 @@
-import { Poppins } from "next/font/google";
+import { Poppins, Playfair_Display } from "next/font/google";
 import "@/styles/globals.css";
 import "@/styles/sprite.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -13,6 +13,7 @@ import PopupChatbot from "@/components/providers/chatbot-provider";
 import Footer from "@/components/site/Footer";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { clientConfig } from "@/lib/constant/config.client";
+import { LazyMotion, domAnimation } from "framer-motion";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,6 +21,12 @@ const poppins = Poppins({
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
   preload: true,
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair",
 });
 
 
@@ -298,7 +305,7 @@ export default async function Layout({
         />
       </head>
       <body
-        className={`${poppins.className} overflow-x-clip`}
+        className={`${poppins.className} ${playfair.variable} overflow-x-clip`}
         suppressHydrationWarning>
         <ThemeProvider>
           <DarkProvider
@@ -307,17 +314,19 @@ export default async function Layout({
             disableTransitionOnChange
             storageKey="station-theme"
             defaultTheme="dark">
-            <NextTopLoader easing="ease" speed={200} initialPosition={0.08} showSpinner={false} color="#fff" />
-            <Navbar />
-            <div className="overflow-x-clip max-w-[100dvw] flex flex-col min-h-[100dvh]">
-              <main className="lg:mx-32 md:mx-16 my-12 sm:mx-8 mx-6">
-                {children}
-              </main>
-              <Footer />
-            </div>
-            <PopupChatbot />
-            <ThemePicker />
-            <Toaster richColors />
+            <LazyMotion features={domAnimation}>
+              <NextTopLoader easing="ease" speed={200} initialPosition={0.08} showSpinner={false} color="#fff" />
+              <Navbar />
+              <div className="overflow-x-clip max-w-[100dvw] flex flex-col min-h-[100dvh]">
+                <main className="lg:mx-32 md:mx-16 my-12 sm:mx-8 mx-6">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+              <PopupChatbot />
+              <ThemePicker />
+              <Toaster richColors />
+            </LazyMotion>
           </DarkProvider>
         </ThemeProvider>
       </body>

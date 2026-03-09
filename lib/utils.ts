@@ -1,14 +1,20 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { v7 as uuidv7 } from "uuid";
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
+const shortDateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   month: "short",
+  day: "numeric",
+});
+
+const longDateFormatter = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
   day: "numeric",
 });
 
@@ -26,7 +32,7 @@ export const timeAgo = (
   if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
   if (diff < 2592000000) return `${Math.floor(diff / 86400000)} days ago`;
 
-  return dateFormatter.format(date);
+  return shortDateFormatter.format(date);
 };
 
 export const extractPlainText = (richText: unknown): string =>
@@ -67,7 +73,7 @@ export const hexToHSL = (hex: string): string => {
 };
 
 export const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" }).format(date);
+  return longDateFormatter.format(date);
 };
 
 export function getUserId() {
@@ -76,7 +82,7 @@ export function getUserId() {
   let userId = localStorage.getItem("portfolio-user-id");
 
   if (!userId) {
-    userId = uuidv7();
+    userId = crypto.randomUUID();
     localStorage.setItem("portfolio-user-id", userId);
   }
 

@@ -1,13 +1,13 @@
-"use client";
+﻿"use client";
 
-import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { Phone, Mail, MapPin } from "lucide-react";
+import { m } from "framer-motion";
 import { SocialLink } from '@/components/global/Social';
 import { LinkPreview } from "@/components/animate/LinkPreview";
 
 export default function ContactInfo() {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 100 }}
@@ -20,7 +20,7 @@ export default function ContactInfo() {
           <SocialLink
             title="+91 98111 84995"
             href="tel:+919811184995"
-            icon={FaPhoneAlt}
+            icon={Phone}
           />
         </div>
         <div className="hover:-translate-y-1 duration-150">
@@ -28,17 +28,17 @@ export default function ContactInfo() {
           <SocialLink
             title="anujjoshi3105@gmail.com"
             href="mailto:anujjoshi3105@gmail.com"
-            icon={FaEnvelope}
+            icon={Mail}
           />
         </div>
         <div className="hover:-translate-y-1 duration-150">
           <p className="font-semibold">Location</p>
           <LinkPreview title="New Delhi, India" url="https://share.google/IqMNA0wxT6dyQ2fsS" className="flex gap-2 items-center">
-            <FaMapMarkerAlt className="text-theme" />
+            <MapPin className="size-4 text-theme" />
             <span className="link">New Delhi, India</span>
           </LinkPreview>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

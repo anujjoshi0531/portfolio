@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-import { FaTwitter, FaLinkedin, FaLink, FaPaperPlane, FaMessage } from "react-icons/fa6";
+import { Twitter, Linkedin, Link2, Send, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
     Dialog,
@@ -17,13 +17,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "../ui/badge";
 
+// Hoisted outside component — stable reference, never re-created on render
+const SUGGESTIONS = [
+    "Great article! Really enjoyed reading this.",
+    "I found a typo/error that you might want to fix.",
+    "Could you write more about this specific topic?"
+] as const;
+
 interface ShareAndReactProps {
     title: string;
 }
 
+// This component is imported with { ssr: false } from its parent page,
+// so window/navigator access is safe without an isMounted guard.
 export default function ShareAndReact({ title }: ShareAndReactProps) {
-    const [isMounted, setIsMounted] = useState(false);
-
     // Feedback Form State
     const [isOpen, setIsOpen] = useState(false);
     const [name, setName] = useState("");
@@ -31,17 +38,12 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const suggestions = [
-        "Great article! Really enjoyed reading this.",
-        "I found a typo/error that you might want to fix.",
-        "Could you write more about this specific topic?"
-    ];
+    const [isMounted, setIsMounted] = useState(false);
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
+    useEffect(() => setIsMounted(true), []);
 
     const handleShare = async (platform: string) => {
+        if (!isMounted) return;
         const url = window.location.href;
         const text = `Check out "${title}" by Anuj Joshi\n\n`;
 
@@ -53,7 +55,7 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
             try {
                 await navigator.clipboard.writeText(url);
                 toast.success("Link copied to clipboard!");
-            } catch (err) {
+            } catch {
                 toast.error("Failed to copy link");
             }
         }
@@ -88,14 +90,12 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
                 const err = await res.json();
                 toast.error(err?.error || "Failed to send message.");
             }
-        } catch (error) {
+        } catch {
             toast.error("Network error. Try again later.");
         } finally {
             setIsSubmitting(false);
         }
     };
-
-    if (!isMounted) return null;
 
     return (
         <div className="fixed z-40 flex flex-row gap-2 bottom-6 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-md border rounded-full p-2 shadow-lg items-center">
@@ -105,7 +105,7 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
                         className="p-2 rounded-full transition-colors text-muted-foreground hover:bg-theme/10 hover:text-theme relative"
                         aria-label="Send Feedback"
                     >
-                        <FaMessage size={18} />
+                        <MessageCircle size={18} />
                     </button>
                 </DialogTrigger>
 
@@ -140,7 +140,7 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
                             required
                         />{/* Quick Suggestions */}
                         <div className="flex flex-wrap gap-1">
-                            {suggestions.map((sug, i) => (
+                            {SUGGESTIONS.map((sug, i) => (
                                 <Badge
                                     key={i}
                                     onClick={() => setMessage(sug)}
@@ -158,7 +158,7 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
                             className="w-full gap-2 font-semibold"
                         >
                             {isSubmitting ? "Sending..." : "Send Message"}
-                            {!isSubmitting && <FaPaperPlane size={14} />}
+                            {!isSubmitting && <Send size={14} />}
                         </Button>
                     </form>
                 </DialogContent>
@@ -170,7 +170,7 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
                 className="p-2 text-muted-foreground hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 rounded-full transition-colors"
                 aria-label="Share on Twitter"
             >
-                <FaTwitter size={18} />
+                <Twitter size={18} />
             </button>
 
             <button
@@ -178,7 +178,7 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
                 className="p-2 text-muted-foreground hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 rounded-full transition-colors"
                 aria-label="Share on LinkedIn"
             >
-                <FaLinkedin size={18} />
+                <Linkedin size={18} />
             </button>
 
             <button
@@ -186,7 +186,7 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
                 className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors"
                 aria-label="Copy link"
             >
-                <FaLink size={18} />
+                <Link2 size={18} />
             </button>
         </div>
     );

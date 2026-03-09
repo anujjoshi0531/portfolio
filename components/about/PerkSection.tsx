@@ -1,4 +1,4 @@
-import { FaCertificate, FaCode } from "react-icons/fa6";
+import { Award, Code2 } from "lucide-react";
 import { perkData } from "@/lib";
 import { Perk, PerkAnimation } from '@/components/global/Perk';
 import { useEffect, useState, useRef } from "react";
@@ -76,11 +76,11 @@ export default function PerkSection({ totalProjects }: PerkSectionProps) {
   return (
     <div ref={sectionRef}>
       <PerkAnimation className="grid grid-cols-1 sm:grid-cols-2">
-        <Perk value={totalProjects} title="Projects Completed" icon={FaCode} />
+        <Perk value={totalProjects} title="Projects Completed" icon={Code2} />
         <Perk
           value={experienceYears}
           title="Years of Experience"
-          icon={FaCertificate}
+          icon={Award}
         />
       </PerkAnimation>
       <PerkAnimation className="grid sm:grid-cols-2 lg:grid-cols-5">

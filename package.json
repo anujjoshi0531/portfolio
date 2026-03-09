@@ -40,7 +40,6 @@
     "nextjs-toploader": "^3.9.17",
     "nodemailer": "^7.0.10",
     "notion-client": "^6.16.0",
-    "qss": "^3.0.0",
     "react": "^18",
     "react-day-picker": "^9.7.0",
     "react-dom": "^18",
@@ -49,13 +48,10 @@
     "react-medium-image-zoom": "^5.4.1",
     "react-notion-x": "^7.4.3",
     "remark-gfm": "^4.0.1",
-    "remeda": "^2.32.0",
     "server-only": "^0.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "use-sync-external-store": "^1.6.0",
-    "uuid": "^13.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import { Client } from "@notionhq/client";
 import { NotionAPI } from "notion-client";
-import { validate } from "uuid";
+
 import { serverConfig } from "../constant/config.server";
 
 export const notion = new NotionAPI();
@@ -9,7 +9,7 @@ export const notionClient = new Client({
 });
 
 export const fetchPage = async (param: string) => {
-  const isUUID = validate(param);
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(param);
   let page;
 
   if (isUUID) {

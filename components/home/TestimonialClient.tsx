@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib";
@@ -99,7 +99,7 @@ export default function TestimonialClient({ testimonials }: TestimonialClientPro
                     aria-label="Previous testimonial"
                     className={cn("navButtonClasses group", "[grid-area:nav-left]")}
                 >
-                    <FaAngleLeft className="m-auto text-background group-hover:text-primary" />
+                    <ChevronLeft className="m-auto size-4 text-background group-hover:text-primary" />
                 </button>
                 <div className="grid w-full">
                     {testimonials.map((t, idx) => (
@@ -116,7 +116,7 @@ export default function TestimonialClient({ testimonials }: TestimonialClientPro
                     aria-label="Next testimonial"
                     className={cn("navButtonClasses group", "[grid-area:nav-right]")}
                 >
-                    <FaAngleRight className="m-auto text-background group-hover:text-primary" />
+                    <ChevronRight className="m-auto size-4 text-background group-hover:text-primary" />
                 </button>
             </div>
         </SectionTemplate>
