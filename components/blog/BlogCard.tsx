@@ -1,6 +1,5 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn, extractPlainText, timeAgo } from "@/lib";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,7 +30,7 @@ export default function BlogCard({
   const slug = extractPlainText(blog.properties.Slug?.rich_text) || blog.id;
   const thumbnail = blog.properties.Thumbnail?.url || blog?.cover?.external?.url || "/icon.webp";
   const tags = blog.properties.Tags?.multi_select || [];
-  const author = extractPlainText(blog.properties.Author?.rich_text) || "Unknown Author";
+
 
   // FocusCard: blur & scale down when a sibling is hovered
   const isOtherHovered = hovered !== null && hovered !== index;
@@ -99,26 +98,15 @@ export default function BlogCard({
               {description}
             </CardContent>
           </div>
-          <CardContent className="flex items-center justify-between text-muted-foreground text-xs font-medium">
-            <div className="flex items-center space-x-2">
-              <Avatar className="size-6">
-                <AvatarImage
-                  src="/icon.webp"
-                  alt={author}
-                />
-                <AvatarFallback>
-                  {author.charAt(0) || "U"}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-xs">{author || "User"}</span>
-            </div>
+
+          <CardContent className="flex items-center justify-end text-muted-foreground text-xs font-medium">
             <time className="text-xs" dateTime={blog.created_time ? new Date(blog.created_time).toISOString() : undefined} suppressHydrationWarning>
               {timeAgo(blog.created_time as unknown as Date)}
             </time>
           </CardContent>
         </div>
       </Card>
-    </Link>
+    </Link >
 
   );
 }

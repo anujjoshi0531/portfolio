@@ -86,6 +86,8 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
   };
 }
 
+import JsonLd from "@/components/global/JsonLd";
+
 export default async function page({ params }: {
   params: Promise<{ pageId: string }>;
 }) {
@@ -122,10 +124,7 @@ export default async function page({ params }: {
   };
 
   return <div className="pt-16">
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
+    <JsonLd data={jsonLd} />
 
     {/* Floating interaction bar on the left */}
     <ShareAndReact title={title} />

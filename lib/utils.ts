@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-
+import { formatDistanceToNow } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -19,20 +19,14 @@ const longDateFormatter = new Intl.DateTimeFormat("en-US", {
 });
 
 export const timeAgo = (
-  timestamp: Date | null
+  timestamp: Date | string | number | null
 ): string => {
   if (!timestamp) return "Never";
 
   const date = new Date(timestamp);
-  const diff = Date.now() - date.getTime();
+  if (isNaN(date.getTime())) return "Invalid date";
 
-  if (diff < 1000) return "Just now";
-  if (diff < 60000) return `${Math.floor(diff / 1000)} seconds ago`;
-  if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
-  if (diff < 2592000000) return `${Math.floor(diff / 86400000)} days ago`;
-
-  return shortDateFormatter.format(date);
+  return `${formatDistanceToNow(date, { addSuffix: true })}`;
 };
 
 export const extractPlainText = (richText: unknown): string =>

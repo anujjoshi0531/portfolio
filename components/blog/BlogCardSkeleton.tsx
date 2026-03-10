@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Avatar } from "@/components/ui/avatar"
 import { cn } from "@/lib"
 
 interface BlogCardSkeletonProps {
@@ -56,15 +55,7 @@ export default function BlogCardSkeleton({ variant = "vertical", className }: Bl
 
           {/* Author and date skeleton */}
           <CardContent>
-            <div className="flex items-center justify-between">
-              {/* Author section */}
-              <div className="flex items-center space-x-2">
-                <Avatar className="size-6">
-                  <div className="w-full h-full bg-muted rounded-full" />
-                </Avatar>
-                <div className="h-3 bg-muted/70 rounded w-16" />
-              </div>
-
+            <div className="flex items-center justify-end">
               {/* Date skeleton */}
               <div className="h-3 bg-muted/70 rounded w-12" />
             </div>

@@ -3778,7 +3778,7 @@ svg.notion-page-icon {
 
 .dark-mode .notion-quote {
   background: hsl(var(--theme) / 0.05) !important;
-  color: hsl(var(--theme) / 0.75) !important;
+  color: hsl(var(--primary) / 0.75) !important;
 }
 
 /* --- Small/meta text --- */

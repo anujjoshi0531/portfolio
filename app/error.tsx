@@ -24,11 +24,6 @@ export default function GlobalError({
           <div className="text-8xl md:text-[200px] font-bold text-muted-foreground/20 select-none">
             Error
           </div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="size-24 md:size-36 flex items-center justify-center">
-              <AlertTriangle className="size-full text-destructive/60" strokeWidth={1.5} />
-            </div>
-          </div>
         </div>
 
         {/* Content */}
