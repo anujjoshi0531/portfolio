@@ -15,7 +15,7 @@ export const notionClient = new Client({
 // Results are cached in-memory for the lifetime of the process.
 const dsIdCache = new Map<string, string>();
 
-async function getDataSourceId(databaseId: string): Promise<string> {
+export async function getDataSourceId(databaseId: string): Promise<string> {
   const cached = dsIdCache.get(databaseId);
   if (cached) return cached;
 
@@ -28,7 +28,7 @@ async function getDataSourceId(databaseId: string): Promise<string> {
   return dsId;
 }
 
-function requireId(id: string | undefined, name: string): string {
+export function requireId(id: string | undefined, name: string): string {
   if (!id) throw new Error(`Missing ${name}`);
   return id;
 }

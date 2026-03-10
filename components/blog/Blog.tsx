@@ -8,7 +8,7 @@ import { SearchInput } from './SearchInput';
 import { BlogFilter } from "./filter/BlogFilter";
 import { BlogPagination } from './BlogPagination';
 import { PageTemplate } from '../global/SectionTemplate';
-import NoWork from "../site/NoWork";
+import Image from "next/image";
 import { useFilters } from '@/hooks';
 
 interface BlogProps {
@@ -58,7 +58,7 @@ export default function Blog({
           <div className="max-w-lg w-full text-center space-y-6">
             <div className="flex justify-center mb-4">
               <div className="size-64 md:size-128 text-muted-foreground/80">
-                <NoWork className="w-full h-full" />
+                <img src="/no-work.svg" alt="No Work Found" className="w-full h-full object-contain" />
               </div>
             </div>
             <div className="space-y-3">

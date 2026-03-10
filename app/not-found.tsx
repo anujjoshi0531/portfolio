@@ -1,7 +1,7 @@
 import { PageTemplate } from '@/components/global/SectionTemplate'
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import SVG404 from "@/components/site/SVG404"
+import Image from "next/image"
 import GoBackButton from "@/components/site/GoBackButton"
 
 export default function NotFound() {
@@ -15,7 +15,7 @@ export default function NotFound() {
             <div className="text-8xl md:text-[250px] font-bold text-muted-foreground/20 select-none">404</div>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="size-36 md:size-48 flex items-center justify-center">
-                <SVG404 />
+                <img src="/404.svg" alt="404" className="w-full h-full object-contain" />
               </div>
             </div>
           </div>

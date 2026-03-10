@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { sendToRecipient, sendThankYouEmail } from "@/lib/server/mail";
 import { z } from "zod";
 
@@ -60,14 +61,18 @@ export async function POST(request: Request) {
   const safeName = escapeHTML(name);
   const safeMessage = escapeHTML(message).replace(/\n/g, "<br>");
 
-  try {
-    await Promise.all([
-      sendToRecipient(safeName, email, safeMessage),
-      sendThankYouEmail(safeName, email, safeMessage),
-    ]);
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error sending email:", error);
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
-  }
+  // Trigger the email sending in the background to reduce UI wait time 
+  after(async () => {
+    try {
+      await Promise.all([
+        sendToRecipient(safeName, email, safeMessage),
+        sendThankYouEmail(safeName, email, safeMessage),
+      ]);
+      console.log(`Contact emails successfully sent for ${email}`);
+    } catch (error) {
+      console.error("Error sending contact email in background:", error);
+    }
+  });
+
+  return NextResponse.json({ success: true });
 }

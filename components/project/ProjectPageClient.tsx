@@ -4,7 +4,7 @@ import { useMemo, useState } from "react"
 import { PageTemplate } from '@/components/global/SectionTemplate'
 import ProjectCard from '@/components/global/ProjectCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import NoWork from "../site/NoWork"
+import Image from "next/image"
 
 interface ProjectPageClientProps {
     projects: NotionProjectPage[]
@@ -39,8 +39,10 @@ export default function ProjectPageClient({ projects, types }: ProjectPageClient
                 ))}
             </div>
         ) : (
-            <div className="mx-auto sm:w-3/4 md:w-2/3 lg:w-1/2 text-center">
-                <NoWork />
+            <div className="mx-auto sm:w-3/4 md:w-2/3 lg:w-1/2 text-center flex flex-col items-center">
+                <div className="size-64 mb-4 text-muted-foreground">
+                    <img src="/no-work.svg" alt="No Projects" className="w-full h-full object-contain" />
+                </div>
                 <p className="text-xl font-semibold">No projects found in this category.</p>
                 <p className="text-muted-foreground mt-2">Check back later for new projects.</p>
             </div>

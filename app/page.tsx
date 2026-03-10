@@ -8,7 +8,7 @@ import TestimonialSection from "@/components/home/TestimonialSection";
 
 export default async function Page() {
   return (
-    <main className="space-y-24">
+    <main className="space-y-24 pb-24">
       <Hero />
       <SectionTemplate title="About Me" subtitle="My Introduction" id="about">
         <AboutSection />

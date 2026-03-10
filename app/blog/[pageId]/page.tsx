@@ -5,6 +5,7 @@ import { extractPlainText } from "@/lib";
 import { fetchPage } from "@/lib/server/notion";
 import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
+import { NewsletterSubscription } from "@/components/blog/NewsletterSubscription";
 
 const ShareAndReact = dynamic(() => import("@/components/blog/ShareAndReact"), {
   loading: () => null,
@@ -135,6 +136,10 @@ export default async function page({ params }: {
     <div className="my-16 sm:my-20">
       <h3 className="text-2xl sm:text-3xl font-bold text-center mb-8">More Related Articles</h3>
       <BlogSection tags={tags} excludeId={page.id} />
+    </div>
+
+    <div className="mb-16 sm:mb-20">
+      <NewsletterSubscription />
     </div>
   </div>;
 }

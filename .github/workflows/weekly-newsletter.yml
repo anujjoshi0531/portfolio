@@ -1,0 +1,20 @@
+name: Weekly Newsletter Cron
+
+on:
+  schedule:
+    # Runs at 2 AM IST Sunday
+    - cron: '30 20 * * 6'
+  workflow_dispatch:
+
+jobs:
+  send-newsletter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Newsletter API
+        run: |
+          curl -X POST \
+            "${{ secrets.USER_URL }}/api/cron/newsletter" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --fail --show-error --silent
