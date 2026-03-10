@@ -6,12 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const shortDateFormatter = new Intl.DateTimeFormat("en-US", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-});
-
 const longDateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   month: "long",
