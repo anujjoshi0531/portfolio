@@ -26,11 +26,13 @@ export async function checkSubscriberExists(email: string): Promise<string | nul
   const dsId = await getNewsletterDataSourceId(dbId);
   const { results } = await newsletterNotionClient.dataSources.query({
     data_source_id: dsId,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filter: {
       property: "Email",
       email: { equals: email },
     } as any,
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (results[0] as any)?.id || null;
 }
 
@@ -86,6 +88,7 @@ export async function getAllSubscribers(): Promise<{ id: string; email: string; 
       },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     for (const page of response.results as any[]) {
       const email = page.properties.Email?.email;
       const name = page.properties.Subscriber?.title?.[0]?.plain_text || page.properties.Subscriber?.title?.[0]?.text?.content || "Subscriber";

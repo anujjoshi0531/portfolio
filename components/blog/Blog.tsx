@@ -57,8 +57,8 @@ export default function Blog({
         <div className="col-span-full flex flex-col items-center justify-center py-12">
           <div className="max-w-lg w-full text-center space-y-6">
             <div className="flex justify-center mb-4">
-              <div className="size-64 md:size-128 text-muted-foreground/80">
-                <img src="/no-work.svg" alt="No Work Found" className="w-full h-full object-contain" />
+              <div className="relative size-64 md:size-128 text-muted-foreground/80">
+                <Image src="/no-work.svg" alt="No Work Found" fill className="object-contain" />
               </div>
             </div>
             <div className="space-y-3">

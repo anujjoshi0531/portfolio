@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     // Fetch top 5 blog posts
     const { results } = await searchPages({ limit: 5 });
     
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const recentBlogs = results.map((page: any) => {
       const title = extractPlainText(page.properties.Name?.title) || "Untitled";
       const description = extractPlainText(page.properties.Description?.rich_text) || "";
@@ -45,8 +46,9 @@ export async function POST(request: Request) {
     await Promise.allSettled(promises);
 
     return NextResponse.json({ message: "Weekly newsletters sent successfully", count: subscribers.length }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Cron Newsletter Error:", error);
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

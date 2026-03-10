@@ -41,9 +41,9 @@ function UnsubscribeContent() {
       setStatus("success");
       setMessage("You have been successfully unsubscribed.");
       toast.success("Unsubscribed successfully");
-    } catch (error: any) {
+    } catch (error: unknown) {
       setStatus("error");
-      setMessage(error.message || "An unexpected error occurred.");
+      setMessage(error instanceof Error ? error.message : "An unexpected error occurred.");
     }
   };
 
@@ -54,9 +54,9 @@ function UnsubscribeContent() {
           <div className="w-16 h-16 bg-amber-100 dark:bg-amber-500/10 rounded-full flex items-center justify-center mb-6">
             <MailQuestion className="w-8 h-8 text-amber-500" />
           </div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">We're sad to see you go!</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">We&apos;re sad to see you go!</h1>
           <p className="text-zinc-500 dark:text-zinc-400 mb-8">
-            Are you sure you want to unsubscribe from the newsletter? You'll miss out on future updates.
+            Are you sure you want to unsubscribe from the newsletter? You&apos;ll miss out on future updates.
           </p>
           <div className="flex gap-4 w-full">
             <button

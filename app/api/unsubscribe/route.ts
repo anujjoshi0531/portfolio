@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       { message: "Unsubscribed successfully" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Unsubscribe error:", error);
     return NextResponse.json(
       { error: "Something went wrong. The provided ID may be invalid." },

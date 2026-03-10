@@ -14,8 +14,8 @@ export default function NotFound() {
           <div className="relative">
             <div className="text-8xl md:text-[250px] font-bold text-muted-foreground/20 select-none">404</div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="size-36 md:size-48 flex items-center justify-center">
-                <img src="/404.svg" alt="404" className="w-full h-full object-contain" />
+              <div className="size-36 md:size-48 flex items-center justify-center relative">
+                <Image src="/404.svg" alt="404" fill className="object-contain" />
               </div>
             </div>
           </div>

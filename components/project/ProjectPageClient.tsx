@@ -40,8 +40,8 @@ export default function ProjectPageClient({ projects, types }: ProjectPageClient
             </div>
         ) : (
             <div className="mx-auto sm:w-3/4 md:w-2/3 lg:w-1/2 text-center flex flex-col items-center">
-                <div className="size-64 mb-4 text-muted-foreground">
-                    <img src="/no-work.svg" alt="No Projects" className="w-full h-full object-contain" />
+                <div className="relative size-64 mb-4 text-muted-foreground">
+                    <Image src="/no-work.svg" alt="No Projects" fill className="object-contain" />
                 </div>
                 <p className="text-xl font-semibold">No projects found in this category.</p>
                 <p className="text-muted-foreground mt-2">Check back later for new projects.</p>

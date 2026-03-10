@@ -36,8 +36,8 @@ export function NewsletterSubscription() {
 
       toast.success(data.message || "Thank you for subscribing!");
       setEmail("");
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }

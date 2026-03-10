@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       { message: "Subscribed successfully" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Subscription error:", error);
     return NextResponse.json(
       { error: "Something went wrong. Please try again later." },
