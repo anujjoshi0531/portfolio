@@ -26,10 +26,10 @@ export async function checkSubscriberExists(email: string): Promise<string | nul
   const dsId = await getNewsletterDataSourceId(dbId);
   const { results } = await newsletterNotionClient.dataSources.query({
     data_source_id: dsId,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filter: {
       property: "Email",
       email: { equals: email },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
