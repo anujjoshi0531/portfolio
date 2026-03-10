@@ -3,23 +3,24 @@ import "@/styles/prism-theme.css";
 import "react-medium-image-zoom/dist/styles.css";
 import { Metadata } from "next";
 import { getMetadata } from "@/lib";
-import { Source_Serif_4, Outfit } from "next/font/google";
+import { Inter, Lora, JetBrains_Mono } from "next/font/google";
 
-const sourceSerif = Source_Serif_4({
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-serif",
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
-  preload: false,
+  variable: "--font-inter",
 });
 
-const outfit = Outfit({
+const lora = Lora({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-outfit",
-  weight: ["400", "500", "600", "700", "800"],
-  preload: false,
+  variable: "--font-lora",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = getMetadata("blog");
@@ -30,7 +31,7 @@ export default function BlogLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`${sourceSerif.variable} ${outfit.variable}`}>
+    <div className={`${inter.variable} ${lora.variable} ${jetbrainsMono.variable}`}>
       {children}
     </div>
   );
