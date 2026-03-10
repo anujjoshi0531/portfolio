@@ -10,7 +10,9 @@ import TooltipComponent from '@/components/global/TooltipComponent'
 import { SearchInput } from './SearchInput'
 import { SearchResults } from "./SearchResults"
 
-export default function SearchButton() {
+import { Suspense } from "react";
+
+function SearchButtonContent() {
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -64,4 +66,12 @@ export default function SearchButton() {
       </DialogContent>
     </Dialog>
   )
+}
+
+export default function SearchButton() {
+  return (
+    <Suspense fallback={<Button variant="ghost" size="icon" className="rounded-full"><Search /></Button>}>
+      <SearchButtonContent />
+    </Suspense>
+  );
 }

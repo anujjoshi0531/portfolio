@@ -27,7 +27,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   const {
     term,
-    setTerm,
     clearSearch,
     handleChange,
     handleKeyDown,
