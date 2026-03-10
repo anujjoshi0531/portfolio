@@ -3,7 +3,7 @@
 import { SectionTemplate } from '@/components/global/SectionTemplate'
 import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
-import { cn, timeAgo } from "@/lib"
+import { cn, formatDate } from "@/lib"
 import { Award, ChevronRight } from "lucide-react"
 import { LinkPreview } from "@/components/animate/LinkPreview"
 
@@ -134,8 +134,8 @@ function ExperienceContent({
                     )}
                 </div>
                 <time className="text-sm">
-                    {timeAgo(formattedExperience.start)} –{" "}
-                    {formattedExperience.end ? timeAgo(formattedExperience.end) : "Present"}
+                    {formatDate(formattedExperience.start)} –{" "}
+                    {formattedExperience.end ? formatDate(formattedExperience.end) : "Present"}
                 </time>
             </div>
             <LinkPreview title={formattedExperience.company} url={formattedExperience.link} className="link cursor-pointer" aria-label={`Visit ${formattedExperience.company} website`}>

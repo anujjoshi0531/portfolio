@@ -135,9 +135,12 @@ export function buildFilter({
   }
 
   if (tags?.length) {
-    for (const tag of tags) {
-      filters.push({ property: "Tags", multi_select: { contains: tag } });
-    }
+    filters.push({
+      or: tags.map((tag) => ({
+        property: "Tags",
+        multi_select: { contains: tag },
+      })),
+    });
   }
 
   if (dateFilter?.after) {

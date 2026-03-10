@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import { m, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { GraduationCap } from "lucide-react";
-import { timeAgo } from "@/lib";
+import { formatDate } from "@/lib";
 import { Badge } from "../ui/badge";
 import { LinkPreview } from "@/components/animate/LinkPreview";
 
@@ -43,8 +43,8 @@ const EduCard = ({ edu }: { edu: Education }) => {
         return () => unsubscribe();
     }, [scrollYProgress, hasPassed]);
 
-    const startAgo = useMemo(() => edu.start ? timeAgo(new Date(edu.start)) : "", [edu.start]);
-    const endAgo = useMemo(() => edu.end ? timeAgo(new Date(edu.end)) : "Present", [edu.end]);
+    const startAgo = useMemo(() => edu.start ? formatDate(new Date(edu.start)) : "", [edu.start]);
+    const endAgo = useMemo(() => edu.end ? formatDate(new Date(edu.end)) : "Present", [edu.end]);
 
     return (
         <div

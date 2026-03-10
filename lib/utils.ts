@@ -60,7 +60,10 @@ export const hexToHSL = (hex: string): string => {
   return `${Math.round(h)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%`;
 };
 
-export const formatDate = (date: Date): string => {
+export const formatDate = (dateInput: Date | string | number | null): string => {
+  if (!dateInput) return "";
+  const date = new Date(dateInput);
+  if (isNaN(date.getTime())) return "Invalid date";
   return longDateFormatter.format(date);
 };
 

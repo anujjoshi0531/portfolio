@@ -13,19 +13,27 @@ function BlogSkeleton() {
   )
 }
 
-async function BlogData({ tags }: { tags?: string[] }) {
+async function BlogData({ tags, excludeId }: { tags?: string[], excludeId?: string }) {
   const data = await searchPages({
-    limit: 5,
+    limit: excludeId ? 6 : 5,
     tags,
   })
 
-  return <BlogClient blogs={data.results as unknown as NotionBlogPage[]} />
+  let results = data.results as unknown as NotionBlogPage[];
+  
+  if (excludeId) {
+    results = results.filter((post) => post.id !== excludeId);
+  }
+
+  results = results.slice(0, 5);
+
+  return <BlogClient blogs={results} />
 }
 
-export default function BlogSection({ tags }: { tags?: string[] }) {
+export default function BlogSection({ tags, excludeId }: { tags?: string[], excludeId?: string }) {
   return (
     <Suspense fallback={<BlogSkeleton />}>
-      <BlogData tags={tags} />
+      <BlogData tags={tags} excludeId={excludeId} />
     </Suspense>
   )
 }
