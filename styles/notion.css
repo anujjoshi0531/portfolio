@@ -510,10 +510,25 @@
 
 .notion-title {
   width: 100%;
-  font-size: 2.5em;
+  text-align: center;
+  font-size: 1.8em;
   font-weight: 750;
   margin-bottom: 20px;
   line-height: 1.2;
+}
+
+@media (min-width: 900px) {
+  .notion-title {
+    width: calc(100% + 180px);
+    margin-left: -90px;
+    font-size: 2.2em;
+  }
+}
+@media (min-width: 768px) and (max-width: 899px) {
+  .notion-title {
+    width: 100%;
+    font-size: 2em;
+  }
 }
 
 .notion-h {

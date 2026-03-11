@@ -107,6 +107,24 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/hero/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/talk/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ];
   },
   productionBrowserSourceMaps: false,

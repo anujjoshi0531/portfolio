@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -75,6 +75,15 @@ export default function HeroImage() {
     const pokeTimerRef = useRef<NodeJS.Timeout | null>(null);
     const triggerBlinkRef = useRef<(() => void) | null>(null);
     const startBlinkRef = useRef<(() => void) | null>(null);
+    const audioSourceSetRef = useRef(false);
+
+    const initAudioSource = () => {
+        if (audioRef.current && !audioSourceSetRef.current) {
+            audioRef.current.src = "/hero.mp3";
+            audioRef.current.load();
+            audioSourceSetRef.current = true;
+        }
+    };
 
     // Define once into the refs (no deps, no re-creation on render)
     if (!triggerBlinkRef.current) {
@@ -181,6 +190,8 @@ export default function HeroImage() {
     const handleMouseEnter = () => {
         stateRef.current.isHovered = true;
         setIsHovered(true);
+        initAudioSource();
+        
         if (audioRef.current) {
             const audio = audioRef.current;
             if (audio.ended) audio.currentTime = 0;
@@ -205,6 +216,7 @@ export default function HeroImage() {
     };
 
     const handleClick = () => {
+        initAudioSource();
         if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
         clickTimerRef.current = setTimeout(() => {
             clickCountRef.current = 0;
@@ -283,9 +295,9 @@ export default function HeroImage() {
                         width={500}
                         height={500}
                         className="sprite-base object-cover"
-                        sizes="(max-width:768px) 360px, (max-width:1024px) 360px, 500px"
+                        sizes="(max-width: 768px) 80vw, (max-width: 1200px) 50vw, 500px"
                     />
-                    {/* Layer 2 â€“ mouth open (talk): plain img â€” no Next.js wrapper overhead */}
+                    {/* Layer 2 – mouth open (talk): plain img — no Next.js wrapper overhead */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/hero/open.png"
@@ -293,9 +305,10 @@ export default function HeroImage() {
                         aria-hidden
                         decoding="async"
                         fetchPriority="low"
+                        loading="lazy"
                         className="sprite-talk sprite-frame object-cover"
                     />
-                    {/* Layer 3 â€“ blink (eyes half-closed): same, plain img */}
+                    {/* Layer 3 – blink (eyes half-closed): same, plain img */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/hero/2.png"
@@ -303,9 +316,10 @@ export default function HeroImage() {
                         aria-hidden
                         decoding="async"
                         fetchPriority="low"
+                        loading="lazy"
                         className="sprite-blink sprite-frame object-cover"
                     />
-                    {/* Layer 4 â€“ yawn overlay: highest z */}
+                    {/* Layer 4 – yawn overlay: highest z */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/hero/yawn.png"
@@ -313,9 +327,10 @@ export default function HeroImage() {
                         aria-hidden
                         decoding="async"
                         fetchPriority="low"
+                        loading="lazy"
                         className="sprite-yawn sprite-frame object-cover"
                     />
-                    {/* Layer 5 â€“ poke overlays: highest z */}
+                    {/* Layer 5 – poke overlays: highest z */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src="/talk/poke1.png"
@@ -323,6 +338,7 @@ export default function HeroImage() {
                         aria-hidden
                         decoding="async"
                         fetchPriority="low"
+                        loading="lazy"
                         className="sprite-poke sprite-poke1 sprite-frame object-cover"
                     />
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -332,6 +348,7 @@ export default function HeroImage() {
                         aria-hidden
                         decoding="async"
                         fetchPriority="low"
+                        loading="lazy"
                         className="sprite-poke sprite-poke2 sprite-frame object-cover"
                     />
                 </div>
@@ -450,7 +467,7 @@ export default function HeroImage() {
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <audio
                 ref={audioRef}
-                preload="auto"
+                preload="none"
                 className="hidden"
                 muted={isMuted}
                 onTimeUpdate={handleTimeUpdate}
@@ -458,7 +475,6 @@ export default function HeroImage() {
                     setTalking(spriteRef.current, false);
                 }}
             >
-                <source src="/hero.mp3" type="audio/mpeg" />
                 <track kind="subtitles" src="/hero.vtt" srcLang="en" label="English" default />
             </audio>
         </div>

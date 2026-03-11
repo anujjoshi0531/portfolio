@@ -40,9 +40,20 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/icon.webp", sizes: "384x384", type: "image/webp" },
       { src: "/icon.webp", sizes: "512x512", type: "image/webp" },
       {
+        src: "/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+      {
         src: "/icon-maskable.webp",
         sizes: "512x512",
         type: "image/webp",
+        purpose: "maskable"
+      },
+      {
+        src: "/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
         purpose: "maskable"
       }
     ],

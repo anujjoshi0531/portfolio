@@ -174,12 +174,10 @@ export default async function Layout({
     <html suppressHydrationWarning lang="en" className="scroll-smooth overflow-x-clip">
       <head>
         <link rel="shortcut icon" href="/icon.webp" type="image/x-icon" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         {contestApiOrigin && (
-          <>
-            <link rel="preconnect" href={contestApiOrigin} crossOrigin="anonymous" />
-            <link rel="dns-prefetch" href={contestApiOrigin} />
-          </>
+          <link rel="dns-prefetch" href={contestApiOrigin} />
         )}
         <JsonLd
           data={{

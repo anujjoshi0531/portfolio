@@ -1,54 +1,183 @@
 import { serverConfig } from "../../constant/config.server";
 
-export const getThankYouTemplate = (name: string, msg?: string) => `
-<!DOCTYPE html>
-<html>
+export const getThankYouTemplate = (name: string, msg?: string) => `<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thank You for Reaching Out</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Thank You — ${serverConfig.USER_NAME}</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f9fafb; color: #1f2937; -webkit-font-smoothing: antialiased;">
-  <div style="max-width: 650px; margin: 40px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);">
-    
-    <!-- Hero Header -->
-    <div style="background: center / cover no-repeat url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop'); background-color: #111827; position: relative;">
-      <div style="background: linear-gradient(to right, rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.8)); padding: 50px 40px;">
-        <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.2;">Thank You,<br><span style="color: #6366f1;">${name}!</span></h1>
-      </div>
-    </div>
-    
-    <!-- Body Content -->
-    <div style="padding: 40px;">
-      <p style="margin: 0 0 20px; font-size: 17px; color: #4b5563; line-height: 1.7;">Hello ${name},</p>
-      <p style="margin: 0 0 24px; font-size: 17px; color: #4b5563; line-height: 1.7;">I've successfully received your message and wanted to personally thank you for reaching out. It's always great to connect with new people!</p>
-      
-      <p style="margin: 0 0 32px; font-size: 17px; color: #4b5563; line-height: 1.7;">I'm reviewing your inquiry and will get back to you <strong>as soon as possible</strong>. If you forgot to add any details, just reply directly to this email.</p>
-      
-      ${msg ? `
-      <!-- User's Message Copy -->
-      <div style="margin-bottom: 32px;">
-        <h3 style="margin: 0 0 12px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #9ca3af; font-weight: 700;">Copy of your message</h3>
-        <div style="background-color: #f3f4f6; border-left: 4px solid #6366f1; border-radius: 0 8px 8px 0; padding: 20px; color: #4b5563; font-size: 15px; line-height: 1.6; font-style: italic; white-space: pre-wrap;">"${msg}"</div>
-      </div>
-      ` : ''}
-      
-      <!-- CTA Button -->
-      <div style="margin-top: 10px;">
-        <a href="${serverConfig.USER_URL}" style="display: inline-block; padding: 16px 32px; background-color: #111827; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px; transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);">Return to Portfolio</a>
-      </div>
-    </div>
-    
-      <!-- Sophisticated Footer -->
-    <div style="background-color: #111827; padding: 40px; text-align: left;">
-      <div style="display: table; width: 100%;">
-        <div style="display: table-cell; vertical-align: middle;">
-          <h4 style="margin: 0 0 8px; color: #ffffff; font-size: 18px; font-weight: 700;">${serverConfig.USER_NAME}</h4>
-          <p style="margin: 0; color: #9ca3af; font-size: 15px; font-weight: 400;">Software Developer & Designer</p>
-        </div>
-      </div>
-    </div>
-  </div>
+<body style="margin:0;padding:0;background-color:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#0a0a0a;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;">
+
+        <!-- Top brand bar -->
+        <tr>
+          <td style="padding-bottom:20px;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td>
+                  <a href="${serverConfig.USER_URL}" style="text-decoration:none;font-size:15px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;">
+                    <span style="color:#f97316;">&lt;/&gt;</span> ${serverConfig.USER_NAME}
+                  </a>
+                </td>
+                <td style="text-align:right;">
+                  <span style="font-size:11px;color:#525252;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;">Auto Reply</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Card -->
+        <tr>
+          <td style="background-color:#141414;border:1px solid #262626;border-radius:16px;overflow:hidden;">
+
+            <!-- Header -->
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td style="padding:46px 40px 40px;border-bottom:1px solid #262626;text-align:center;">
+                  <div style="display:inline-block;width:68px;height:68px;background:#1a1a1a;border:2px solid #f97316;border-radius:50%;text-align:center;line-height:68px;font-size:28px;margin-bottom:22px;">✅</div>
+                  <h1 style="margin:0 0 12px;color:#ffffff;font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1.2;">
+                    Got your message,<br><span style="color:#f97316;">${name}!</span>
+                  </h1>
+                  <p style="margin:0 auto;max-width:380px;color:#a3a3a3;font-size:14px;line-height:1.7;">
+                    I personally read every inquiry and will get back to you within <strong style="color:#ffffff;">24–48 hours</strong>.
+                  </p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Body -->
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td style="padding:36px 40px 32px;">
+
+                  <!-- Intro -->
+                  <p style="margin:0 0 28px;font-size:15px;color:#a3a3a3;line-height:1.75;">
+                    Hi ${name} 👋,<br><br>
+                    Thank you for taking the time to reach out through my portfolio. Your message is important to me and I always respond personally. I appreciate your interest and I'm looking forward to connecting!
+                  </p>
+
+                  <!-- What happens next -->
+                  <p style="margin:0 0 16px;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:#525252;font-weight:700;">What happens next</p>
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:32px;">
+                    <!-- Steps -->
+                    <tr>
+                      <td style="padding-bottom:18px;">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            <td style="width:40px;vertical-align:top;">
+                              <div style="width:30px;height:30px;background:#f97316;border-radius:50%;text-align:center;line-height:30px;font-size:13px;font-weight:800;color:#ffffff;">1</div>
+                            </td>
+                            <td style="vertical-align:top;padding-top:4px;">
+                              <strong style="display:block;color:#ffffff;font-size:14px;font-weight:700;margin-bottom:4px;">Message Review</strong>
+                              <span style="color:#737373;font-size:13px;line-height:1.5;">I'll read your message carefully and understand exactly what you need.</span>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding-bottom:18px;">
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            <td style="width:40px;vertical-align:top;">
+                              <div style="width:30px;height:30px;background:#1a1a1a;border:2px solid #f97316;border-radius:50%;text-align:center;line-height:26px;font-size:13px;font-weight:800;color:#f97316;">2</div>
+                            </td>
+                            <td style="vertical-align:top;padding-top:4px;">
+                              <strong style="display:block;color:#ffffff;font-size:14px;font-weight:700;margin-bottom:4px;">Thoughtful Response</strong>
+                              <span style="color:#737373;font-size:13px;line-height:1.5;">I'll craft a personalized reply tailored to your specific needs.</span>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            <td style="width:40px;vertical-align:top;">
+                              <div style="width:30px;height:30px;background:#1a1a1a;border:2px solid #262626;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:800;color:#525252;">3</div>
+                            </td>
+                            <td style="vertical-align:top;padding-top:4px;">
+                              <strong style="display:block;color:#ffffff;font-size:14px;font-weight:700;margin-bottom:4px;">Reply in 24–48h</strong>
+                              <span style="color:#737373;font-size:13px;line-height:1.5;">Watch your inbox — my reply will arrive directly to your email.</span>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+
+                  ${msg ? `<!-- Message copy -->
+                  <p style="margin:0 0 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:#525252;font-weight:700;">Copy of your message</p>
+                  <div style="background:#1a1a1a;border:1px solid #262626;border-left:3px solid #f97316;border-radius:12px;padding:20px 24px;margin-bottom:28px;">
+                    <p style="margin:0;color:#d4d4d4;font-size:14px;line-height:1.8;white-space:pre-wrap;font-style:italic;">"${msg}"</p>
+                  </div>` : ''}
+
+                  <!-- Tip callout -->
+                  <div style="background:#1c1200;border:1px solid #78350f;border-radius:10px;padding:14px 18px;margin-bottom:32px;">
+                    <p style="margin:0;font-size:13px;color:#fbbf24;line-height:1.6;">
+                      💬 <strong>Need to add something?</strong> Just reply to this email and I'll see it alongside your original message.
+                    </p>
+                  </div>
+
+                  <!-- Divider -->
+                  <hr style="border:none;border-top:1px solid #262626;margin:0 0 28px;">
+
+                  <!-- CTAs -->
+                  <p style="margin:0 0 18px;font-size:14px;color:#a3a3a3;line-height:1.7;">While you wait, explore my work:</p>
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                      <td style="padding-right:12px;">
+                        <a href="${serverConfig.USER_URL}" style="display:inline-block;padding:12px 26px;background-color:#f97316;color:#ffffff;text-decoration:none;font-weight:800;font-size:13px;border-radius:9px;">
+                          View Portfolio →
+                        </a>
+                      </td>
+                      <td>
+                        <a href="${serverConfig.USER_URL}/blog" style="display:inline-block;padding:12px 26px;background:#1a1a1a;border:1px solid #262626;color:#a3a3a3;text-decoration:none;font-weight:600;font-size:13px;border-radius:9px;">
+                          Read Blog
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+
+                </td>
+              </tr>
+            </table>
+
+            <!-- Footer -->
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td style="border-top:1px solid #262626;padding:24px 40px;">
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                      <td>
+                        <p style="margin:0 0 2px;font-size:14px;font-weight:800;color:#ffffff;">${serverConfig.USER_NAME}</p>
+                        <p style="margin:0;font-size:12px;color:#525252;">Fullstack Developer</p>
+                      </td>
+                      <td style="text-align:right;">
+                        <a href="${serverConfig.USER_URL}" style="font-size:12px;color:#f97316;text-decoration:none;font-weight:600;">${serverConfig.USER_URL}</a>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin:14px 0 0;font-size:11px;color:#404040;text-align:center;line-height:1.6;">
+                    This is an automated receipt confirmation. I'll follow up personally soon.
+                  </p>
+                </td>
+              </tr>
+            </table>
+
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+
 </body>
-</html>
-`;
+</html>`;
