@@ -116,7 +116,8 @@ export default function HeroImage() {
     // ── Mount / unmount ───────────────────────────────────────────────────────
 
     useEffect(() => {
-        const audio = audioRef.current!;
+        const audio = audioRef.current;
+        if (!audio) return;
         audio.volume = 0.85;
 
         scheduleBlink();
@@ -124,7 +125,7 @@ export default function HeroImage() {
 
         // Sync subtitle cues → speech bubble while audio plays
         function bindSubtitles() {
-            const track = audio.textTracks[0];
+            const track = audio?.textTracks[0];
             if (!track) return;
             track.mode = "hidden";
             track.addEventListener("cuechange", () => {
@@ -134,9 +135,11 @@ export default function HeroImage() {
             });
         }
 
-        audio.readyState >= 1
-            ? bindSubtitles()
-            : audio.addEventListener("loadedmetadata", bindSubtitles, { once: true });
+        if (audio.readyState >= 1) {
+            bindSubtitles();
+        } else {
+            audio.addEventListener("loadedmetadata", bindSubtitles, { once: true });
+        }
 
         // Any user activity resets the idle yawn timer
         const resetIdle = () => scheduleYawn();
