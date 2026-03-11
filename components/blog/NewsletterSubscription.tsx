@@ -52,7 +52,7 @@ export function NewsletterSubscription() {
         <p className="mx-auto mt-2 max-w-xl text-center text-lg leading-8 text-muted-foreground">
           Get the latest articles on software engineering, web development, and tech trends delivered straight to your inbox.
         </p>
-        <form onSubmit={handleSubmit} className="mx-auto mt-10 flex max-w-md gap-x-4">
+        <form onSubmit={handleSubmit} className="mx-auto mt-10 flex max-w-md gap-x-2 sm:gap-x-4">
           <label htmlFor="email-address" className="sr-only">
             Email address
           </label>

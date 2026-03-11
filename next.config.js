@@ -69,6 +69,7 @@ const nextConfig = {
     } : false,
   },
   experimental: {
+    allowedDevOrigins: ["localhost:3000"],
     optimizeCss: true,
     optimizePackageImports: [
       "lucide-react",
