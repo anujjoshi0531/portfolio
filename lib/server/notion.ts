@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+export type { Client };
 import type { QueryDataSourceParameters } from "@notionhq/client/build/src/api-endpoints";
 import { NotionAPI } from "notion-client";
 
@@ -12,19 +13,28 @@ export const notionClient = new Client({
 });
 
 // Resolves a database ID to its primary data source ID (v5 / API 2025-09-03).
-// Results are cached in-memory for the lifetime of the process.
-const dsIdCache = new Map<string, string>();
+// Results are cached in-memory for the lifetime of the process, keyed by the client instance.
+const dsIdCache = new WeakMap<Client, Map<string, string>>();
 
-export async function getDataSourceId(databaseId: string): Promise<string> {
-  const cached = dsIdCache.get(databaseId);
+export async function getDataSourceId(
+  databaseId: string,
+  client: Client = notionClient
+): Promise<string> {
+  let clientCache = dsIdCache.get(client);
+  if (!clientCache) {
+    clientCache = new Map<string, string>();
+    dsIdCache.set(client, clientCache);
+  }
+
+  const cached = clientCache.get(databaseId);
   if (cached) return cached;
 
-  const db = await notionClient.databases.retrieve({ database_id: databaseId });
+  const db = await client.databases.retrieve({ database_id: databaseId });
   const sources = (db as unknown as { data_sources?: { id: string }[] }).data_sources;
   const dsId = sources?.[0]?.id;
   if (!dsId) throw new Error(`No data source found for database: ${databaseId}`);
 
-  dsIdCache.set(databaseId, dsId);
+  clientCache.set(databaseId, dsId);
   return dsId;
 }
 
@@ -312,4 +322,22 @@ export async function getBlogs() {
     },
   });
   return results;
+}
+
+/**
+ * Writes the current view and like counts back to a Notion blog page.
+ * Called by the nightly stats-sync cron job.
+ */
+export async function updateBlogStats(
+  pageId: string,
+  views: number,
+  likes: number,
+): Promise<void> {
+  await notionClient.pages.update({
+    page_id: pageId,
+    properties: {
+      Views: { number: views },
+      Likes: { number: likes },
+    },
+  });
 }

@@ -103,7 +103,7 @@ export default function Navbar() {
         }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="fixed top-0 left-1/2 -translate-x-1/2 z-[10] w-screen  backdrop-blur-[200px]"
+        className="fixed top-0 left-1/2 -translate-x-1/2 z-[100000] w-screen  backdrop-blur-[200px]"
       >
         <header className="flex items-center justify-between p-4 py-6 lg:px-6 w-[95%] mx-auto">
 

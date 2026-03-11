@@ -7,25 +7,46 @@ import * as Sentry from "@sentry/nextjs";
 Sentry.init({
   dsn: "https://785b35c892468fb3c9a2e0af1a6af2b4@o4509858293547008.ingest.us.sentry.io/4509858294333440",
 
-  // Add optional integrations for additional features
-  integrations: [Sentry.replayIntegration()],
+  // No integrations listed here — Replay is lazy-loaded below so it stays
+  // out of the critical JS bundle that every visitor downloads on first load.
+  integrations: [],
 
-  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  // Sample 10% of traces in production (1.0 = every request — too expensive).
+  tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
+
   // Enable logs to be sent to Sentry
   enableLogs: true,
 
-  // Define how likely Replay events are sampled.
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
+  // Replay sample rates — still honoured once the integration loads lazily.
   replaysSessionSampleRate: 0.1,
-
-  // Define how likely Replay events are sampled when an error occurs.
   replaysOnErrorSampleRate: 1.0,
 
   // Enable sending user PII (Personally Identifiable Information)
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
 });
+
+// Lazy-load Replay AFTER the page is interactive.
+// The replay SDK is ~60kB+ — deferring it keeps it out of the initial bundle
+// so it doesn't block LCP or inflate the shared JS chunk every visitor downloads.
+if (typeof window !== "undefined") {
+  const loadReplay = async () => {
+    const { replayIntegration } = await import("@sentry/nextjs");
+    Sentry.addIntegration(
+      replayIntegration({
+        maskAllText: false,
+        blockAllMedia: false,
+      })
+    );
+  };
+
+  // Wait until the browser is idle (after LCP, hydration, etc.)
+  if ("requestIdleCallback" in window) {
+    (window as Window & typeof globalThis & { requestIdleCallback: (cb: () => void) => void })
+      .requestIdleCallback(loadReplay);
+  } else {
+    // Safari fallback
+    setTimeout(loadReplay, 2000);
+  }
+}
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

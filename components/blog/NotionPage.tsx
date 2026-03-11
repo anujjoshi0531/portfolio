@@ -104,9 +104,11 @@ const propertyTextValue = (
 
 export function NotionPage({
   recordMap,
+  slug,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  recordMap: any
+  recordMap: any;
+  slug: string;
 }) {
   const components = React.useMemo<Partial<NotionComponents>>(
     () => ({
@@ -133,7 +135,7 @@ export function NotionPage({
 
   return (
     <>
-      <ReadingProgress recordMap={recordMap} />
+      <ReadingProgress recordMap={recordMap} slug={slug} />
       <NotionRenderer
         components={components}
         recordMap={recordMap}

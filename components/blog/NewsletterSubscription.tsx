@@ -45,7 +45,7 @@ export function NewsletterSubscription() {
 
   return (
     <div className="w-full">
-      <div className="relative isolate overflow-hidden bg-muted/40 border border-border px-6 py-16 sm:py-24 shadow-2xl rounded-2xl sm:rounded-3xl sm:px-24">
+      <div className="relative isolate overflow-hidden bg-muted/40 border border-border px-6 py-16 sm:py-20 shadow-2xl rounded-2xl sm:px-20">
         <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           Subscribe to My Newsletter
         </h2>
@@ -87,7 +87,7 @@ export function NewsletterSubscription() {
         </form>
         <svg
           viewBox="0 0 1024 1024"
-          className="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-x-1/2 pointer-events-none"
+          className="absolute left-1/2 top-1/2 -z-10 size-[128rem] -translate-x-1/2 pointer-events-none"
           aria-hidden="true"
         >
           <circle cx="512" cy="512" r="512" fill="url(#759c1415-0410-454c-8f7c-9a820de03641)" fillOpacity="0.2"></circle>

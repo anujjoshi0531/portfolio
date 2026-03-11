@@ -1,6 +1,5 @@
 import { Poppins, Playfair_Display } from "next/font/google";
 import "@/styles/globals.css";
-import "@/styles/sprite.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { DarkProvider } from "@/components/providers/dark-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -17,7 +16,7 @@ import { LazyMotion, domAnimation } from "framer-motion";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
   preload: true,
@@ -25,7 +24,7 @@ const poppins = Poppins({
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-playfair",
 });
 
@@ -42,46 +41,7 @@ export const metadata: Metadata = {
   description: "Explore the portfolio of Anuj Joshi, a full-stack developer specialized in building scalable systems, intuitive user experiences, and reliable end-to-end solutions. Showcasing high-impact projects, engineering insights, open-source contributions, and strong problem-solving capabilities.",
 
   keywords: [
-    // Personal & Professional
-    "Anuj Joshi", "Anuj Joshi Portfolio", "Anuj Joshi Developer", "Anuj Joshi DTU",
-
-    // Technical Skills
-    "Full Stack Developer", "Frontend Developer", "Backend Developer",
-    "React Developer", "Next.js Developer", "JavaScript Developer", "TypeScript Developer",
-    "Python Developer", "Node.js Developer", "Web Developer",
-
-    // Technologies & Frameworks
-    "React", "Next.js", "JavaScript", "TypeScript", "Python", "Node.js",
-    "HTML5", "CSS3", "Tailwind CSS", "MongoDB", "PostgreSQL", "MySQL",
-    "Express.js", "API Development", "REST API", "GraphQL",
-
-    // Specializations
-    "AI Developer", "Machine Learning Engineer", "Data Scientist",
-    "Web3 Developer", "Blockchain Developer", "Smart Contracts",
-    "Robotics Engineer", "IoT Developer",
-
-    // Education & Experience
-    "Computer Science Engineer", "DTU", "Delhi Technological University",
-    "CSE Student", "Tech Enthusiast", "Software Engineer",
-
-    // Project Types
-    "Portfolio Projects", "Open Source", "Technical Blog", "Code Repository",
-    "Software Projects", "Web Applications", "Mobile Apps",
-
-    // Industry Terms
-    "Hire Full Stack Developer", "Freelance Developer", "Remote Developer",
-    "Software Development", "Web Development Services",
-    "Custom Web Applications", "Responsive Design", "Progressive Web Apps",
-
-    // Location
-    "Delhi Developer", "India Developer", "Remote Work",
-
-    // Societies & Organizations
-    "Society of Robotics", "LIMSTIR", "Tech Communities",
-
-    // Additional Technologies
-    "Docker", "AWS", "Firebase", "Vercel", "Netlify", "Git", "GitHub",
-    "Redux", "Context API", "Prisma", "Mongoose", "Socket.io"
+    "Anuj Joshi", "Portfolio", "Full Stack Developer", "Next.js", "TypeScript", "Software Engineer"
   ],
 
   // Author Information
@@ -214,6 +174,7 @@ export default async function Layout({
     <html suppressHydrationWarning lang="en" className="scroll-smooth overflow-x-clip">
       <head>
         <link rel="shortcut icon" href="/icon.webp" type="image/x-icon" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {contestApiOrigin && (
           <>
             <link rel="preconnect" href={contestApiOrigin} crossOrigin="anonymous" />
@@ -286,14 +247,7 @@ export default async function Layout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                var savedColor = localStorage.getItem("themeColor");
-                if (savedColor) {
-                  document.documentElement.style.setProperty("--theme", savedColor);
-                }
-              } catch (e) {}
-            `,
+            __html: `try{var s=localStorage.getItem("themeColor");if(s)document.documentElement.style.setProperty("--theme",s)}catch(e){}`,
           }}
         />
       </head>

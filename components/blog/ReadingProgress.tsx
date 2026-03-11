@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
+import ViewCounter from "./ViewCounter";
+import LikeCounter from "./LikeCounter";
+import { ClockIcon } from "lucide-react";
 
 interface ReadingProgressProps {
     /** Pass raw record map to count words for estimated reading time */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recordMap?: any;
+    slug?: string;
 }
 
 function countWords(recordMap: unknown): number {
@@ -32,12 +36,12 @@ function countWords(recordMap: unknown): number {
     return wordCount;
 }
 
-export function ReadingProgress({ recordMap }: ReadingProgressProps) {
+export function ReadingProgress({ recordMap, slug }: ReadingProgressProps) {
     const [progress, setProgress] = useState(0);
     const [targetNode, setTargetNode] = useState<Element | null>(null);
     const raf = useRef<number | null>(null);
 
-    const wordCount = countWords(recordMap);
+    const wordCount = useMemo(() => countWords(recordMap), [recordMap]);
     const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
     useEffect(() => {
@@ -52,39 +56,57 @@ export function ReadingProgress({ recordMap }: ReadingProgressProps) {
         };
         window.addEventListener("scroll", onScroll, { passive: true });
 
-        // Find the notion metadata row to inject the reading time into
-        const interval = setInterval(() => {
-            const row = document.querySelector('.notion-collection-row');
-            if (row) {
-                setTargetNode(row);
-                clearInterval(interval);
+        // Efficiently detect when the Notion header row appears in the DOM using MutationObserver
+        const observer = new MutationObserver(() => {
+            const rowBody = document.querySelector('.notion-collection-row-body')
+                || document.querySelector('.notion-collection-row');
+            if (rowBody) {
+                let statsNode = document.getElementById('custom-blog-stats');
+                if (!statsNode) {
+                    statsNode = document.createElement('div');
+                    statsNode.id = 'custom-blog-stats';
+                    statsNode.className = 'w-full flex justify-center pt-4';
+                    rowBody.appendChild(statsNode);
+                }
+                setTargetNode(statsNode);
+                observer.disconnect();
             }
-        }, 100);
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Initial check in case it's already there
+        const rowBody = document.querySelector('.notion-collection-row-body')
+            || document.querySelector('.notion-collection-row');
+        if (rowBody) {
+            let statsNode = document.getElementById('custom-blog-stats');
+            if (!statsNode) {
+                statsNode = document.createElement('div');
+                statsNode.id = 'custom-blog-stats';
+                statsNode.className = 'w-full flex justify-center pt-4';
+                rowBody.appendChild(statsNode);
+            }
+            setTargetNode(statsNode);
+            observer.disconnect();
+        }
 
         return () => {
             window.removeEventListener("scroll", onScroll);
             if (raf.current) cancelAnimationFrame(raf.current);
-            clearInterval(interval);
+            observer.disconnect();
         };
     }, []);
 
     const ReadingTimePill = (
-        <div className="notion-collection-row-property">
-            <div className="flex items-center justify-center gap-1.5 text-[14px] sm:text-[15px] font-medium text-theme/90 hover:text-theme transition-colors cursor-default">
-                <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                >
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                </svg>
+        <div className="flex items-center justify-center gap-4 sm:gap-6 text-sm sm:text-[15px] font-medium text-muted-foreground w-full">
+            {slug && (
+                <>
+                    <ViewCounter slug={slug} increment={true} className="hover:text-foreground transition-colors" />
+                    <LikeCounter slug={slug} className="hover:text-foreground transition-colors" />
+                </>
+            )}
+            <div className="flex items-center gap-1.5 cursor-default hover:text-foreground transition-colors">
+                <ClockIcon className="w-4 h-4" />
                 <span>{readingTime} min read</span>
             </div>
         </div>

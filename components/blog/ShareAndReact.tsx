@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "../ui/badge";
+import LikeCounter from "./LikeCounter";
 
 // Hoisted outside component — stable reference, never re-created on render
 const SUGGESTIONS = [
@@ -26,11 +27,12 @@ const SUGGESTIONS = [
 
 interface ShareAndReactProps {
     title: string;
+    slug: string;
 }
 
 // This component is imported with { ssr: false } from its parent page,
 // so window/navigator access is safe without an isMounted guard.
-export default function ShareAndReact({ title }: ShareAndReactProps) {
+export default function ShareAndReact({ title, slug }: ShareAndReactProps) {
     // Feedback Form State
     const [isOpen, setIsOpen] = useState(false);
     const [name, setName] = useState("");
@@ -98,11 +100,14 @@ export default function ShareAndReact({ title }: ShareAndReactProps) {
     };
 
     return (
-        <div className="fixed z-40 flex flex-row gap-2 bottom-6 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-md border rounded-full p-2 shadow-lg items-center">
+        <div className="fixed z-40 flex flex-row gap-2 bottom-6 xl:bottom-auto xl:top-1/3 left-1/2 -translate-x-1/2 xl:left-8 xl:-translate-x-0 xl:flex-col bg-background/80 backdrop-blur-md border rounded-full px-4 py-2 xl:px-2 xl:py-4 shadow-lg items-center">
+
+            <LikeCounter slug={slug} showCountOnClickOnly={true} className="hover:text-red-500 transition-colors" />
+
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                     <button
-                        className="p-2 rounded-full transition-colors text-muted-foreground hover:bg-theme/10 hover:text-theme relative"
+                        className="p-2 rounded-full transition-colors text-muted-foreground hover:bg-theme/10 hover:text-theme relative flex justify-center items-center"
                         aria-label="Send Feedback"
                     >
                         <MessageCircle size={18} />

@@ -505,7 +505,7 @@
 }
 
 .notion b {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .notion-title {
@@ -4206,7 +4206,7 @@ svg.notion-page-icon {
   justify-content: center !important;
   gap: 16px 24px !important;
   width: 100% !important;
-  padding: 0 0 40px 0 !important;
+  padding: 0 0 20px 0 !important;
   border-bottom: 1px solid hsl(var(--primary) / 0.1);
   margin-bottom: 48px !important;
 }

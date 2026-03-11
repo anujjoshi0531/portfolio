@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn, extractPlainText, timeAgo } from "@/lib";
 import Image from "next/image";
 import Link from "next/link";
+import ViewCounter from "./ViewCounter";
 
 interface BlogCardProps {
   blog: NotionBlogPage;
@@ -77,6 +78,11 @@ export default function BlogCard({
             )}
           >
           </div>
+          
+          <div className="absolute top-2 right-2 flex gap-1 bg-black/50 backdrop-blur-md rounded-md px-2 py-1">
+            <ViewCounter slug={slug} increment={false} className="text-white text-xs scale-90" />
+          </div>
+
           <div className="absolute bottom-1 left-2 flex gap-1">
             {tags.map((topic) => (
               <Badge key={topic.id}>{topic.name}</Badge>

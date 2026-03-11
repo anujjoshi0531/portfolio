@@ -124,22 +124,22 @@ export default async function page({ params }: {
     }
   };
 
-  return <div className="pt-16">
+  return <div className="pt-16 max-w-[900px] mx-auto relative px-4 sm:px-6 lg:px-8">
     <JsonLd data={jsonLd} />
 
     {/* Floating interaction bar on the left */}
-    <ShareAndReact title={title} />
+    <ShareAndReact title={title} slug={extractPlainText(page?.properties?.Slug?.rich_text) || pageId} />
 
-    <NotionPage recordMap={recordMap} />
+    <NotionPage
+      recordMap={recordMap}
+      slug={extractPlainText(page?.properties?.Slug?.rich_text) || pageId}
+    />
 
     {/* Up Next / Related Articles */}
     <div className="my-16 sm:my-20">
       <h3 className="text-2xl sm:text-3xl font-bold text-center mb-8">More Related Articles</h3>
       <BlogSection tags={tags} excludeId={page.id} />
     </div>
-
-    <div className="mb-16 sm:mb-20">
-      <NewsletterSubscription />
-    </div>
+    <NewsletterSubscription />
   </div>;
 }

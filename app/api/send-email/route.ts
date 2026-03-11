@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 import { after } from "next/server";
 import { sendToRecipient, sendThankYouEmail } from "@/lib/server/mail";
 import { z } from "zod";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-// Basic in-memory rate limiting
-const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
-const RATE_LIMIT = 5; // Max emails per IP
-const TIME_WINDOW = 60 * 60 * 1000; // 1 hour
+// Create a new ratelimiter, that allows 5 requests per 1 hour
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "1 h"),
+  analytics: true,
+});
 
 const EmailSchema = z.object({
   name: z.string().max(100),
@@ -17,19 +21,10 @@ const EmailSchema = z.object({
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") || "unknown";
 
-  const now = Date.now();
-  const rateData = rateLimitMap.get(ip);
-  if (rateData) {
-    if (now - rateData.timestamp < TIME_WINDOW) {
-      if (rateData.count >= RATE_LIMIT) {
-        return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
-      }
-      rateLimitMap.set(ip, { count: rateData.count + 1, timestamp: rateData.timestamp });
-    } else {
-      rateLimitMap.set(ip, { count: 1, timestamp: now });
-    }
-  } else {
-    rateLimitMap.set(ip, { count: 1, timestamp: now });
+  // Check rate limit via Upstash Redis
+  const { success } = await ratelimit.limit(`ratelimit_${ip}`);
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
   }
 
   // 1. Strict Request Body Size Limit

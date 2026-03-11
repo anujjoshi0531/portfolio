@@ -1,30 +1,13 @@
-import { requireId } from "./notion";
+import { requireId, getDataSourceId, notionClient } from "./notion";
 import { serverConfig } from "../constant/config.server";
-import { Client } from "@notionhq/client";
 
-const newsletterNotionClient = new Client({
-  auth: serverConfig.NOTION_NEWSLETTER_TOKEN,
-});
+// We now use the main notionClient from ./notion.ts for all newsletter operations.
 
-const dsIdCache = new Map<string, string>();
-
-async function getNewsletterDataSourceId(databaseId: string): Promise<string> {
-  const cached = dsIdCache.get(databaseId);
-  if (cached) return cached;
-
-  const db = await newsletterNotionClient.databases.retrieve({ database_id: databaseId });
-  const sources = (db as unknown as { data_sources?: { id: string }[] }).data_sources;
-  const dsId = sources?.[0]?.id;
-  if (!dsId) throw new Error(`No data source found for database: ${databaseId}`);
-
-  dsIdCache.set(databaseId, dsId);
-  return dsId;
-}
 
 export async function checkSubscriberExists(email: string): Promise<string | null> {
   const dbId = requireId(serverConfig.NOTION_NEWSLETTER_ID, "NOTION_NEWSLETTER_ID");
-  const dsId = await getNewsletterDataSourceId(dbId);
-  const { results } = await newsletterNotionClient.dataSources.query({
+  const dsId = await getDataSourceId(dbId, notionClient);
+  const { results } = await notionClient.dataSources.query({
     data_source_id: dsId,
     filter: {
       property: "Email",
@@ -39,7 +22,7 @@ export async function checkSubscriberExists(email: string): Promise<string | nul
 export async function addSubscriber(email: string): Promise<string> {
   const dbId = requireId(serverConfig.NOTION_NEWSLETTER_ID, "NOTION_NEWSLETTER_ID");
 
-  const response = await newsletterNotionClient.pages.create({
+  const response = await notionClient.pages.create({
     parent: { database_id: dbId },
     properties: {
       Subscriber: {
@@ -59,7 +42,7 @@ export async function addSubscriber(email: string): Promise<string> {
 }
 
 export async function updateSubscriberStatus(pageId: string, status: "Subscribed" | "Unsubscribed") {
-  await newsletterNotionClient.pages.update({
+  await notionClient.pages.update({
     page_id: pageId,
     properties: {
       Status: {
@@ -73,11 +56,11 @@ export async function getAllSubscribers(): Promise<{ id: string; email: string; 
   const dbId = requireId(serverConfig.NOTION_NEWSLETTER_ID, "NOTION_NEWSLETTER_ID");
   let hasMore = true;
   let nextCursor: string | undefined = undefined;
-  const dsId = await getNewsletterDataSourceId(dbId);
+  const dsId = await getDataSourceId(dbId, notionClient);
   const subscribers: { id: string; email: string; name: string }[] = [];
 
   while (hasMore) {
-    const response = await newsletterNotionClient.dataSources.query({
+    const response = await notionClient.dataSources.query({
       data_source_id: dsId,
       start_cursor: nextCursor,
       filter: {

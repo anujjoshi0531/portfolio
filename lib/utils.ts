@@ -12,6 +12,8 @@ const longDateFormatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
+export const numberFormatter = new Intl.NumberFormat();
+
 export const timeAgo = (
   timestamp: Date | string | number | null
 ): string => {

@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { getAllSubscribers } from "@/lib/server/newsletter";
-import { sendWeeklyNewsletter } from "@/lib/server/mail";
+import { Client } from "@upstash/qstash";
 import { searchPages } from "@/lib/server/notion";
 import { extractPlainText } from "@/lib";
+
+const qstashClient = new Client({
+  token: process.env.QSTASH_TOKEN || "",
+});
 
 export async function POST(request: Request) {
   try {
@@ -16,6 +20,11 @@ export async function POST(request: Request) {
 
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!process.env.QSTASH_TOKEN) {
+      console.warn("QSTASH_TOKEN is not set in environment variables");
+      return NextResponse.json({ error: "Queue Configuration Error" }, { status: 500 });
     }
 
     const subscribers = await getAllSubscribers();
@@ -36,16 +45,25 @@ export async function POST(request: Request) {
       return { title, description, slug, image };
     }).filter(blog => blog.slug);
 
-    // Send emails asynchronously
+    // Determine the base URL to send webhooks to
+    const host = request.headers.get("host") || "your-production-url.com";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    // Usually NEXT_PUBLIC_SITE_URL or VERCEL_URL or URL are provided.
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`;
+
+    // Send emails asynchronously by dispatching to the QStash queue
     const promises = subscribers.map(sub => 
-      sendWeeklyNewsletter(sub.email, sub.name, sub.id, recentBlogs).catch(err => {
-        console.error(`Failed to send newsletter to ${sub.email}:`, err);
+      qstashClient.publishJSON({
+        url: `${baseUrl}/api/queue/send-newsletter`,
+        body: { email: sub.email, name: sub.name, id: sub.id, recentBlogs }
+      }).catch(err => {
+        console.error(`Failed to queue newsletter for ${sub.email}:`, err);
       })
     );
     
     await Promise.allSettled(promises);
 
-    return NextResponse.json({ message: "Weekly newsletters sent successfully", count: subscribers.length }, { status: 200 });
+    return NextResponse.json({ message: "Weekly newsletters queued successfully via QStash", count: subscribers.length }, { status: 200 });
   } catch (error: unknown) {
     console.error("Cron Newsletter Error:", error);
     const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
