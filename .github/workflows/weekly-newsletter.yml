@@ -2,19 +2,44 @@ name: Weekly Newsletter Cron
 
 on:
   schedule:
-    # Runs at 2 AM IST Sunday
+    # 2 AM IST Sunday
     - cron: '30 20 * * 6'
   workflow_dispatch:
 
 jobs:
   send-newsletter:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
-      - name: Trigger Newsletter API
+      - name: Call Newsletter Cron API
         run: |
-          curl -X POST \
-            "${{ secrets.USER_URL }}/api/cron/newsletter" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
-            --fail --show-error --silent
+          node -e "
+          async function trigger() {
+            console.log('Triggering newsletter cron...');
+            try {
+              const response = await fetch('${{ secrets.USER_URL }}/api/cron/newsletter', {
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ${{ secrets.CRON_SECRET }}',
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+                },
+                body: JSON.stringify({})
+              });
+              
+              const data = await response.text();
+              console.log('Status:', response.status);
+              console.log('Response:', data);
+              
+              if (!response.ok) {
+                console.error('Cron failed');
+                process.exit(1);
+              }
+            } catch (err) {
+              console.error('Error:', err.message);
+              process.exit(1);
+            }
+          }
+          trigger();
+          "

@@ -2,19 +2,44 @@ name: Daily Blog Stats Sync
 
 on:
   schedule:
-    # Runs at 2:00 AM daily
-    - cron: '0 2 * * *'
+    # Runs at 2:00 AM IST daily
+    - cron: '30 20 * * *'
   workflow_dispatch:
 
 jobs:
   sync-stats:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - name: Trigger Stats Sync API
         run: |
-          curl -X POST \
-            "${{ secrets.USER_URL }}/api/cron/sync-blog-stats" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
-            --fail --show-error --silent
+          node -e "
+          async function trigger() {
+            console.log('Triggering blog stats sync...');
+            try {
+              const response = await fetch('${{ secrets.USER_URL }}/api/cron/sync-blog-stats', {
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ${{ secrets.CRON_SECRET }}',
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+                },
+                body: JSON.stringify({})
+              });
+              
+              const data = await response.text();
+              console.log('Status:', response.status);
+              console.log('Response:', data);
+              
+              if (!response.ok) {
+                console.error('Stats sync failed');
+                process.exit(1);
+              }
+            } catch (err) {
+              console.error('Error:', err.message);
+              process.exit(1);
+            }
+          }
+          trigger();
+          "

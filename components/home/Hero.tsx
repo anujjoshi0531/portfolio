@@ -23,7 +23,7 @@ export default function Hero() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            className="space-y-2 md:space-y-4 select-none flex flex-col items-center lg:items-start w-full">
+            className="space-y-2 md:space-y-4 select-none flex flex-col items-center lg:items-start lg:text-left text-center w-full">
             <m.h1
               variants={childVariants}
               className="font-bold text-[2rem] sm:text-[3rem] md:text-6xl w-full">
@@ -73,7 +73,7 @@ export default function Hero() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          className="flex justify-center items-center lg:gap-20 gap-10">
+          className="flex lg:justify-start justify-center items-center lg:gap-20 gap-10">
           {socialLinks
             .filter((l) => ["LinkedIn", "Twitter", "Telegram"].includes(l.title))
             .map(({ title, name, href, icon }) => (

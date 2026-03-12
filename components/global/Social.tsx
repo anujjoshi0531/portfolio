@@ -9,9 +9,9 @@ interface HeroSocialProps {
 
 function HeroSocial({ title, name, href, icon: Icon }: HeroSocialProps) {
   return (
-    <LinkPreview url={href} title={title} className="group md:flex items-center justify-center gap-2 hover:scale-105 transition-all duration-150 md:text-left text-center">
+    <LinkPreview url={href} title={title} className="group md:flex items-center lg:justify-start justify-center gap-2 hover:scale-105 transition-all duration-150 md:text-left text-center">
       {Icon && (
-        <Icon className="text-theme text-2xl md:text-3xl group-hover:text-primary my-2 mx-auto" />
+        <Icon className="text-theme text-2xl md:text-3xl group-hover:text-primary my-2 lg:mx-0 mx-auto" />
       )}
       <div className="items-center sm:block">
         <p className="font-bold text-sm md:text-md">{title}</p>
