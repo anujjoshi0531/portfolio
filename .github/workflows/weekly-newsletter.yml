@@ -2,19 +2,39 @@ name: Weekly Newsletter Cron
 
 on:
   schedule:
-    # Runs at 2 AM IST Sunday
+    # 2 AM IST Sunday
     - cron: '30 20 * * 6'
   workflow_dispatch:
 
 jobs:
   send-newsletter:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
-      - name: Trigger Newsletter API
+      - name: Call Newsletter Cron API
         run: |
-          curl -X POST \
+          echo "Triggering newsletter cron..."
+
+          response=$(curl -X POST \
+            -L \
+            -A "GitHub-Actions-Cron" \
             "${{ secrets.USER_URL }}/api/cron/newsletter" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
-            --fail --show-error --silent
+            --fail \
+            --show-error \
+            --silent \
+            --max-time 30 \
+            --write-out "HTTPSTATUS:%{http_code}")
+
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+
+          echo "Status: $status"
+          echo "Response: $body"
+
+          if [ "$status" -ne 200 ]; then
+            echo "Cron failed"
+            exit 1
+          fi

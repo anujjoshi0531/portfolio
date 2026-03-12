@@ -2,19 +2,39 @@ name: Daily Blog Stats Sync
 
 on:
   schedule:
-    # Runs at 2:00 AM daily
-    - cron: '0 2 * * *'
+    # Runs at 2:00 AM IST daily
+    - cron: '30 20 * * *'
   workflow_dispatch:
 
 jobs:
   sync-stats:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - name: Trigger Stats Sync API
         run: |
-          curl -X POST \
+          echo "Triggering blog stats sync..."
+
+          response=$(curl -X POST \
+            -L \
+            -A "GitHub-Actions-Cron" \
             "${{ secrets.USER_URL }}/api/cron/sync-blog-stats" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
-            --fail --show-error --silent
+            --fail \
+            --show-error \
+            --silent \
+            --max-time 30 \
+            --write-out "HTTPSTATUS:%{http_code}")
+
+          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
+          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+
+          echo "Status: $status"
+          echo "Response: $body"
+
+          if [ "$status" -ne 200 ]; then
+            echo "Stats sync failed"
+            exit 1
+          fi
