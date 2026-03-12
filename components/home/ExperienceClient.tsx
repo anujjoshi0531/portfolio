@@ -128,7 +128,7 @@ function ExperienceContent({
                 <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-xl text-theme">{formattedExperience.role}</h3>
                     {formattedExperience.certificate && (
-                        <LinkPreview title="Certificate" url={formattedExperience.certificate} className="text-theme cursor-pointer" aria-label="Download certificate">
+                        <LinkPreview title="Certificate" url={formattedExperience.certificate} className="text-theme cursor-pointer" ariaLabel="Download certificate">
                             <Award className="text-theme" />
                         </LinkPreview>
                     )}
@@ -138,7 +138,7 @@ function ExperienceContent({
                     {formattedExperience.end ? formatDate(formattedExperience.end) : "Present"}
                 </time>
             </div>
-            <LinkPreview title={formattedExperience.company} url={formattedExperience.link} className="link cursor-pointer" aria-label={`Visit ${formattedExperience.company} website`}>
+            <LinkPreview title={formattedExperience.company} url={formattedExperience.link} className="link cursor-pointer" ariaLabel={`Visit ${formattedExperience.company} website`}>
                 {formattedExperience.company}
                 {formattedExperience.place && <span>,&nbsp;{formattedExperience.place}</span>}
             </LinkPreview>

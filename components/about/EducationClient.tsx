@@ -65,7 +65,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
                 title={edu.institution}
                 url={edu.certificate || edu.url}
                 className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)]"
-                aria-label={`Visit ${edu.institution} website`}
+                ariaLabel={`Visit ${edu.institution} website`}
             >
                 <m.div
                     className="px-8 py-6 rounded-lg shadow-md transition-all bg-muted/40 border border-border group-hover:shadow-lg group-hover:shadow-theme/10"
@@ -85,7 +85,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
                                     {startAgo} - {endAgo}
                                 </time>
                             </div>
-                            <LinkPreview title={edu.institution} url={edu.url || "#"} className="font-medium text-sm my-1 text-muted-foreground">
+                            <LinkPreview title={edu.institution} url={edu.url || "#"} className="font-medium text-sm my-1 text-muted-foreground" ariaLabel={`Visit ${edu.institution} website`}>
                                 {edu.institution},&nbsp;
                                 <span>{edu.place}</span>
                             </LinkPreview>

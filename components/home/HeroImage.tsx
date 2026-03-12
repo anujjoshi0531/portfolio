@@ -270,7 +270,7 @@ export default function HeroImage() {
 
             {/* ── Avatar ── */}
             <m.div
-                className="relative bg-theme/80 lg:max-w-[60vw] w-fit min-w-[150px] min-h-[150px] max-h-[80vh] object-cover rounded-full overflow-hidden animate-profile cursor-pointer"
+                className="relative bg-theme/80 lg:size-[450px] md:size-[380px] size-[280px] aspect-square rounded-full overflow-hidden animate-profile cursor-pointer shrink-0"
                 variants={shaking ? SHAKE_VARIANTS : containerVariants}
                 initial={shaking ? "idle" : "hidden"}
                 animate={shaking ? "shake" : "visible"}

@@ -1,4 +1,4 @@
-﻿import { containerVariants } from '@/lib/animate';
+import { containerVariants } from '@/lib/animate';
 import { m, useMotionValue, useSpring, useInView } from "framer-motion";
 import { type LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -56,7 +56,7 @@ function Perk({ value, link, title, icon: Icon, subtitle }: PerkProps) {
 
   if (link) {
     return (
-      <LinkPreview title={title} url={link} aria-label={`View ${perkText}`}>
+      <LinkPreview title={title} url={link} ariaLabel={`View ${perkText}`}>
         {content}
       </LinkPreview>
     );

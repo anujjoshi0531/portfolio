@@ -9,7 +9,12 @@ interface HeroSocialProps {
 
 function HeroSocial({ title, name, href, icon: Icon }: HeroSocialProps) {
   return (
-    <LinkPreview url={href} title={title} className="group md:flex items-center lg:justify-start justify-center gap-2 hover:scale-105 transition-all duration-150 md:text-left text-center">
+    <LinkPreview
+      url={href}
+      title={title}
+      ariaLabel={`Visit ${title} profile`}
+      className="group md:flex items-center lg:justify-start justify-center gap-2 hover:scale-105 transition-all duration-150 md:text-left text-center"
+    >
       {Icon && (
         <Icon className="text-theme text-2xl md:text-3xl group-hover:text-primary my-2 lg:mx-0 mx-auto" />
       )}
@@ -30,14 +35,14 @@ interface SocialIconProps {
 
 function SocialIcon({ href, title, children }: SocialIconProps) {
   return (
-    <button
-      className="group relative isolate rounded-full p-2 transition-all shrink-0 before:absolute before:inset-px before:-z-10 before:rounded-full before:transition-all before:duration-500  hover:before:inset-full bg-background hover:bg-primary hover:text-background before:bg-background"
-      aria-label={title}
-      title={title}>
-      <LinkPreview url={href} title={title}>
-        {children}
-      </LinkPreview>
-    </button>
+    <LinkPreview
+      url={href}
+      title={title}
+      ariaLabel={title}
+      className="group relative isolate rounded-full p-2 transition-all shrink-0 before:absolute before:inset-px before:-z-10 before:rounded-full before:transition-all before:duration-500 hover:before:inset-full bg-background hover:bg-primary hover:text-background before:bg-background block w-fit h-fit"
+    >
+      {children}
+    </LinkPreview>
   );
 }
 
@@ -51,6 +56,7 @@ function SocialLink({ title, href, icon: Icon }: SocialLinkProps) {
     <LinkPreview
       url={href}
       title={title}
+      ariaLabel={title}
       className="flex gap-2 items-center">
       {Icon && <Icon className="text-theme size-4" />}
       <span className="link">{title}</span>

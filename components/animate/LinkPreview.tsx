@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
 
 
@@ -20,6 +20,7 @@ type LinkPreviewProps = {
     height?: number;
     quality?: number;
     layout?: string;
+    ariaLabel?: string;
 } & (
         | { isStatic: true; imageSrc: string }
         | { isStatic?: false; imageSrc?: never }
@@ -36,6 +37,7 @@ export const LinkPreview = ({
     imageSrc = "",
     quality: _quality = 50,
     layout: _layout = "fixed",
+    ariaLabel,
 }: LinkPreviewProps) => {
     let src: string;
     if (!isStatic) {
@@ -90,6 +92,7 @@ export const LinkPreview = ({
                     onMouseMove={handleMouseMove}
                     className={className}
                     href={url}
+                    aria-label={ariaLabel}
                 >
                     {children}
                 </HoverCardPrimitive.Trigger>

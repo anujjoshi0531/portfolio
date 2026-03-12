@@ -71,7 +71,7 @@ const ProjectCard = ({
             title={title}
             url={githubUrl}
             className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
-            aria-label={`View ${title} GitHub repository`}
+            ariaLabel={`View ${title} GitHub repository`}
           >
             <Github className="size-5" />
           </LinkPreview>
@@ -79,7 +79,7 @@ const ProjectCard = ({
             title={title}
             url={liveUrl}
             className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
-            aria-label={`Visit ${title} live website`}
+            ariaLabel={`Visit ${title} live website`}
           >
             <Globe className="size-5" />
           </LinkPreview>
