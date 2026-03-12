@@ -14,32 +14,32 @@ jobs:
     steps:
       - name: Trigger Stats Sync API
         run: |
-          echo "Triggering blog stats sync..."
-
-          # Reverting to USER_URL with Googlebot identity to bypass Cloudflare
-          response=$(curl -X POST \
-            -L \
-            -A "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
-            -H "Accept: application/json" \
-            -H "Referer: ${{ secrets.USER_URL }}" \
-            -H "Origin: ${{ secrets.USER_URL }}" \
-            -H "X-Forwarded-For: 127.0.0.1" \
-            -d '{}' \
-            "${{ secrets.USER_URL }}/api/cron/sync-blog-stats" \
-            --show-error \
-            --silent \
-            --max-time 30 \
-            --write-out "HTTPSTATUS:%{http_code}")
-
-          body=$(echo "$response" | sed -e 's/HTTPSTATUS\:.*//g')
-          status=$(echo "$response" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
-
-          echo "Status: $status"
-          echo "Response: $body"
-
-          if [ "$status" -ne 200 ]; then
-            echo "Stats sync failed"
-            exit 1
-          fi
+          node -e "
+          async function trigger() {
+            console.log('Triggering blog stats sync...');
+            try {
+              const response = await fetch('${{ secrets.USER_URL }}/api/cron/sync-blog-stats', {
+                method: 'POST',
+                headers: {
+                  'Authorization': 'Bearer ${{ secrets.CRON_SECRET }}',
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+                },
+                body: JSON.stringify({})
+              });
+              
+              const data = await response.text();
+              console.log('Status:', response.status);
+              console.log('Response:', data);
+              
+              if (!response.ok) {
+                console.error('Stats sync failed');
+                process.exit(1);
+              }
+            } catch (err) {
+              console.error('Error:', err.message);
+              process.exit(1);
+            }
+          }
+          trigger();
+          "
