@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { m } from "framer-motion";
 import { HeroSocial } from '@/components/global/Social';
@@ -17,25 +17,25 @@ export default function Hero() {
       <HeroImage />
 
       {/* Profile Text */}
-      <div className="space-y-12 translate-y-8">
-        <div className="md:space-y-8 md:py-12 sm:py-5 px-2 mx-auto md:mx-0">
+      <div className="space-y-12 translate-y-8 w-full">
+        <div className="md:space-y-8 md:py-12 sm:py-5 px-2 w-full text-center lg:text-left">
           <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            className="space-y-2 md:space-y-4 select-none">
+            className="space-y-2 md:space-y-4 select-none flex flex-col items-center lg:items-start w-full">
             <m.h1
               variants={childVariants}
-              className="text-nowrap font-bold text-[2rem] sm:text-[3rem] md:text-6xl">
+              className="font-bold text-[2rem] sm:text-[3rem] md:text-6xl w-full">
               Hi, I&apos;m&nbsp;
-              <span className="text-theme">Anuj Joshi</span>
+              <span className="text-theme whitespace-nowrap">Anuj Joshi</span>
             </m.h1>
             <m.h2
               variants={childVariants}
-              className="overflow-hidden whitespace-nowrap">
+              className="overflow-hidden w-full">
               <FlipWords
                 words={["A Fullstack Developer", "A Machine Learning Enthusiast", "Software Development Engineer", "Problem Solver at Scale", "Building AI-Powered Systems"]}
-                className="h-8 font-medium text-[1rem] sm:text-[1.5rem] md:text-2xl"
+                className="h-8 font-medium text-[1rem] sm:text-[1.5rem] md:text-2xl text-center lg:text-left w-full px-0"
               />
             </m.h2>
           </m.div>

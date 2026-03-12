@@ -6,23 +6,23 @@ import { useEffect, useRef, useState } from "react";
 
 const BLINK_FRAME_MS = [60, 60, 80, 60, 60, 60];
 const MOVE_MAP = {
-    neutral: "/blink/avatar1.png",
-    up: "/move/up.png",
-    down: "/move/down.png",
-    left: "/move/left.png",
-    right: "/move/right.png",
-    upLeft: "/move/up-left.png",
-    upRight: "/move/up-right.png",
-    downLeft: "/move/down-left.png",
-    downRight: "/move/down-right.png",
+    neutral: "/blink/avatar1.webp",
+    up: "/move/up.webp",
+    down: "/move/down.webp",
+    left: "/move/left.webp",
+    right: "/move/right.webp",
+    upLeft: "/move/up-left.webp",
+    upRight: "/move/up-right.webp",
+    downLeft: "/move/down-left.webp",
+    downRight: "/move/down-right.webp",
 } as const;
 const BLINK_FRAMES = [
-    "/blink/avatar1.png",
-    "/blink/avatar2.png",
-    "/blink/avatar3.png",
-    "/blink/avatar4.png",
-    "/blink/avatar3.png",
-    "/blink/avatar2.png",
+    "/blink/avatar1.webp",
+    "/blink/avatar2.webp",
+    "/blink/avatar3.webp",
+    "/blink/avatar4.webp",
+    "/blink/avatar3.webp",
+    "/blink/avatar2.webp",
 ] as const;
 type Direction = keyof typeof MOVE_MAP;
 

@@ -101,6 +101,15 @@
     opacity: 1;
 }
 
+/* Hide other layers when yawning to keep ONLY the yawn image visible */
+.sprite-wrap.is-yawning .sprite-base,
+.sprite-wrap.is-yawning .sprite-talk,
+.sprite-wrap.is-yawning .sprite-blink {
+    opacity: 0 !important;
+    animation: none !important;
+    transition: none !important;
+}
+
 /* ── Poke overlays (highest z) ─────────────── */
 .sprite-poke {
     z-index: 4;

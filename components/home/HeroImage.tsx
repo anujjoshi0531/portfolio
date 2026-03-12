@@ -175,6 +175,8 @@ export default function HeroImage() {
     function onMouseEnter() {
         isHoveredRef.current = true;
         setIsHovered(true);
+        if (isYawning) return;
+
         loadAudio();
         lastClickAt.current = Date.now(); // prevents click firing right after hover on mobile
 
@@ -203,6 +205,14 @@ export default function HeroImage() {
 
     function onClick() {
         if (Date.now() - lastClickAt.current < 300) return; // ignore immediate post-hover tap
+
+        if (isYawning) {
+            clearTimeout(yawnTimer.current);
+            audioRef.current?.pause();
+            setMessage("");
+            setSpriteClass("is-talking", false);
+            return;
+        }
 
         loadAudio();
         clickCount.current += 1;
@@ -271,22 +281,22 @@ export default function HeroImage() {
             >
                 {/* Sprite layers — visibility controlled via sprite.css */}
                 <div ref={spriteRef} className={spriteWrapClass}>
-                    <Image priority src="/hero/1.png" alt="Anuj Joshi" width={500} height={500}
+                    <Image priority src="/hero/1.webp" alt="Anuj Joshi" width={500} height={500}
                         className="sprite-base object-cover"
                         sizes="(max-width: 768px) 80vw, (max-width: 1200px) 50vw, 500px" />
 
                     {/* eslint-disable @next/next/no-img-element */}
-                    <img src="/hero/open.png" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-talk  sprite-frame object-cover" />
-                    <img src="/hero/2.png" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-blink sprite-frame object-cover" />
-                    <img src="/hero/yawn.png" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-yawn  sprite-frame object-cover" />
-                    <img src="/talk/poke1.png" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-poke sprite-poke1 sprite-frame object-cover" />
-                    <img src="/talk/poke2.png" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-poke sprite-poke2 sprite-frame object-cover" />
+                    <img src="/hero/open.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-talk  sprite-frame object-cover" />
+                    <img src="/hero/2.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-blink sprite-frame object-cover" />
+                    <img src="/hero/yawn.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-yawn  sprite-frame object-cover" />
+                    <img src="/talk/poke1.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-poke sprite-poke1 sprite-frame object-cover" />
+                    <img src="/talk/poke2.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-poke sprite-poke2 sprite-frame object-cover" />
                     {/* eslint-enable @next/next/no-img-element */}
                 </div>
 
                 {/* ── Audio Controls ── */}
                 <AnimatePresence>
-                    {isHovered && (
+                    {isHovered && !isYawning && (
                         <m.div
                             key="audio-controls"
                             initial={{ opacity: 0, y: 8 }}
