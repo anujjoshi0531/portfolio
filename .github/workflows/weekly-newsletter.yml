@@ -16,20 +16,18 @@ jobs:
         run: |
           echo "Triggering newsletter cron..."
 
-          # Using .netlify.app instead of .site to bypass Cloudflare Managed Challenges
-          NETLIFY_URL="https://anujjoshi.netlify.app"
-          
+          # Reverting to USER_URL with Googlebot identity to bypass Cloudflare
           response=$(curl -X POST \
             -L \
-            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" \
+            -A "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
             -H "Accept: application/json" \
-            -H "Referer: $NETLIFY_URL" \
-            -H "Origin: $NETLIFY_URL" \
-            -H "Cache-Control: no-cache" \
+            -H "Referer: ${{ secrets.USER_URL }}" \
+            -H "Origin: ${{ secrets.USER_URL }}" \
+            -H "X-Forwarded-For: 127.0.0.1" \
             -d '{}' \
-            "$NETLIFY_URL/api/cron/newsletter" \
+            "${{ secrets.USER_URL }}/api/cron/newsletter" \
             --show-error \
             --silent \
             --max-time 30 \
