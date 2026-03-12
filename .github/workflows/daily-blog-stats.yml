@@ -16,17 +16,20 @@ jobs:
         run: |
           echo "Triggering blog stats sync..."
 
+          # Using .netlify.app instead of .site to bypass Cloudflare Managed Challenges
+          NETLIFY_URL="https://anujjoshi.netlify.app"
+          
           response=$(curl -X POST \
             -L \
             -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
             -H "Accept: application/json" \
-            -H "Referer: ${{ secrets.USER_URL }}" \
-            -H "Origin: ${{ secrets.USER_URL }}" \
+            -H "Referer: $NETLIFY_URL" \
+            -H "Origin: $NETLIFY_URL" \
             -H "Cache-Control: no-cache" \
             -d '{}' \
-            "${{ secrets.USER_URL }}/api/cron/sync-blog-stats" \
+            "$NETLIFY_URL/api/cron/sync-blog-stats" \
             --show-error \
             --silent \
             --max-time 30 \
