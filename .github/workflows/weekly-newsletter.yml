@@ -18,11 +18,15 @@ jobs:
 
           response=$(curl -X POST \
             -L \
-            -A "GitHub-Actions-Cron" \
-            "${{ secrets.USER_URL }}/api/cron/newsletter" \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
-            --fail \
+            -H "Accept: application/json" \
+            -H "Referer: ${{ secrets.USER_URL }}" \
+            -H "Origin: ${{ secrets.USER_URL }}" \
+            -H "Cache-Control: no-cache" \
+            -d '{}' \
+            "${{ secrets.USER_URL }}/api/cron/newsletter" \
             --show-error \
             --silent \
             --max-time 30 \
