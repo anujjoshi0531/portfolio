@@ -93,20 +93,20 @@
     }
 }
 
-/* ── Yawn overlay ─────────────────────────── */
-.sprite-yawn {
+/* ── Thinking overlay ─────────────────────────── */
+.sprite-think {
     z-index: 3;
-    transition: opacity 300ms ease;
+    transition: opacity 400ms ease;
 }
 
-.sprite-wrap.is-yawning .sprite-yawn {
+.sprite-wrap.is-thinking .sprite-think {
     opacity: 1;
 }
 
-/* Hide other layers when yawning to keep ONLY the yawn image visible */
-.sprite-wrap.is-yawning .sprite-base,
-.sprite-wrap.is-yawning .sprite-talk,
-.sprite-wrap.is-yawning .sprite-blink {
+/* Hide other layers when thinking to keep ONLY the thinking image visible */
+.sprite-wrap.is-thinking .sprite-base,
+.sprite-wrap.is-thinking .sprite-talk,
+.sprite-wrap.is-thinking .sprite-blink {
     opacity: 0 !important;
     animation: none !important;
     transition: none !important;
@@ -129,11 +129,11 @@
 .sprite-wrap.is-poking-1 .sprite-base,
 .sprite-wrap.is-poking-1 .sprite-talk,
 .sprite-wrap.is-poking-1 .sprite-blink,
-.sprite-wrap.is-poking-1 .sprite-yawn,
+.sprite-wrap.is-poking-1 .sprite-think,
 .sprite-wrap.is-poking-2 .sprite-base,
 .sprite-wrap.is-poking-2 .sprite-talk,
 .sprite-wrap.is-poking-2 .sprite-blink,
-.sprite-wrap.is-poking-2 .sprite-yawn {
+.sprite-wrap.is-poking-2 .sprite-think {
     opacity: 0 !important;
     animation: none !important;
     transition: none !important;

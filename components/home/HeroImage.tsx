@@ -47,7 +47,7 @@ export default function HeroImage() {
     const [isHovered, setIsHovered] = useState(false);
     const [shaking, setShaking] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
-    const [isYawning, setIsYawning] = useState(false);
+    const [isThinking, setIsThinking] = useState(false);
     const [activePoke, setActivePoke] = useState(0);
 
     const spriteRef = useRef<HTMLDivElement>(null);
@@ -67,7 +67,7 @@ export default function HeroImage() {
     // Timers
     const blinkTimer = useRef<ReturnType<typeof setTimeout>>();
     const idleTimer = useRef<ReturnType<typeof setTimeout>>();
-    const yawnTimer = useRef<ReturnType<typeof setTimeout>>();
+    const thinkTimer = useRef<ReturnType<typeof setTimeout>>();
     const pokeTimer = useRef<ReturnType<typeof setTimeout>>();
     const shakeTimer = useRef<ReturnType<typeof setTimeout>>();
     const clickTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -97,20 +97,32 @@ export default function HeroImage() {
         }, 1200 + Math.random() * 3600);
     }
 
-    // ── Idle yawn ─────────────────────────────────────────────────────────────
+    // ── Thinking pose loop ───────────────────────────────────────────────────
 
-    function scheduleYawn() {
+    function scheduleThinking() {
         clearTimeout(idleTimer.current);
-        clearTimeout(yawnTimer.current);
+        clearTimeout(thinkTimer.current);
 
+        // Start waiting for the next thinking pose
         idleTimer.current = setTimeout(() => {
             const audio = audioRef.current;
             const audioPlaying = audio && !audio.paused && !audio.ended;
-            if (isHoveredRef.current || audioPlaying) return;
+            
+            // Re-check conditions: don't think if hovered or playing audio
+            if (isHoveredRef.current || audioPlaying) {
+                scheduleThinking(); 
+                return;
+            }
 
-            setIsYawning(true);
-            yawnTimer.current = setTimeout(() => setIsYawning(false), 1500);
-        }, 6000);
+            setIsThinking(true);
+            
+            // Stay in thinking pose for 4 seconds
+            thinkTimer.current = setTimeout(() => {
+                setIsThinking(false);
+                // Wait for the next periodic cycle
+                scheduleThinking(); 
+            }, 4000);
+        }, 15000 + Math.random() * 10000); // 15-25s idle delay
     }
 
     // ── Mount / unmount ───────────────────────────────────────────────────────
@@ -121,7 +133,7 @@ export default function HeroImage() {
         audio.volume = 0.85;
 
         scheduleBlink();
-        scheduleYawn();
+        scheduleThinking();
 
         // Sync subtitle cues → speech bubble while audio plays
         function bindSubtitles() {
@@ -141,13 +153,16 @@ export default function HeroImage() {
             audio.addEventListener("loadedmetadata", bindSubtitles, { once: true });
         }
 
-        // Any user activity resets the idle yawn timer
-        const resetIdle = () => scheduleYawn();
+        // Any user activity resets the idle timer and clears active pose
+        const resetIdle = () => {
+            setIsThinking(prev => prev ? false : prev);
+            scheduleThinking();
+        };
         (["mousemove", "keydown", "touchstart", "scroll"] as const)
             .forEach((e) => window.addEventListener(e, resetIdle, { passive: true }));
 
         return () => {
-            [blinkTimer, idleTimer, yawnTimer, pokeTimer, shakeTimer, clickTimer]
+            [blinkTimer, idleTimer, thinkTimer, pokeTimer, shakeTimer, clickTimer]
                 .forEach((t) => clearTimeout(t.current));
             (["mousemove", "keydown", "touchstart", "scroll"] as const)
                 .forEach((e) => window.removeEventListener(e, resetIdle));
@@ -175,7 +190,7 @@ export default function HeroImage() {
     function onMouseEnter() {
         isHoveredRef.current = true;
         setIsHovered(true);
-        if (isYawning) return;
+        if (isThinking) setIsThinking(false);
 
         loadAudio();
         lastClickAt.current = Date.now(); // prevents click firing right after hover on mobile
@@ -206,8 +221,9 @@ export default function HeroImage() {
     function onClick() {
         if (Date.now() - lastClickAt.current < 300) return; // ignore immediate post-hover tap
 
-        if (isYawning) {
-            clearTimeout(yawnTimer.current);
+        if (isThinking) {
+            setIsThinking(false);
+            clearTimeout(thinkTimer.current);
             audioRef.current?.pause();
             setMessage("");
             setSpriteClass("is-talking", false);
@@ -261,7 +277,7 @@ export default function HeroImage() {
 
     const spriteWrapClass = [
         "sprite-wrap w-full h-full",
-        isYawning && "is-yawning",
+        isThinking && "is-thinking",
         activePoke > 0 && `is-poking-${activePoke}`,
     ].filter(Boolean).join(" ");
 
@@ -288,7 +304,7 @@ export default function HeroImage() {
                     {/* eslint-disable @next/next/no-img-element */}
                     <img src="/hero/open.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-talk  sprite-frame object-cover" />
                     <img src="/hero/2.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-blink sprite-frame object-cover" />
-                    <img src="/hero/yawn.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-yawn  sprite-frame object-cover" />
+                    <img src="/hero/thinking.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-think sprite-frame object-cover" />
                     <img src="/talk/poke1.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-poke sprite-poke1 sprite-frame object-cover" />
                     <img src="/talk/poke2.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-poke sprite-poke2 sprite-frame object-cover" />
                     {/* eslint-enable @next/next/no-img-element */}
@@ -296,7 +312,7 @@ export default function HeroImage() {
 
                 {/* ── Audio Controls ── */}
                 <AnimatePresence>
-                    {isHovered && !isYawning && (
+                    {isHovered && !isThinking && (
                         <m.div
                             key="audio-controls"
                             initial={{ opacity: 0, y: 8 }}
@@ -336,7 +352,7 @@ export default function HeroImage() {
 
             {/* ── Hover Badge ── */}
             <AnimatePresence>
-                {!isHovered && !isYawning && !shaking && !message && (
+                {!isHovered && !isThinking && !shaking && !message && (
                     <m.div
                         initial={{ opacity: 0, scale: 0.9, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -361,7 +377,7 @@ export default function HeroImage() {
 
             {/* ── Speech Bubble ── */}
             <AnimatePresence mode="wait">
-                {message && !isYawning && (
+                {message && !isThinking && (
                     <m.div
                         key={message}
                         initial={{ opacity: 0, scale: 0.88, y: 6 }}
