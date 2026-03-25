@@ -1,6 +1,8 @@
 import Blog from "@/components/blog/Blog";
 import { getBlogFilters, searchPages, getPagesCount } from "@/lib/server/notion";
 
+export const revalidate = 3600; // Revalidate every hour
+
 interface SearchProps {
   searchParams: Promise<{
     q?: string;

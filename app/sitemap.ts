@@ -3,6 +3,8 @@ import { getBlogs } from '@/lib/server/notion';
 import type { MetadataRoute } from 'next';
 import { clientConfig } from "@/lib/constant/config.client";
 
+export const revalidate = 3600; // Revalidate every hour
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = clientConfig.BASE_URL;
     const pages = await getBlogs() as unknown as NotionBlogPage[];

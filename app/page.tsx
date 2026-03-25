@@ -109,6 +109,8 @@ function TestimonialSkeleton() {
 // section independently as its Notion / Redis data resolves — without waiting
 // for all API calls to complete before sending any bytes to the client.
 
+export const revalidate = 3600; // Revalidate every hour
+
 export default function Page() {
   return (
     <main className="space-y-24 pb-24">
