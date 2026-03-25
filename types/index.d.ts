@@ -213,7 +213,8 @@ type NotionTestimonialPage = {
         Rating: { select: { name: string } | null };
         Platform: { select: { name: string } | null };
         Project: { rich_text: NotionRichTextItem[] };
-        Avatar: { url: string | null };
+        Contact: { rich_text: NotionRichTextItem[] };
+        Avatar: { files: { file?: { url: string }; external?: { url: string } }[] };
         Remark: { title: NotionRichTextItem[] };
         Date: { date: { start: string } | null };
     };
@@ -264,6 +265,7 @@ type Testimonial = {
     name: string;
     role: string;
     avatar: string;
+    contact?: string;
 };
 
 type Skill = {

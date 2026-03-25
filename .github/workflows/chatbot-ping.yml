@@ -1,0 +1,20 @@
+name: Chatbot Backend Wakeup
+
+on:
+  schedule:
+    # Runs at 2:00 AM IST daily (consistent with other cron jobs)
+    - cron: '30 20 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Ping Chatbot Health Endpoint
+        run: |
+          echo "Pinging chatbot backend with API Key..."
+          curl -s -X GET "${{ vars.CHATBOT_API_URL }}/health" \
+            -H "Authorization: Bearer ${{ secrets.CHATBOT_API_KEY }}" \
+            -I

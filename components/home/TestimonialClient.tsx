@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib";
+import { LinkPreview } from "../animate/LinkPreview";
 
 interface Testimonial {
     id: string;
@@ -12,10 +13,10 @@ interface Testimonial {
     company: string;
     position: string;
     rating: string;
-    platform: string;
     project: string;
     avatar: string | null;
     review: string;
+    contact: string;
     date: string;
 }
 
@@ -42,14 +43,24 @@ const TestimonialCard = ({
                 className={`text-sm flex flex-col items-center gap-2 mt-6 transition-all duration-500 ${isVisible ? "translate-y-0" : "translate-y-24"
                     }`}
             >
-                <Avatar className="w-12 h-12">
-                    <AvatarImage src={testimonial.avatar || "/icon.webp"} alt={testimonial.name} />
-                    <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div>
-                    <p className="font-bold capitalize">{testimonial.name}</p>
-                    <p className="text-xs">{testimonial.position}</p>
-                </div>
+                <LinkPreview
+                    url={testimonial.contact}
+                    className={cn(
+                        "flex flex-col items-center gap-2 transition-opacity hover:opacity-80",
+                        !testimonial.contact && "pointer-events-none"
+                    )}
+                >
+                    <Avatar className="w-12 h-12">
+                        <AvatarImage src={testimonial.avatar || "/icon.webp"} alt={testimonial.name} />
+                        <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <p className="font-bold capitalize inline-flex items-center gap-1">
+                            {testimonial.name}
+                        </p>
+                        <p className="text-xs">{testimonial.position}</p>
+                    </div>
+                </LinkPreview>
             </div>
         </div>
     );
