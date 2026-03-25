@@ -15,6 +15,10 @@ jobs:
       - name: Ping Chatbot Health Endpoint
         run: |
           echo "Pinging chatbot backend with API Key..."
-          curl -s -X GET "${{ vars.CHATBOT_API_URL }}/health" \
+          # --connect-timeout 30: Wait 30s to connect
+          # --max-time 240: Wait up to 4 mins for the whole operation (wakeup time)
+          curl -v -X GET "${{ vars.CHATBOT_API_URL }}/health" \
             -H "Authorization: Bearer ${{ secrets.CHATBOT_API_KEY }}" \
+            --connect-timeout 30 \
+            --max-time 240 \
             -I
