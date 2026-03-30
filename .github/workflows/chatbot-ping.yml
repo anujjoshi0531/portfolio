@@ -14,11 +14,34 @@ jobs:
     steps:
       - name: Ping Chatbot Health Endpoint
         run: |
-          echo "Pinging chatbot backend with API Key..."
-          # --connect-timeout 30: Wait 30s to connect
-          # --max-time 240: Wait up to 4 mins for the whole operation (wakeup time)
-          curl -v -X GET "${{ vars.CHATBOT_API_URL }}/health" \
-            -H "Authorization: Bearer ${{ secrets.CHATBOT_API_KEY }}" \
-            --connect-timeout 30 \
-            --max-time 240 \
-            -I
+          node -e "
+          async function ping() {
+            const url = '${{ vars.CHATBOT_API_URL }}/health';
+            const apiKey = '${{ secrets.CHATBOT_API_KEY }}';
+            console.log('Pinging chatbot backend:', url);
+            
+            try {
+              const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                  'Authorization': 'Bearer ' + apiKey,
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+                }
+              });
+              
+              console.log('Status Code:', response.status);
+              const data = await response.text();
+              console.log('Response:', data);
+              
+              if (!response.ok) {
+                console.error('Ping failed with status:', response.status);
+                process.exit(1);
+              }
+              console.log('Ping successful!');
+            } catch (err) {
+              console.error('Error during ping:', err.message);
+              process.exit(1);
+            }
+          }
+          ping();
+          "
