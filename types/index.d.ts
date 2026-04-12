@@ -171,7 +171,7 @@ type NotionBlogPage = {
         Author: { rich_text: NotionRichTextItem[] };
         Tags: { multi_select: NotionSelectOption[] };
         Published: { date: { start: string; end: string | null; time_zone: string | null } | null };
-        Thumbnail: { url: string | null };
+        Thumbnail: { files: { file?: { url: string }; external?: { url: string } }[] };
         Public: { checkbox: boolean };
     };
     url: string;
@@ -188,7 +188,7 @@ type NotionProjectPage = {
         Description: { rich_text: NotionRichTextItem[] };
         pid: { rich_text: NotionRichTextItem[] };
         Topics: { multi_select: NotionSelectOption[] };
-        Thumbnail: { url: string | null };
+        Thumbnail: { files: { file?: { url: string }; external?: { url: string } }[] };
         GitHub: { url: string | null };
         URL: { url: string | null };
         Category: { select: NotionSelectOption | null };

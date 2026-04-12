@@ -29,7 +29,7 @@ export default function BlogCard({
   const title = extractPlainText(blog.properties.Name?.title) || "Untitled Blog";
   const description = extractPlainText(blog.properties.Description?.rich_text) || "No description available";
   const slug = extractPlainText(blog.properties.Slug?.rich_text) || blog.id;
-  const thumbnail = blog.properties.Thumbnail?.url || blog?.cover?.external?.url || "/icon.webp";
+  const thumbnail = blog.properties.Thumbnail.files[0]?.file?.url || blog.properties.Thumbnail.files[0]?.external?.url || "/icon.webp";
   const tags = blog.properties.Tags?.multi_select || [];
 
 
@@ -78,7 +78,7 @@ export default function BlogCard({
             )}
           >
           </div>
-          
+
           <div className="absolute top-2 right-2 flex gap-1 bg-black/50 backdrop-blur-md rounded-md px-2 py-1">
             <ViewCounter slug={slug} increment={false} className="text-white text-xs scale-90" />
           </div>
