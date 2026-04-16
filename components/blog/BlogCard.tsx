@@ -29,7 +29,7 @@ export default function BlogCard({
   const title = extractPlainText(blog.properties.Name?.title) || "Untitled Blog";
   const description = extractPlainText(blog.properties.Description?.rich_text) || "No description available";
   const slug = extractPlainText(blog.properties.Slug?.rich_text) || blog.id;
-  const thumbnail = blog.properties.Thumbnail.files[0]?.file?.url || blog.properties.Thumbnail.files[0]?.external?.url || "/icon.webp";
+  const thumbnail = blog.properties.Thumbnail?.url || blog.properties.Thumbnail?.files?.[0]?.file?.url || blog.properties.Thumbnail?.files?.[0]?.external?.url || "/icon.webp";
   const tags = blog.properties.Tags?.multi_select || [];
 
 

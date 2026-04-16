@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       const title = extractPlainText(page.properties.Name?.title) || "Untitled";
       const description = extractPlainText(page.properties.Description?.rich_text) || "";
       const slug = extractPlainText(page.properties.Slug?.rich_text) || "";
-      const image = page.properties.Thumbnail.files[0]?.file?.url || page.properties.Thumbnail.files[0]?.external?.url || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop";
+      const image = page.properties.Thumbnail?.url || page.properties.Thumbnail?.files?.[0]?.file?.url || page.properties.Thumbnail?.files?.[0]?.external?.url || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop";
       return { title, description, slug, image };
     }).filter(blog => blog.slug);
 
