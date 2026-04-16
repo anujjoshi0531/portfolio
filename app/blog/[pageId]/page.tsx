@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
   const props = page.properties;
   const title = extractPlainText(props.Name?.title) || "Untitled";
   const description = extractPlainText(props.Description?.rich_text) || "No description available.";
-  const image = props.Thumbnail.files[0]?.file?.url || props.Thumbnail.files[0]?.external?.url || `/opengraph-image.webp`;
+  const image = props.Thumbnail?.files?.[0]?.file?.url || props.Thumbnail?.files?.[0]?.external?.url || `/opengraph-image.webp`;
   const slug = extractPlainText(props.Slug?.rich_text);
 
 
@@ -106,7 +106,7 @@ export default async function page({ params }: {
 
   const title = extractPlainText(page?.properties?.Name?.title) || "Untitled";
   const description = extractPlainText(page?.properties?.Description?.rich_text) || "";
-  const image = page?.properties?.Thumbnail.files[0]?.file?.url || page?.properties?.Thumbnail.files[0]?.external?.url || `/opengraph-image.webp`;
+  const image = page?.properties?.Thumbnail?.files?.[0]?.file?.url || page?.properties?.Thumbnail?.files?.[0]?.external?.url || `/opengraph-image.webp`;
   const datePublished = page?.created_time || new Date().toISOString();
   const dateModified = page?.last_edited_time || datePublished;
 
