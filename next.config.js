@@ -76,6 +76,7 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours
+    unoptimized: true,
   },
   compress: true,
   poweredByHeader: false,
