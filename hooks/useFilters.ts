@@ -3,7 +3,7 @@
 
 import { filterDiscoverParams } from "@/lib"
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 export const useFilters = (pathname: string = "/blog") => {
   const router = useRouter();
@@ -15,45 +15,42 @@ export const useFilters = (pathname: string = "/blog") => {
     setFilters(filterDiscoverParams(params));
   }, [searchParams]);
 
-  const getFilter = (key: string) => filters[key] ?? undefined;
+  const getFilter = useCallback((key: string) => filters[key] ?? undefined, [filters]);
 
-  const setFilter = (value: Record<string, string>) => {
+  const setFilter = useCallback((value: Record<string, string>) => {
     setFilters((prev) => ({
       ...prev,
       ...value,
     }));
-  };
+  }, []);
 
-  const saveFilters = (value?: Record<string, string>) => {
+  const saveFilters = useCallback((value?: Record<string, string>) => {
     const currentParams = Object.fromEntries(searchParams.entries());
     const updatedParams = { ...currentParams, ...filters, ...value };
     const query = new URLSearchParams(updatedParams);
     router.replace(`${pathname}?${query.toString()}`);
-  };
+  }, [searchParams, filters, router, pathname]);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     const currentParams = Object.fromEntries(searchParams.entries());
-    const filteredParams = Object.keys(currentParams).reduce((acc, key) => {
-      if (!filters[key]) {
-        acc[key] = currentParams[key];
-      }
-      return acc;
-    }, {} as Record<string, string>);
+    const filteredParams = Object.fromEntries(
+      Object.entries(currentParams).filter(([key]) => !filters[key])
+    );
 
     const query = new URLSearchParams(filteredParams);
     setFilters({});
     router.replace(`${pathname}?${query.toString()}`);
-  };
+  }, [searchParams, filters, router, pathname]);
 
-  const count = Object.values(filters).filter((v) => v).length;
+  const count = useMemo(() => Object.values(filters).filter((v) => v).length, [filters]);
 
   // ── Derived active-filter state (replaces useBlogFilters) ──
-  const activeTags = searchParams.get("tags")?.split(",").filter(Boolean) ?? [];
-  const activeDateFrom = searchParams.get("published_gte") ?? null;
-  const activeDateTo = searchParams.get("published_lte") ?? null;
-  const hasActiveFilters = activeTags.length > 0 || !!activeDateFrom || !!activeDateTo;
+  const activeTags = useMemo(() => searchParams.get("tags")?.split(",").filter(Boolean) ?? [], [searchParams]);
+  const activeDateFrom = useMemo(() => searchParams.get("published_gte") ?? null, [searchParams]);
+  const activeDateTo = useMemo(() => searchParams.get("published_lte") ?? null, [searchParams]);
+  const hasActiveFilters = useMemo(() => activeTags.length > 0 || !!activeDateFrom || !!activeDateTo, [activeTags, activeDateFrom, activeDateTo]);
 
-  const removeFilter = (key: string, value?: string) => {
+  const removeFilter = useCallback((key: string, value?: string) => {
     const params = new URLSearchParams(searchParams.toString());
     if (key === "tags" && value) {
       const newTags = (params.get("tags")?.split(",").filter(Boolean) ?? []).filter(
@@ -69,11 +66,11 @@ export const useFilters = (pathname: string = "/blog") => {
     }
     params.delete("page");
     router.push(`${pathname}?${params.toString()}`);
-  };
+  }, [searchParams, router, pathname]);
 
-  const clearAllFilters = () => {
+  const clearAllFilters = useCallback(() => {
     router.push(pathname);
-  };
+  }, [router, pathname]);
 
   return {
     filters,

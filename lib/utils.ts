@@ -22,7 +22,7 @@ export const timeAgo = (
   const date = new Date(timestamp);
   if (isNaN(date.getTime())) return "Invalid date";
 
-  return `${formatDistanceToNow(date, { addSuffix: true })}`;
+  return formatDistanceToNow(date, { addSuffix: true });
 };
 
 export const extractPlainText = (richText: unknown): string =>

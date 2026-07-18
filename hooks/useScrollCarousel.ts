@@ -1,16 +1,23 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
-export function useScrollCarousel(itemWidth: number = 370) {
+export function useScrollCarousel(itemWidth: number = 370, indexMultiplier: number = 1) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const tickingRef = useRef(false);
 
     const updateScrollButtons = useCallback(() => {
-        if (scrollContainerRef.current) {
-            const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-            setCanScrollLeft(scrollLeft > 0);
-            setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+        if (!tickingRef.current) {
+            window.requestAnimationFrame(() => {
+                if (scrollContainerRef.current) {
+                    const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+                    setCanScrollLeft(scrollLeft > 0);
+                    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+                }
+                tickingRef.current = false;
+            });
+            tickingRef.current = true;
         }
     }, []);
 
@@ -37,23 +44,25 @@ export function useScrollCarousel(itemWidth: number = 370) {
     const scrollToIndex = useCallback(
         (index: number) => {
             if (scrollContainerRef.current) {
-                const scrollAmount = itemWidth * index * 2;
+                const scrollAmount = itemWidth * index * indexMultiplier;
                 scrollContainerRef.current.scrollTo({
                     left: scrollAmount,
                     behavior: "smooth",
                 });
-                setCurrentIndex(index * 2);
+                setCurrentIndex(index * indexMultiplier);
             }
         },
-        [itemWidth]
+        [itemWidth, indexMultiplier]
     );
 
     useEffect(() => {
         const container = scrollContainerRef.current;
         if (container) {
-            container.addEventListener("scroll", updateScrollButtons);
+            container.addEventListener("scroll", updateScrollButtons, { passive: true });
             updateScrollButtons();
-            return () => container.removeEventListener("scroll", updateScrollButtons);
+            return () => {
+                container.removeEventListener("scroll", updateScrollButtons);
+            };
         }
     }, [updateScrollButtons]);
 

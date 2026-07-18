@@ -2,6 +2,7 @@ import { Client } from "@notionhq/client";
 export type { Client };
 import type { QueryDataSourceParameters } from "@notionhq/client/build/src/api-endpoints";
 import { NotionAPI } from "notion-client";
+import { cache } from "react";
 
 import { serverConfig } from "../constant/config.server";
 
@@ -67,6 +68,13 @@ type NotionFilter = FilterEntry | CompoundFilterEntry;
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/** Converts a Date to a YYYY-MM-DD string, or returns null if invalid. */
+function toDateString(date: Date): string | null {
+  return date instanceof Date && !isNaN(date.getTime())
+    ? date.toISOString().split("T")[0]
+    : null;
+}
+
 function parseSort(sortParam: string) {
   const [property, direction] = sortParam.split("-");
   const validDirection =
@@ -88,7 +96,7 @@ function parseSort(sortParam: string) {
 
 // --- Exported functions ---
 
-export async function fetchPage(param: string) {
+export const fetchPage = cache(async (param: string) => {
   let page;
 
   if (UUID_PATTERN.test(param)) {
@@ -113,7 +121,7 @@ export async function fetchPage(param: string) {
 
   const recordMap = await notion.getPage(param);
   return { data: page, recordMap };
-}
+});
 
 export function buildFilter({
   query,
@@ -154,26 +162,20 @@ export function buildFilter({
   }
 
   if (dateFilter?.after) {
-    const date = dateFilter.after;
-    const isValidDate = date instanceof Date && !isNaN(date.getTime());
-    const dateStr = isValidDate ? date.toISOString().split("T")[0] : date;
-
+    const dateStr = toDateString(dateFilter.after);
     if (dateStr) {
       filters.push({
         property: dateFilter.property,
-        date: { on_or_after: dateStr as string },
+        date: { on_or_after: dateStr },
       });
     }
   }
   if (dateFilter?.before) {
-    const date = dateFilter.before;
-    const isValidDate = date instanceof Date && !isNaN(date.getTime());
-    const dateStr = isValidDate ? date.toISOString().split("T")[0] : date;
-
+    const dateStr = toDateString(dateFilter.before);
     if (dateStr) {
       filters.push({
         property: dateFilter.property,
-        date: { on_or_before: dateStr as string },
+        date: { on_or_before: dateStr },
       });
     }
   }
@@ -181,7 +183,7 @@ export function buildFilter({
   return filters;
 }
 
-export async function getPagesCount(options: FilterOptions) {
+export const getPagesCount = cache(async (options: FilterOptions) => {
   const filters = buildFilter(options);
   const dbId = requireId(serverConfig.NOTION_DATABASE_ID, "NOTION_DATABASE_ID");
   const dsId = await getDataSourceId(dbId);
@@ -203,9 +205,9 @@ export async function getPagesCount(options: FilterOptions) {
   } while (cursor);
 
   return { total };
-}
+});
 
-export async function searchPages({
+export const searchPages = cache(async ({
   query,
   tags,
   dateFilter,
@@ -218,7 +220,7 @@ export async function searchPages({
   limit?: number;
   page?: number;
   sort_by?: string;
-}) {
+}) => {
   const filters = buildFilter({ query, tags, dateFilter, isPublic, category });
   const dbId = requireId(serverConfig.NOTION_DATABASE_ID, "NOTION_DATABASE_ID");
   const dsId = await getDataSourceId(dbId);
@@ -251,9 +253,9 @@ export async function searchPages({
     has_more: allResults.length > startIndex + limit || startCursor !== undefined,
     next_cursor: null,
   };
-}
+});
 
-export async function getBlogFilters() {
+export const getBlogFilters = cache(async () => {
   const dbId = requireId(serverConfig.NOTION_DATABASE_ID, "NOTION_DATABASE_ID");
   const dsId = await getDataSourceId(dbId);
   const dataSource = await notionClient.dataSources.retrieve({ data_source_id: dsId });
@@ -270,9 +272,9 @@ export async function getBlogFilters() {
   const categories = categoriesProperty?.select?.options.map((o) => o.name) ?? [];
 
   return { tags, categories };
-}
+});
 
-export async function getProjectType() {
+export const getProjectType = cache(async () => {
   const dbId = requireId(serverConfig.NOTION_PROJECT_ID, "NOTION_PROJECT_ID");
   const dsId = await getDataSourceId(dbId);
   const dataSource = await notionClient.dataSources.retrieve({ data_source_id: dsId });
@@ -283,13 +285,13 @@ export async function getProjectType() {
     { select?: { options: { id: string; name: string }[] } } | undefined;
 
   return typeProperty?.select?.options;
-}
+});
 
-export async function fetchCollection(
+export const fetchCollection = cache(async (
   dbId: string | undefined,
   sortProp: string,
   dbName: string,
-) {
+) => {
   const id = requireId(dbId, dbName);
   const dsId = await getDataSourceId(id);
   const { results } = await notionClient.dataSources.query({
@@ -297,21 +299,25 @@ export async function fetchCollection(
     sorts: [{ property: sortProp, direction: "descending" }],
   });
   return results;
-}
+});
 
-export const getProject = () =>
-  fetchCollection(serverConfig.NOTION_PROJECT_ID, "End", "NOTION_PROJECT_ID");
+export const getProject = cache(() =>
+  fetchCollection(serverConfig.NOTION_PROJECT_ID, "End", "NOTION_PROJECT_ID")
+);
 
-export const getExperience = () =>
-  fetchCollection(serverConfig.NOTION_EXPERIENCE_ID, "End", "NOTION_EXPERIENCE_ID");
+export const getExperience = cache(() =>
+  fetchCollection(serverConfig.NOTION_EXPERIENCE_ID, "End", "NOTION_EXPERIENCE_ID")
+);
 
-export const getEducation = () =>
-  fetchCollection(serverConfig.NOTION_EDUCATION_ID, "End", "NOTION_EDUCATION_ID");
+export const getEducation = cache(() =>
+  fetchCollection(serverConfig.NOTION_EDUCATION_ID, "End", "NOTION_EDUCATION_ID")
+);
 
-export const getTestimonials = () =>
-  fetchCollection(serverConfig.NOTION_TESTIMONIAL_ID, "Date", "NOTION_TESTIMONIAL_ID");
+export const getTestimonials = cache(() =>
+  fetchCollection(serverConfig.NOTION_TESTIMONIAL_ID, "Date", "NOTION_TESTIMONIAL_ID")
+);
 
-export async function getBlogs() {
+export const getBlogs = cache(async () => {
   const dbId = requireId(serverConfig.NOTION_DATABASE_ID, "NOTION_DATABASE_ID");
   const dsId = await getDataSourceId(dbId);
   const { results } = await notionClient.dataSources.query({
@@ -322,7 +328,7 @@ export async function getBlogs() {
     },
   });
   return results;
-}
+});
 
 /**
  * Writes the current view and like counts back to a Notion blog page.

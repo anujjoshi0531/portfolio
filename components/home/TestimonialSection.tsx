@@ -38,12 +38,12 @@ function transformNotionData(notionData: NotionTestimonialPage[]) {
     name: extractPlainText(item.properties.Name.rich_text) || "Anonymous",
     company: extractPlainText(item.properties.Company.rich_text) || "Unknown Company",
     position: extractPlainText(item.properties.Position.rich_text) || "Unknown Position",
-    rating: item.properties.Rating.select?.name || "⭐⭐⭐⭐⭐ (5/5)",
-    project: extractPlainText(item.properties.Project.rich_text) || "Unknown Project",
+    rating: item.properties.Rating?.select?.name || "⭐⭐⭐⭐⭐ (5/5)",
+    project: extractPlainText(item.properties.Project?.rich_text) || "Unknown Project",
     contact: extractPlainText(item.properties.Contact?.rich_text) || "",
-    avatar: item.properties.Avatar.files[0]?.file?.url || item.properties.Avatar.files[0]?.external?.url || null,
-    review: extractPlainText(item.properties.Remark.title) || "No review provided",
-    date: item.properties.Date.date?.start || new Date().toISOString().split("T")[0],
+    avatar: item.properties.Avatar?.files?.[0]?.file?.url || item.properties.Avatar?.files?.[0]?.external?.url || null,
+    review: extractPlainText(item.properties.Remark?.title) || "No review provided",
+    date: item.properties.Date?.date?.start || new Date().toISOString().split("T")[0],
   }));
 }
 

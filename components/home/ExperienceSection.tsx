@@ -9,8 +9,8 @@ function formatExperience(exp: NotionExperience) {
   return {
     company: extractPlainText(exp.properties?.Organization.rich_text) || "",
     role: extractPlainText(exp.properties?.Role.title) || "",
-    start: new Date(exp.properties?.Start.date.start),
-    end: exp.properties?.End.date?.start ? new Date(exp.properties.End.date.start) : null,
+    start: exp.properties?.Start?.date?.start ? new Date(exp.properties.Start.date.start) : new Date(),
+    end: exp.properties?.End?.date?.start ? new Date(exp.properties.End.date.start) : null,
     place: extractPlainText(exp.properties?.Place.rich_text) || "",
     link: exp.properties?.URL.url || "#",
     description: extractPlainText(exp.properties?.Description.rich_text)

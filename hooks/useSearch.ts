@@ -2,7 +2,7 @@
 
 import { sendGAEvent } from "@next/third-parties/google";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 
 interface UseSearchProps {
@@ -44,52 +44,7 @@ export const useSearch = ({
     }
   }, [pathname, paramQuery, searchPath, syncUrl]);
 
-  useEffect(() => {
-    if (auto && syncUrl && pathname === searchPath) {
-      handleSearch(value);
-    }
-  }, [value, auto, syncUrl, pathname, searchPath]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!enableFetch) return;
-
-    const performSearch = async () => {
-      if (!value.trim()) {
-        setIsLoading(false);
-        setSearchResult(null);
-        setSearchError(null);
-        return;
-      }
-
-      setIsLoading(true);
-      setSearchError(null);
-
-      try {
-        const result = await fetch("/api/search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: value }),
-        });
-
-        if (!result.ok) {
-          throw new Error(`HTTP error! status: ${result.status}`);
-        }
-
-        const res = await result.json();
-        setSearchResult(res);
-      } catch (error: any) {
-        console.error("Search error:", error);
-        setSearchError({ error: "Search failed" });
-        setSearchResult(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    performSearch();
-  }, [value, enableFetch]);
-
-  function handleSearch(searchValue: string) {
+  const handleSearch = useCallback((searchValue: string) => {
     if (!syncUrl) return;
 
     const params = new URLSearchParams(searchParams.toString());
@@ -124,17 +79,78 @@ export const useSearch = ({
       router.replace(page, { scroll: true });
       return;
     }
-  }
+  }, [syncUrl, searchParams, router, searchPath, gaEventCategory, pathname, page]);
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement> | string) {
+  useEffect(() => {
+    if (auto && syncUrl && pathname === searchPath) {
+      handleSearch(value);
+    }
+  }, [value, auto, syncUrl, pathname, searchPath, handleSearch]);
+
+  useEffect(() => {
+    if (!enableFetch) return;
+
+    const controller = new AbortController();
+
+    const performSearch = async () => {
+      if (!value.trim()) {
+        setIsLoading(false);
+        setSearchResult(null);
+        setSearchError(null);
+        return;
+      }
+
+      setIsLoading(true);
+      setSearchError(null);
+
+      try {
+        const result = await fetch("/api/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: value }),
+          signal: controller.signal,
+        });
+
+        if (!result.ok) {
+          throw new Error(`HTTP error! status: ${result.status}`);
+        }
+
+        const res = await result.json();
+        setSearchResult(res);
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          return;
+        }
+        console.error("Search error:", error);
+        setSearchError({ error: "Search failed" });
+        setSearchResult(null);
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    performSearch();
+
+    return () => {
+      controller.abort();
+    };
+  }, [value, enableFetch]);
+
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement> | string) => {
     if (typeof event === "string") {
       setTerm(event);
     } else {
       setTerm(event.target.value);
     }
-  }
+  }, []);
 
-  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+  const clearSearch = useCallback(() => {
+    setTerm("");
+  }, []);
+
+  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && paramQuery !== value && !auto && syncUrl) {
       handleSearch(value);
     }
@@ -142,11 +158,7 @@ export const useSearch = ({
     if (event.key === "Escape") {
       clearSearch();
     }
-  }
-
-  function clearSearch() {
-    setTerm("");
-  }
+  }, [paramQuery, value, auto, syncUrl, handleSearch, clearSearch]);
 
   return {
     term,

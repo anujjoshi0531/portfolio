@@ -1,4 +1,6 @@
-interface useMultiSelectProps {
+import { useCallback, useMemo } from "react"
+
+export interface UseMultiSelectProps {
   value?: string
   logic: "and" | "or"
   onChange: (value: string) => void
@@ -8,29 +10,64 @@ export const useMultiSelect = ({
   value,
   logic,
   onChange,
-}: useMultiSelectProps) => {
+}: UseMultiSelectProps) => {
   const operator = logic === "and" ? "," : "|"
-  const selection = value ? value.split(operator) : []
+  const selection = useMemo(() => (value ? value.split(operator) : []), [value, operator])
 
-  const removeSelection = (id: string) => {
-    return selection.filter((genre) => genre !== id).join(operator)
-  }
+  const removeSelection = useCallback(
+    (id: string) => {
+      return selection.filter((item) => item !== id).join(operator)
+    },
+    [selection, operator],
+  )
 
-  const addSelection = (id: string) => {
-    return [...selection, id].join(operator)
-  }
+  const addSelection = useCallback(
+    (id: string) => {
+      return [...selection, id].join(operator)
+    },
+    [selection, operator],
+  )
 
-  const clearSelection = () => {
+  const clearSelection = useCallback(() => {
     onChange("")
-  }
+  }, [onChange])
 
-  const toggleSelection = (id: string) => {
-    onChange(selection.includes(id) ? removeSelection(id) : addSelection(id))
-  }
+  const add = useCallback(
+    (id: string) => {
+      if (!selection.includes(id)) {
+        onChange(addSelection(id))
+      }
+    },
+    [selection, addSelection, onChange],
+  )
+
+  const remove = useCallback(
+    (id: string) => {
+      if (selection.includes(id)) {
+        onChange(removeSelection(id))
+      }
+    },
+    [selection, removeSelection, onChange],
+  )
+
+  const toggleSelection = useCallback(
+    (id: string) => {
+      onChange(selection.includes(id) ? removeSelection(id) : addSelection(id))
+    },
+    [selection, removeSelection, addSelection, onChange],
+  )
+
+  const isSelected = useCallback(
+    (id: string) => selection.includes(id),
+    [selection],
+  )
 
   return {
     selection,
     clearSelection,
     toggleSelection,
+    add,
+    remove,
+    isSelected,
   }
 }

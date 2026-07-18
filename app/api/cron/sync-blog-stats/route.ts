@@ -69,8 +69,8 @@ export async function POST(request: Request) {
       })
     );
 
-    // 4. Flush the dirty set atomically — fresh slate for the next 24h.
-    await redis.del("stats:dirty");
+    // 4. Flush the dirty set atomically — only remove the slugs we processed.
+    await redis.srem("stats:dirty", ...dirtySlugs);
 
     const synced = results.filter((r) => r.status === "fulfilled").length;
     const failed = results

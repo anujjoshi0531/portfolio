@@ -4,6 +4,7 @@
 
 import * as Sentry from "@sentry/nextjs";
 
+
 Sentry.init({
   dsn: "https://785b35c892468fb3c9a2e0af1a6af2b4@o4509858293547008.ingest.us.sentry.io/4509858294333440",
 
@@ -40,9 +41,8 @@ if (typeof window !== "undefined") {
   };
 
   // Wait until the browser is idle (after LCP, hydration, etc.)
-  if ("requestIdleCallback" in window) {
-    (window as Window & typeof globalThis & { requestIdleCallback: (cb: () => void) => void })
-      .requestIdleCallback(loadReplay);
+  if (typeof (window as unknown as { requestIdleCallback?: unknown }).requestIdleCallback === "function") {
+    (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(loadReplay);
   } else {
     // Safari fallback
     setTimeout(loadReplay, 2000);

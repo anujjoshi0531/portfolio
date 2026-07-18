@@ -10,14 +10,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Slug is required" }, { status: 400 });
     }
 
+    let changed = 0;
     if (action === "decrement") {
-        await redis.srem(`likes:ips:${slug}`, ip); // Remove IP from set
+        changed = await redis.srem(`likes:ips:${slug}`, ip); // Remove IP from set (returns 1 if removed, 0 if not)
     } else {
-        await redis.sadd(`likes:ips:${slug}`, ip); // Add IP to set
+        changed = await redis.sadd(`likes:ips:${slug}`, ip); // Add IP to set (returns 1 if added, 0 if already exists)
     }
 
-    // Mark this slug as needing a Notion sync tonight.
-    await redis.sadd("stats:dirty", slug);
+    // Mark this slug as needing a Notion sync tonight, only if a change actually occurred.
+    if (changed > 0) {
+        await redis.sadd("stats:dirty", slug);
+    }
 
     // Total likes = legacy integer count + unique IPs in the set
     const [uniqueIpsCount, legacyRaw] = await Promise.all([
