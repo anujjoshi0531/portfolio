@@ -106,7 +106,7 @@ function TestimonialSkeleton() {
 // ── Page ─────────────────────────────────────────────────────────────────────
 // Each below-fold section is wrapped in its own <Suspense> boundary.
 // Next.js streams the Hero shell in the first TCP burst, then flushes each
-// section independently as its Notion / Redis data resolves — without waiting
+// section independently as its local content / Redis data resolves — without waiting
 // for all API calls to complete before sending any bytes to the client.
 
 export const revalidate = 3600; // Revalidate every hour

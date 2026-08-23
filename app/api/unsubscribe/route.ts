@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     const { id } = parsedData.data;
 
-    // We rely on the Notion ID being inherently secure and hard to guess.
+    // We rely on the subscriber ID being inherently secure and hard to guess.
     await updateSubscriberStatus(id, "Unsubscribed");
 
     return NextResponse.json(

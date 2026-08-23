@@ -3,29 +3,21 @@
 import Link from "next/link"
 import { FileIcon, Calendar, User } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { extractPlainText, timeAgo } from "@/lib"
-
-type SearchResultPage = NotionBlogPage & {
-  icon?: { emoji?: string };
-  properties: NotionBlogPage["properties"] & {
-    Type?: { select?: { name: string } };
-  }
-}
+import { timeAgo } from "@/lib"
 
 interface SearchResultItemProps {
-  page: SearchResultPage
+  page: BlogPost
   onClose: () => void
 }
 
 export const SearchResultItem = (function SearchResultItem({ page, onClose }: SearchResultItemProps) {
-  const title = extractPlainText(page.properties.Name?.title || [])
-  const description = extractPlainText(page.properties.Description?.rich_text || [])
-  const author = extractPlainText(page.properties.Author?.rich_text || [])
-  const publishedDate = page.properties.Published?.date?.start
-  const tags = page.properties.Tags?.multi_select || []
-  const slug = extractPlainText(page.properties.Slug?.rich_text || [])
-  const type = page.properties.Type?.select?.name
-  const pageUrl = slug || page.id
+  const title = page.title
+  const description = page.description
+  const author = page.author
+  const publishedDate = page.published ?? page.created
+  const tags = page.tags ? page.tags.map((t, i) => ({ id: `${i}`, name: t })) : []
+  const category = page.category
+  const pageUrl = page.slug || page.id
 
   return (
     <Link
@@ -36,17 +28,13 @@ export const SearchResultItem = (function SearchResultItem({ page, onClose }: Se
     >
       <div className="flex items-start gap-4">
         <div className="shrink-0 mt-1">
-          {page.icon?.emoji ? (
-            <span className="text-lg">{page.icon.emoji}</span>
-          ) : (
-            <FileIcon className="size-5" />
-          )}
+          <FileIcon className="size-5" />
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-semibold text-base truncate">{title || "Untitled"}</h3>
-            {type && (<Badge>{type}</Badge>)}
+            {category && (<Badge>{category}</Badge>)}
           </div>
 
           {description && <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{description}</p>}

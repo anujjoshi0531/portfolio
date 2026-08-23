@@ -65,7 +65,7 @@ const ScrollIndicator = ({
 )
 
 interface BlogClientProps {
-    blogs: NotionBlogPage[]
+    blogs: BlogPost[]
 }
 
 export default function BlogClient({ blogs }: BlogClientProps) {

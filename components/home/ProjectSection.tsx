@@ -1,4 +1,4 @@
-import { getProject } from "@/lib/server/notion"
+import { getProjects } from "@/lib/server/local-content"
 import ProjectClient from "./ProjectClient"
 import { Suspense } from "react"
 import { Skeleton } from "../ui/skeleton"
@@ -18,8 +18,8 @@ function ProjectSkeleton() {
 }
 
 async function ProjectData({ className }: { className?: string }) {
-  const projects = await getProject()
-  return <ProjectClient projects={projects as unknown as NotionProjectPage[]} className={className} />
+  const projects = getProjects()
+  return <ProjectClient projects={projects} className={className} />
 }
 
 export default function ProjectSection({ className }: { className?: string }) {

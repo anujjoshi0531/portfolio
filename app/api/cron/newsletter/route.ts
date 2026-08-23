@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAllSubscribers } from "@/lib/server/newsletter";
 import { Client } from "@upstash/qstash";
-import { searchPages } from "@/lib/server/notion";
-import { extractPlainText } from "@/lib";
+import { searchBlogs } from "@/lib/server/local-content";
 
 const qstashClient = new Client({
   token: process.env.QSTASH_TOKEN || "",
@@ -34,14 +33,13 @@ export async function POST(request: Request) {
     }
 
     // Fetch top 5 blog posts
-    const { results } = await searchPages({ limit: 5 });
+    const { results } = await searchBlogs({ limit: 5 });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const recentBlogs = results.map((page: any) => {
-      const title = extractPlainText(page.properties.Name?.title) || "Untitled";
-      const description = extractPlainText(page.properties.Description?.rich_text) || "";
-      const slug = extractPlainText(page.properties.Slug?.rich_text) || "";
-      const image = page.properties.Thumbnail?.url || page.properties.Thumbnail?.files?.[0]?.file?.url || page.properties.Thumbnail?.files?.[0]?.external?.url || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop";
+    const recentBlogs = results.map((blog) => {
+      const title = blog.title || "Untitled";
+      const description = blog.description || "";
+      const slug = blog.slug || blog.id;
+      const image = blog.thumbnail || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop";
       return { title, description, slug, image };
     }).filter(blog => blog.slug);
 

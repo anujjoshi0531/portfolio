@@ -1,5 +1,4 @@
-import { getTestimonials } from "@/lib/server/notion";
-import { extractPlainText } from "@/lib";
+import { getTestimonials, ContentItem } from "@/lib/server/local-content";
 import TestimonialClient from "./TestimonialClient";
 import { Suspense } from "react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';
@@ -32,24 +31,30 @@ function TestimonialSkeleton() {
   );
 }
 
-function transformNotionData(notionData: NotionTestimonialPage[]) {
-  return notionData.map((item) => ({
-    id: item.id,
-    name: extractPlainText(item.properties.Name.rich_text) || "Anonymous",
-    company: extractPlainText(item.properties.Company.rich_text) || "Unknown Company",
-    position: extractPlainText(item.properties.Position.rich_text) || "Unknown Position",
-    rating: item.properties.Rating?.select?.name || "⭐⭐⭐⭐⭐ (5/5)",
-    project: extractPlainText(item.properties.Project?.rich_text) || "Unknown Project",
-    contact: extractPlainText(item.properties.Contact?.rich_text) || "",
-    avatar: item.properties.Avatar?.files?.[0]?.file?.url || item.properties.Avatar?.files?.[0]?.external?.url || null,
-    review: extractPlainText(item.properties.Remark?.title) || "No review provided",
-    date: item.properties.Date?.date?.start || new Date().toISOString().split("T")[0],
-  }));
+function transformData(data: ContentItem[]) {
+  return data.map((item) => {
+    const reviewText = item.content
+      ? item.content.replace(/^>\s*/gm, "").trim()
+      : "No review provided";
+
+    return {
+      id: item.id || item.slug,
+      name: (item.frontmatter?.name ? String(item.frontmatter.name) : item.title) || "Anonymous",
+      company: item.company || "Unknown Company",
+      position: item.position || "Unknown Position",
+      rating: item.frontmatter?.rating ? String(item.frontmatter.rating) : "⭐⭐⭐⭐⭐ (5/5)",
+      project: item.frontmatter?.project ? String(item.frontmatter.project) : "Unknown Project",
+      contact: item.frontmatter?.contact ? String(item.frontmatter.contact) : item.url || "",
+      avatar: item.avatar || null,
+      review: reviewText,
+      date: item.date || item.created || new Date().toISOString().split("T")[0],
+    };
+  });
 }
 
 async function TestimonialData() {
-  const data = await getTestimonials();
-  const testimonials = transformNotionData(data as unknown as NotionTestimonialPage[]);
+  const data = getTestimonials();
+  const testimonials = transformData(data);
 
   return <TestimonialClient testimonials={testimonials} />;
 }

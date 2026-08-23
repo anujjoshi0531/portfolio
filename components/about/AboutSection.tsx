@@ -1,8 +1,8 @@
-import { getProject } from "@/lib/server/notion";
+import { getProjects } from "@/lib/server/local-content";
 import AboutClient from "./AboutClient";
 
 export default async function AboutSection() {
-  const projects = await getProject();
+  const projects = getProjects();
   const totalProjects = projects?.length || 0;
 
   return <AboutClient totalProjects={totalProjects} />;

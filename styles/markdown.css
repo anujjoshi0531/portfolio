@@ -1,0 +1,347 @@
+/* ============================================================
+   Markdown body (unified pipeline output)
+   ============================================================ */
+
+.markdown-body {
+  line-height: 1.75;
+  font-size: 1rem;
+  color: var(--color-neutral-300);
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 640px) {
+  .markdown-body {
+    font-size: 1.05rem;
+  }
+}
+
+/* ---------- Headings ---------- */
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  font-weight: 700;
+  color: var(--color-neutral-100);
+  scroll-margin-top: 6rem;
+}
+
+.markdown-body h1 {
+  font-size: 1.875rem;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-neutral-800);
+}
+
+@media (min-width: 640px) {
+  .markdown-body h1 {
+    font-size: 2.25rem;
+  }
+}
+
+.markdown-body h2 {
+  font-size: 1.5rem;
+  margin: 2rem 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .markdown-body h2 {
+    font-size: 1.875rem;
+  }
+}
+
+.markdown-body h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--color-neutral-200);
+}
+
+@media (min-width: 640px) {
+  .markdown-body h3 {
+    font-size: 1.5rem;
+  }
+}
+
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+  color: var(--color-neutral-200);
+}
+
+/* Heading anchor links */
+.heading-anchor {
+  margin-left: 0.5rem;
+  color: hsl(var(--theme));
+  opacity: 0;
+  text-decoration: none !important;
+  transition: opacity 0.15s ease;
+}
+
+.markdown-body h1:hover .heading-anchor,
+.markdown-body h2:hover .heading-anchor,
+.markdown-body h3:hover .heading-anchor,
+.markdown-body h4:hover .heading-anchor,
+.markdown-body h5:hover .heading-anchor,
+.markdown-body h6:hover .heading-anchor,
+.markdown-body :is(h1, h2, h3, h4, h5, h6):focus-within .heading-anchor {
+  opacity: 1;
+}
+
+/* ---------- Paragraphs & text ---------- */
+.markdown-body p {
+  margin: 1rem 0;
+}
+
+.markdown-body a:not(.heading-anchor) {
+  color: hsl(var(--theme));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s ease;
+}
+
+.markdown-body a:not(.heading-anchor):hover {
+  opacity: 0.8;
+}
+
+.markdown-body strong {
+  color: var(--color-neutral-100);
+  font-weight: 600;
+}
+
+.markdown-body hr {
+  border: 0;
+  border-top: 1px solid var(--color-neutral-800);
+  margin: 2rem 0;
+}
+
+/* ---------- Lists ---------- */
+.markdown-body ul,
+.markdown-body ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+}
+
+.markdown-body li {
+  margin: 0.375rem 0;
+}
+
+.markdown-body li > ul,
+.markdown-body li > ol {
+  margin: 0.375rem 0;
+}
+
+.markdown-body li::marker {
+  color: var(--color-neutral-500);
+}
+
+.markdown-body input[type="checkbox"] {
+  accent-color: hsl(var(--theme));
+  margin-right: 0.5rem;
+}
+
+/* ---------- Inline code ---------- */
+.markdown-body code:not(pre code) {
+  background-color: rgb(71 76 80 / 0.55);
+  color: #ff7b9c;
+  border-radius: 5px;
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* ---------- Code blocks ---------- */
+.markdown-body pre {
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-neutral-800);
+  background-color: #0d1117;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(156 163 175 / 0.4) transparent;
+}
+
+.markdown-body pre::-webkit-scrollbar {
+  height: 5px;
+}
+
+.markdown-body pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.markdown-body pre::-webkit-scrollbar-thumb {
+  background: rgb(156 163 175 / 0.4);
+  border-radius: 100px;
+}
+
+.markdown-body pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* ---------- Blockquote (non-callout) ---------- */
+.markdown-body > blockquote {
+  border-left: 4px solid var(--color-neutral-600);
+  background: rgb(23 23 23 / 0.5);
+  border-radius: 0 0.375rem 0.375rem 0;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: var(--color-neutral-300);
+}
+
+/* ---------- Callouts (Obsidian-style) ---------- */
+.callout {
+  --callout-color: 59 130 246;
+  border: 1px solid rgb(var(--callout-color) / 0.35);
+  border-left: 4px solid rgb(var(--callout-color));
+  background: rgb(var(--callout-color) / 0.08);
+  border-radius: 0.375rem;
+  padding: 0.875rem 1.125rem;
+  margin: 1.25rem 0;
+}
+
+.callout > *:first-child {
+  margin-top: 0;
+}
+
+.callout > *:last-child {
+  margin-bottom: 0;
+}
+
+.callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: rgb(var(--callout-color));
+  margin: 0 0 0.25rem;
+}
+
+.callout p {
+  margin: 0.375rem 0;
+}
+
+.callout-info,
+.callout-note {
+  --callout-color: 59 130 246;
+}
+
+.callout-tip,
+.callout-success,
+.callout-check,
+.callout-done {
+  --callout-color: 16 185 129;
+}
+
+.callout-warning,
+.callout-caution {
+  --callout-color: 245 158 11;
+}
+
+.callout-danger,
+.callout-error,
+.callout-bug {
+  --callout-color: 239 68 68;
+}
+
+.callout-question,
+.callout-help {
+  --callout-color: 168 85 247;
+}
+
+.callout-example {
+  --callout-color: 236 72 153;
+}
+
+.callout-quote,
+.callout-cite {
+  --callout-color: 156 163 175;
+}
+
+/* ---------- Tables ---------- */
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  display: block;
+  overflow-x: auto;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--color-neutral-800);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.markdown-body thead th {
+  background-color: rgb(23 23 23 / 0.75);
+  color: var(--color-neutral-100);
+  font-weight: 600;
+}
+
+.markdown-body tbody tr:nth-child(even) {
+  background-color: rgb(23 23 23 / 0.35);
+}
+
+/* ---------- Images ---------- */
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-neutral-800);
+}
+
+.markdown-body p:has(> img:only-child) {
+  text-align: center;
+}
+
+/* ---------- Math (KaTeX) ---------- */
+.markdown-body .math-display,
+.markdown-body .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}
+
+.markdown-body .katex {
+  font-size: 1.05em;
+}
+
+/* ============================================================
+   Reading progress bar (ported from notion.css)
+   ============================================================ */
+
+.blog-reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999;
+  background: transparent;
+  pointer-events: none;
+}
+
+.blog-reading-progress-bar {
+  height: 100%;
+  background: hsl(var(--theme));
+  transition: width 0.1s linear;
+}

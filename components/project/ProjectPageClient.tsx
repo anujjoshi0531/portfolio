@@ -7,8 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
 
 interface ProjectPageClientProps {
-    projects: NotionProjectPage[]
-    types: NotionProjectType[]
+    projects: Project[]
+    types: ProjectCategory[]
 }
 
 export default function ProjectPageClient({ projects, types }: ProjectPageClientProps) {
@@ -20,7 +20,12 @@ export default function ProjectPageClient({ projects, types }: ProjectPageClient
 
     const getFilteredProjects = (categoryId: string) => {
         if (categoryId === "-1") return allProjects
-        return allProjects.filter((project) => project?.properties?.Category?.select?.id === categoryId)
+        return allProjects.filter((project) => {
+            if (project.category) {
+                return project.category.toLowerCase() === categoryId.toLowerCase() || project.category === categoryId;
+            }
+            return false;
+        })
     }
 
     const renderProjectCards = (categoryId: string) => {

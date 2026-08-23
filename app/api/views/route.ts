@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     if (acquiredLock) {
         // Increment the absolute master total.
         await redis.incr(`pageviews:total:${slug}`);
-        // Mark this slug as needing a Notion sync tonight.
+        // Track this view in Redis.
         await redis.sadd("stats:dirty", slug);
     }
     

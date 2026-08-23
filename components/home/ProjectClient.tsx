@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useRef, useState } from "react"
 import { m, useScroll, useTransform } from "framer-motion"
@@ -9,7 +9,7 @@ import { MagnetBtn } from "@/components/animate/MagnetBtn"
 import ProjectCard from "@/components/global/ProjectCard"
 
 interface ProjectClientProps {
-    projects: NotionProjectPage[]
+    projects: Project[]
     className?: string
 }
 

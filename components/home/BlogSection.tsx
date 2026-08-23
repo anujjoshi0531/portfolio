@@ -1,4 +1,4 @@
-import { searchPages } from "@/lib/server/notion"
+import { searchBlogs } from "@/lib/server/local-content"
 import BlogClient from "./BlogClient"
 import { Suspense } from "react"
 import BlogCardSkeleton from '@/components/blog/BlogCardSkeleton'
@@ -14,15 +14,15 @@ function BlogSkeleton() {
 }
 
 async function BlogData({ tags, excludeId }: { tags?: string[], excludeId?: string }) {
-  const data = await searchPages({
+  const data = await searchBlogs({
     limit: excludeId ? 6 : 5,
     tags,
   })
 
-  let results = data.results as unknown as NotionBlogPage[];
+  let results = data.results;
   
   if (excludeId) {
-    results = results.filter((post) => post.id !== excludeId);
+    results = results.filter((post) => post.id !== excludeId && post.slug !== excludeId);
   }
 
   results = results.slice(0, 5);

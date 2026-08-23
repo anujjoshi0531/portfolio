@@ -44,30 +44,6 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
-      {
-        protocol: "https",
-        hostname: "notion.so",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.notion.so",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "prod-files-secure.s3.us-west-2.amazonaws.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "s3.us-west-2.amazonaws.com",
-        port: "",
-        pathname: "/**",
-      },
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours
@@ -141,20 +117,7 @@ const nextConfig = {
     ];
   },
   productionBrowserSourceMaps: false,
-  // Suppress webpack warnings from third-party dependencies
   webpack: (config, { isServer, dev }) => {
-    // Suppress the critical dependency warning from keyv (used by notion-client)
-    config.module = config.module || {};
-    config.module.exprContextCritical = false;
-
-    // Alternative: Ignore specific warnings using webpack's ignoreWarnings
-    config.ignoreWarnings = [
-      {
-        module: /node_modules\/keyv\/src\/index\.js/,
-        message: /Critical dependency: the request of a dependency is an expression/,
-      },
-    ];
-
     // Fix HMR WebSocket port mismatch in dev mode
     if (dev && !isServer) {
       config.output = config.output || {};

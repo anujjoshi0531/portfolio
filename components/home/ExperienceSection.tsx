@@ -1,23 +1,24 @@
-import { getExperience } from "@/lib/server/notion"
-import { extractPlainText } from "@/lib"
+import { getExperiences, ContentItem } from "@/lib/server/local-content"
 import ExperienceClient from "./ExperienceClient"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { SectionTemplate } from '@/components/global/SectionTemplate'
 
-function formatExperience(exp: NotionExperience) {
+function formatExperience(exp: ContentItem) {
+  const descLines = exp.content
+    ? exp.content.split("\n").map((l: string) => l.replace(/^- /, "").trim()).filter(Boolean)
+    : [exp.description || ""];
+
   return {
-    company: extractPlainText(exp.properties?.Organization.rich_text) || "",
-    role: extractPlainText(exp.properties?.Role.title) || "",
-    start: exp.properties?.Start?.date?.start ? new Date(exp.properties.Start.date.start) : new Date(),
-    end: exp.properties?.End?.date?.start ? new Date(exp.properties.End.date.start) : null,
-    place: extractPlainText(exp.properties?.Place.rich_text) || "",
-    link: exp.properties?.URL.url || "#",
-    description: extractPlainText(exp.properties?.Description.rich_text)
-      .split("\n")
-      .filter((line) => line.trim() !== ""),
-    skills: exp.properties?.Skills.multi_select.map((skill) => skill.name) || [],
-    certificate: exp.properties?.Certificate.url || null,
+    company: exp.organization || exp.company || "",
+    role: exp.title || "",
+    start: exp.start ? new Date(exp.start) : new Date(),
+    end: exp.end ? new Date(exp.end) : null,
+    place: exp.location || "",
+    link: exp.url || "#",
+    description: descLines.length > 0 ? descLines : [exp.description || ""],
+    skills: exp.skills || [],
+    certificate: exp.frontmatter?.certificate ? String(exp.frontmatter.certificate) : null,
   }
 }
 
@@ -48,10 +49,10 @@ function ExperienceSkeleton() {
   )
 }
 
-function groupAndSortExperiences(data: NotionExperience[]) {
+function groupAndSortExperiences(data: ContentItem[]) {
   const grouped: Record<string, ReturnType<typeof formatExperience>[]> = {}
   data.forEach((exp) => {
-    const type = exp.properties?.Type?.select?.name || "Other"
+    const type = exp.type || "Other"
     if (!grouped[type]) grouped[type] = []
     grouped[type].push(formatExperience(exp))
   })
@@ -60,7 +61,7 @@ function groupAndSortExperiences(data: NotionExperience[]) {
 }
 
 async function ExperienceData() {
-  const data = (await getExperience()) as unknown as NotionExperience[]
+  const data = getExperiences()
   const { grouped, sortedTypes } = groupAndSortExperiences(data)
 
   return (

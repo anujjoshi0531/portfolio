@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { memo } from "react";
-import { extractPlainText } from "@/lib";
 import { LinkPreview } from "@/components/animate/LinkPreview";
 import { cn } from "@/lib";
 
@@ -14,7 +13,7 @@ interface ProjectTag {
 }
 
 interface ProjectCardProps {
-  project: NotionProjectPage;
+  project: Project;
   size?: boolean;
   index?: number;
   hovered?: number | null;
@@ -28,13 +27,13 @@ const ProjectCard = ({
   hovered = null,
   setHovered,
 }: ProjectCardProps) => {
-  const tags = project?.properties?.Topics?.multi_select || [];
-  const title = extractPlainText(project.properties.Name?.title || []) || "Untitled Project";
-  const description = extractPlainText(project.properties.Description?.rich_text || []) || "No description available";
-  const image = project.properties.Thumbnail?.url || project.properties.Thumbnail?.files?.[0]?.file?.url || project.properties.Thumbnail?.files?.[0]?.external?.url || '/icon.webp';
-  const githubUrl = project.properties.GitHub?.url || "#";
-  const liveUrl = project.properties.URL?.url || "#";
-  const pid = extractPlainText(project.properties.pid?.rich_text || []) || "unknown";
+  const tags = (project.tags || []).map((t, i) => ({ id: `${i}`, name: t }));
+  const title = project.title || "Untitled Project";
+  const description = project.description || "No description available";
+  const image = project.thumbnail || '/icon.webp';
+  const githubUrl = project.github || "#";
+  const liveUrl = project.url || "#";
+  const pid = project.slug || project.id || "unknown";
 
   // FocusCard interaction: blur & scale down when a sibling is hovered
   const isOtherHovered = hovered !== null && hovered !== index;

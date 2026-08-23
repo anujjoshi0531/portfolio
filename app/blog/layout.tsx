@@ -1,6 +1,3 @@
-import "@/styles/notion.css";
-import "@/styles/prism-theme.css";
-import "react-medium-image-zoom/dist/styles.css";
 import { Metadata } from "next";
 import { getMetadata } from "@/lib";
 import { Inter, Lora, JetBrains_Mono } from "next/font/google";

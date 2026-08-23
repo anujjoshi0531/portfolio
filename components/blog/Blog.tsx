@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useFilters } from '@/hooks';
 
 interface BlogProps {
-  posts: NotionBlogPage[];
+  posts: BlogPost[];
   tags: string[];
   categories: string[];
   totalPages: number;

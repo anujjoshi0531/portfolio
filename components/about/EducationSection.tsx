@@ -1,5 +1,4 @@
-import { getEducation } from "@/lib/server/notion";
-import { extractPlainText } from "@/lib";
+import { getEducations, ContentItem } from "@/lib/server/local-content";
 import EducationClient from "./EducationClient";
 import { Suspense } from "react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';
@@ -9,12 +8,10 @@ import { Card } from "../ui/card";
 function LoadingSkeleton() {
   return (
     <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-      {/* Icon Skeleton */}
       <div className="md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative isolate rounded-full p-2 bg-muted shrink-0">
         <Skeleton className="w-6 h-6 rounded" />
       </div>
 
-      {/* Card Skeleton */}
       <Card className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-lg shadow-md">
         <div className="space-y-3">
           <Skeleton className="h-6 w-3/4" />
@@ -45,38 +42,27 @@ function EducationSkeleton() {
   );
 }
 
-type NotionEduProps = {
-  id?: string;
-  properties?: {
-    Course?: { title?: NotionRichTextItem[] };
-    Institution?: { rich_text?: NotionRichTextItem[] };
-    Place?: { rich_text?: NotionRichTextItem[] };
-    Grade?: { rich_text?: NotionRichTextItem[] };
-    Description?: { rich_text?: NotionRichTextItem[] };
-    Start?: { date?: { start?: string } };
-    End?: { date?: { start?: string } };
-    Skills?: { multi_select?: NotionSelectOption[] };
-    Type?: { select?: NotionSelectOption };
-    URL?: { url?: string };
-    Certificate?: { url?: string };
-  };
-};
+function processEducation(data: ContentItem[]) {
+  const education = data.map((item) => {
+    const descLines = item.content
+      ? item.content.split("\n").map((l: string) => l.replace(/^- /, "").trim()).filter(Boolean)
+      : [item.description || ""];
 
-function processEducation(data: NotionEduProps[]) {
-  const education = data.map((item) => ({
-    id: item.id || Math.random().toString(),
-    course: extractPlainText(item.properties?.Course?.title) || "Course not specified",
-    institution: extractPlainText(item.properties?.Institution?.rich_text) || "Institution not specified",
-    place: extractPlainText(item.properties?.Place?.rich_text) || "",
-    grade: extractPlainText(item.properties?.Grade?.rich_text) || "",
-    description: extractPlainText(item.properties?.Description?.rich_text).split("\n").filter((line: string) => line.trim() !== "") || [],
-    start: item.properties?.Start?.date?.start || "",
-    end: item.properties?.End?.date?.start || "",
-    skills: item.properties?.Skills?.multi_select?.map((skill) => skill.name) || [],
-    type: item.properties?.Type?.select?.name || "",
-    url: item.properties?.URL?.url || "",
-    certificate: item.properties?.Certificate?.url || "",
-  }));
+    return {
+      id: item.id || item.slug,
+      course: item.title || "Course not specified",
+      institution: item.institution || "Institution not specified",
+      place: item.location || "",
+      grade: item.grade || "",
+      description: descLines.length > 0 ? descLines : [item.description || ""],
+      start: item.start || "",
+      end: item.end || "",
+      skills: item.skills || [],
+      type: item.type || "",
+      url: item.url || "",
+      certificate: item.frontmatter?.certificate ? String(item.frontmatter.certificate) : "",
+    };
+  });
 
   return education.sort((a, b) => {
     const dateA = a.start ? new Date(a.start).getTime() : 0;
@@ -86,8 +72,8 @@ function processEducation(data: NotionEduProps[]) {
 }
 
 async function EducationData() {
-  const data = await getEducation();
-  const education = processEducation(data as NotionEduProps[]);
+  const data = getEducations();
+  const education = processEducation(data);
 
   return <EducationClient education={education} />;
 }

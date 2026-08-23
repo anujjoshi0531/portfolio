@@ -20,9 +20,8 @@ export function SearchResults({ className, hasQuery, query, searchResult, search
         ) : hasQuery && searchResult && Array.isArray((searchResult as { results?: unknown[] }).results) ? (
           (searchResult as { results: unknown[] }).results.length > 0 ? (
             <div>
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {(searchResult as any).results.map((page: NotionBlogPage) => (
-                <SearchResultItem key={page.id} page={page as any} onClose={onClose} /> // eslint-disable-line @typescript-eslint/no-explicit-any
+              {(searchResult as { results: BlogPost[] }).results.map((page) => (
+                <SearchResultItem key={page.id} page={page} onClose={onClose} />
               ))}
             </div>
           ) : (

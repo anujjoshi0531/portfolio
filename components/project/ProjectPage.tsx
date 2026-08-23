@@ -1,4 +1,4 @@
-import { getProject, getProjectType } from "@/lib/server/notion"
+import { getProjects } from "@/lib/server/local-content"
 import ProjectPageClient from "./ProjectPageClient"
 import { Suspense } from "react"
 import { PageTemplate } from '@/components/global/SectionTemplate'
@@ -9,7 +9,6 @@ function ProjectPageSkeleton() {
     <>
       <PageTemplate title="Project" subtitle="My Recent Works" />
       <div className="py-12 min-h-screen">
-        {/* Tabs skeleton */}
         <div className="flex flex-wrap justify-center mb-8 gap-2">
           <Skeleton className="h-10 w-16 rounded-md" />
           <Skeleton className="h-10 w-24 rounded-md" />
@@ -17,7 +16,6 @@ function ProjectPageSkeleton() {
           <Skeleton className="h-10 w-28 rounded-md" />
           <Skeleton className="h-10 w-22 rounded-md" />
         </div>
-        {/* Grid skeleton */}
         <div className="grid py-4 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="bg-card rounded-lg border p-4 space-y-4">
@@ -40,12 +38,11 @@ function ProjectPageSkeleton() {
 }
 
 async function ProjectPageData() {
-  const [projects, types] = await Promise.all([
-    getProject(),
-    getProjectType(),
-  ])
+  const projects = getProjects()
+  const categories = Array.from(new Set(projects.map((p) => p.category).filter(Boolean))) as string[]
+  const types: ProjectCategory[] = categories.map((cat) => ({ id: cat, name: cat }))
 
-  return <ProjectPageClient projects={projects as unknown as NotionProjectPage[]} types={(types || []) as unknown as NotionProjectType[]} />
+  return <ProjectPageClient projects={projects} types={types} />
 }
 
 export default function ProjectPage() {

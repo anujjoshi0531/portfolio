@@ -1,0 +1,35 @@
+name: Sync Content Submodule
+
+on:
+  repository_dispatch:
+    types: [update-submodule]
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-submodule:
+    name: Sync Submodule Pointer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Main Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Submodules
+        run: |
+          git submodule update --remote --merge content
+
+      - name: Commit and Push Submodule Update
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if [[ -n $(git status --porcelain content) ]]; then
+            git add content
+            git commit -m "chore(content): sync content submodule to latest"
+            git push origin main
+          else
+            echo "No submodule changes detected."
+          fi

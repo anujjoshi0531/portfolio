@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         changed = await redis.sadd(`likes:ips:${slug}`, ip); // Add IP to set (returns 1 if added, 0 if already exists)
     }
 
-    // Mark this slug as needing a Notion sync tonight, only if a change actually occurred.
+    // Track this slug in Redis stats, only if a change actually occurred.
     if (changed > 0) {
         await redis.sadd("stats:dirty", slug);
     }

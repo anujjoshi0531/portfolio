@@ -1,5 +1,5 @@
 import Blog from "@/components/blog/Blog";
-import { getBlogFilters, searchPages, getPagesCount } from "@/lib/server/notion";
+import { getBlogFilters, searchBlogs } from "@/lib/server/local-content";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -28,33 +28,17 @@ export default async function BlogPage({ searchParams }: SearchProps) {
   const page = params.page ? Number(params.page) : 1;
   const limit = params.limit ? Number(params.limit) : 9;
   const tags = params.tags ? params.tags.split(",").filter(Boolean) : [];
-  const published_gte = params.published_gte ? new Date(params.published_gte) : undefined;
-  const published_lte = params.published_lte ? new Date(params.published_lte) : undefined;
-  const sort_by = params.sort_by || "published-descending";
-
-  const dateFilter = (published_gte || published_lte) ? {
-    property: "Published",
-    after: published_gte,
-    before: published_lte,
-  } : undefined;
 
   // Get posts with pagination
-  const data = await searchPages({
+  const data = await searchBlogs({
     query: q,
     tags: tags.length > 0 ? tags : undefined,
-    dateFilter,
-    sort_by,
     page,
     limit,
   });
 
-  const { total } = await getPagesCount({
-    query: q,
-    tags: tags.length > 0 ? tags : undefined,
-    dateFilter,
-  });
-
-  const blogs = data.results as unknown as NotionBlogPage[];
+  const total = data.total;
+  const blogs = data.results;
   const totalPages = Math.ceil(total / limit);
   const currentPage = Math.max(1, Math.min(page, totalPages || 1));
 

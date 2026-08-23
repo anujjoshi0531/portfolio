@@ -1,12 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn, extractPlainText, timeAgo } from "@/lib";
+import { cn, timeAgo } from "@/lib";
 import Image from "next/image";
 import Link from "next/link";
 import ViewCounter from "./ViewCounter";
 
 interface BlogCardProps {
-  blog: NotionBlogPage;
+  blog: BlogPost;
   variant?: "vertical" | "horizontal";
   className?: string;
   /** FocusCard-style: index of this card in its sibling list */
@@ -26,12 +26,12 @@ export default function BlogCard({
   setHovered,
 }: BlogCardProps) {
   const isVertical = variant === "vertical";
-  const title = extractPlainText(blog.properties.Name?.title) || "Untitled Blog";
-  const description = extractPlainText(blog.properties.Description?.rich_text) || "No description available";
-  const slug = extractPlainText(blog.properties.Slug?.rich_text) || blog.id;
-  const thumbnail = blog.properties.Thumbnail?.url || blog.properties.Thumbnail?.files?.[0]?.file?.url || blog.properties.Thumbnail?.files?.[0]?.external?.url || "/icon.webp";
-  const tags = blog.properties.Tags?.multi_select || [];
-
+  const title = blog.title || "Untitled Blog";
+  const description = blog.description || "No description available";
+  const slug = blog.slug || blog.id;
+  const thumbnail = blog.thumbnail || "/icon.webp";
+  const tags = blog.tags.map((t, i) => ({ id: `${i}`, name: t }));
+  const displayDate = blog.published ?? blog.created;
 
   // FocusCard: blur & scale down when a sibling is hovered
   const isOtherHovered = hovered !== null && hovered !== index;
@@ -100,19 +100,19 @@ export default function BlogCard({
                 {title}
               </CardTitle>
             </CardHeader>
-            <CardContent className={cn("mb-2 text-sm text-muted-foreground", isVertical && "line-clamp-3 h-16")}>
+            <CardContent className={cn("mb-2 text-sm text-muted-foreground", isVertical && "line-clamp-3 min-h-[4rem]")}>
               {description}
             </CardContent>
           </div>
 
           <CardContent className="flex items-center justify-end text-muted-foreground text-xs font-medium">
-            <time className="text-xs" dateTime={blog.created_time ? new Date(blog.created_time).toISOString() : undefined} suppressHydrationWarning>
-              {timeAgo(blog.created_time as unknown as Date)}
+            <time className="text-xs" dateTime={displayDate ? new Date(displayDate).toISOString() : undefined} suppressHydrationWarning>
+              {timeAgo(displayDate ? new Date(displayDate) : new Date())}
             </time>
           </CardContent>
         </div>
       </Card>
-    </Link >
+    </Link>
 
   );
 }
