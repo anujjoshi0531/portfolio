@@ -47,7 +47,7 @@ export default function ExperienceClient({ groupedExperiences, types }: Experien
         <SectionTemplate title="Experience" subtitle="Where I've worked" id="experience">
             <div className="mx-auto max-w-5xl grid grid-rows-1 md:grid-cols-7 gap-4 md:gap-8">
                 {/* Experience Type Tabs */}
-                <ul className="relative h-max-content flex md:block overflow-x-scroll md:overflow-auto md:col-span-2 pr-2">
+                <ul className="relative h-fit flex flex-row md:flex-col overflow-x-auto md:overflow-visible md:col-span-2 pr-2">
                     {types.map((type) => (
                         <li
                             key={type}

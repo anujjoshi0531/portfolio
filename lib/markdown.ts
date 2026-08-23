@@ -21,18 +21,6 @@ export interface TocEntry {
   depth: number;
 }
 
-export interface RenderedMarkdown {
-  html: string;
-  toc: TocEntry[];
-  wordCount: number;
-  readingTimeMinutes: number;
-}
-
-interface MarkdownFileData {
-  words?: number;
-  toc?: TocEntry[];
-}
-
 const READING_WPM = 200;
 
 function fileData(file: VFile): MarkdownFileData {
@@ -155,6 +143,92 @@ export function remarkWikiEmbeds(): Transformer<Root> {
 }
 
 /* ------------------------------------------------------------------ */
+/* Custom remark plugin: Obsidian Wikilinks ([[slug|alias]])          */
+/* ------------------------------------------------------------------ */
+
+const WIKILINK_REGEX = /\[\[([^\]|#]+)?(?:#([^\]|]+))?(?:\|([^\]]+))?\]\]/g;
+
+function slugifyWikiTarget(target?: string): string {
+  if (!target) return "";
+  return target
+    .trim()
+    .toLowerCase()
+    .replace(/\.md$/, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function remarkWikiLinks(): Transformer<Root> {
+  return (tree, file) => {
+    const outgoingLinks: string[] = [];
+
+    visit(tree, "text", (node: Text, index: number | undefined, parent: unknown) => {
+      if (!parent || index === undefined) return;
+
+      // Ignore text inside wikilink embed (![[...]])
+      WIKILINK_REGEX.lastIndex = 0;
+      if (!WIKILINK_REGEX.test(node.value)) return;
+
+      WIKILINK_REGEX.lastIndex = 0;
+      const replacement: PhrasingContent[] = [];
+      const value = node.value;
+      let last = 0;
+      let match: RegExpExecArray | null;
+
+      while ((match = WIKILINK_REGEX.exec(value)) !== null) {
+        // Skip match if preceded by '!' (handled by remarkWikiEmbeds)
+        if (match.index > 0 && value[match.index - 1] === "!") {
+          continue;
+        }
+
+        if (match.index > last) {
+          replacement.push({ type: "text", value: value.slice(last, match.index) });
+        }
+
+        const rawTarget = match[1] ?? "";
+        const rawHeading = match[2] ?? "";
+        const rawAlias = match[3] ?? "";
+
+        const targetSlug = slugifyWikiTarget(rawTarget);
+        if (targetSlug) {
+          outgoingLinks.push(targetSlug);
+        }
+
+        const headingSlug = rawHeading ? "#" + slugifyWikiTarget(rawHeading) : "";
+        const href = targetSlug ? `/blog/${targetSlug}${headingSlug}` : headingSlug || "#";
+        const displayText = rawAlias.trim() || rawHeading.trim() || rawTarget.trim() || targetSlug;
+
+        replacement.push({
+          type: "link",
+          url: href,
+          data: {
+            hProperties: {
+              className: ["internal-link", "quartz-wikilink"],
+              "data-slug": targetSlug,
+              "data-heading": rawHeading,
+            },
+          },
+          children: [{ type: "text", value: displayText }],
+        });
+
+        last = match.index + match[0].length;
+      }
+
+      WIKILINK_REGEX.lastIndex = 0;
+      if (replacement.length > 0) {
+        if (last < value.length) replacement.push({ type: "text", value: value.slice(last) });
+        const parentNode = parent as { children: PhrasingContent[] };
+        parentNode.children.splice(index, 1, ...replacement);
+        return index + replacement.length;
+      }
+    });
+
+    const fileDataRef = file.data as MarkdownFileData & { outgoingLinks?: string[] };
+    fileDataRef.outgoingLinks = outgoingLinks;
+  };
+}
+
+/* ------------------------------------------------------------------ */
 /* Stats collection: word count + ToC into vfile data                 */
 /* ------------------------------------------------------------------ */
 
@@ -203,6 +277,20 @@ function rehypeLazyImages(): Transformer<HastRoot> {
   };
 }
 
+export interface RenderedMarkdown {
+  html: string;
+  toc: TocEntry[];
+  wordCount: number;
+  readingTimeMinutes: number;
+  outgoingLinks: string[];
+}
+
+interface MarkdownFileData {
+  words?: number;
+  toc?: TocEntry[];
+  outgoingLinks?: string[];
+}
+
 /* ------------------------------------------------------------------ */
 /* Processor                                                          */
 /* ------------------------------------------------------------------ */
@@ -213,6 +301,7 @@ const processor = unified()
   .use(remarkMath)
   .use(remarkCallouts)
   .use(remarkWikiEmbeds)
+  .use(remarkWikiLinks)
   .use(remarkWordCount)
   .use(remarkRehype)
   .use(rehypeHighlight, { detect: false })
@@ -230,10 +319,12 @@ const processor = unified()
 /** Render markdown to HTML with generated ToC and reading-time stats. */
 export async function renderMarkdown(content: string): Promise<RenderedMarkdown> {
   const file = await processor.process(content);
+  const data = fileData(file);
   return {
     html: String(file),
-    toc: fileData(file).toc ?? [],
-    wordCount: fileData(file).words ?? 0,
-    readingTimeMinutes: Math.max(1, Math.ceil((fileData(file).words ?? 0) / READING_WPM)),
+    toc: data.toc ?? [],
+    wordCount: data.words ?? 0,
+    readingTimeMinutes: Math.max(1, Math.ceil((data.words ?? 0) / READING_WPM)),
+    outgoingLinks: data.outgoingLinks ?? [],
   };
 }

@@ -1,14 +1,7 @@
 import { searchBlogs } from "@/lib/server/local-content";
-import { Redis } from "@upstash/redis";
+import { redis } from "@/lib/server/redis";
 
 export const revalidate = 3600;
-
-let redis: Redis | null = null;
-try {
-  redis = Redis.fromEnv();
-} catch {
-  redis = null;
-}
 
 export async function POST(req: Request) {
   try {

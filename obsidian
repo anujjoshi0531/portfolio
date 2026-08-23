@@ -1,0 +1,88 @@
+# Quartz Integration & Content Rendering Strategy
+
+Integrate **Quartz** (`https://quartz.jzhao.xyz/`) into the portfolio repository to render blog posts, notes, and content collections directly from the `content/` Obsidian vault with rich digital garden capabilities (Interactive Graph View, Backlinks, Popover Page Previews, Wikilink Resolution, Explorer Tree, and Obsidian Callouts).
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Architectural Approaches for Quartz Integration**
+> 
+> Quartz (created by Jacky Zhao) is designed to transform Obsidian vaults into interactive digital gardens. Because our content directory (`content/`) is structured as an Obsidian vault (containing `.base` files, wikilinks, and callouts), there are two main architectural patterns for integrating Quartz:
+> 
+> 1. **Option A: Next.js + Quartz Component & Parsing Pipeline (Recommended)**
+>    - Incorporate Quartz's core components (Interactive Graph View, Backlink indexer, Popover Page Previews, Wikilink resolver) directly into our Next.js 15 App Router (`lib/markdown.ts`, `app/blog/[pageId]/page.tsx`).
+>    - **Pros**: Retains all portfolio features (Tailwind v4 theme system, dynamic Redis like/view counters, newsletter subscriptions, rate-limiting, layout navbar/footer, fast server-side rendering).
+>    - **Cons**: Requires building custom React components for Graph View and Popovers based on Quartz client scripts.
+> 
+> 2. **Option B: Quartz 4 CLI Build Target (`npx quartz build`)**
+>    - Install and configure Quartz 4 (`@jackyzha0/quartz`) directly in the workspace, generating static HTML files into `public/notes` or output directory during build.
+>    - **Pros**: Zero-config Quartz standard UI out-of-the-box, matching standard `jzhao.xyz` layout.
+>    - **Cons**: Quartz operates outside Next.js App Router, requiring sub-domain or static path hosting (`/notes`), and does not natively share our React navbar/footer or Redis backend APIs.
+> 
+> **Recommendation**: Option A offers a seamless user experience where the entire blog functions as a full-featured Quartz digital garden while maintaining the unified Next.js portfolio design and dynamic functionality.
+
+---
+
+## Open Questions
+
+> [!NOTE]
+> 1. **Scope of Quartz Rendering**: Do you want Quartz features (Graph View, Backlinks, Popover Previews) applied only to `/blog` articles, or across all content collections (`/blog`, `/project`, `/about`)?
+> 2. **Default Layout Style**: Would you prefer the graph view rendered as an inline side panel on blog posts (like Quartz default) or as a toggleable modal/interactive widget?
+
+---
+
+## Proposed Changes
+
+### Component 1: Obsidian Parsing & Quartz Markdown Pipeline Enhancement
+
+#### [MODIFY] [`lib/markdown.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/markdown.ts)
+- Add **Wikilink Parsing** (`[[slug]]` & `[[slug|display]]`) to auto-resolve references between markdown notes in `content/`.
+- Add **Backlink Extraction**: Parse all internal wikilinks across content files to construct a full reverse-dependency map (Backlinks index).
+- Enhance **Obsidian Callout Support**: Expand callout types (`[!note]`, `[!abstract]`, `[!todo]`, `[!warning]`, `[!example]`, `[!quote]`, `[!success]`, `[!bug]`) with Quartz color tokens.
+
+#### [MODIFY] [`lib/server/local-content.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/server/local-content.ts)
+- Build in-memory graph index of all content nodes (slug, title, tags, outgoing links, incoming backlinks).
+- Expose `getBacklinks(slug)` and `getGraphData()` for rendering Quartz components.
+
+---
+
+### Component 2: Quartz UI Components (Graph View, Backlinks, Popovers)
+
+#### [NEW] `components/blog/GraphView.tsx`
+- Interactive 2D canvas graph visualization using D3.js or ForceGraph (matching Quartz 4 graph component).
+- Visualizes blog post connections, tags, and topic clusters with node highlighting and click-to-navigate.
+
+#### [NEW] `components/blog/Backlinks.tsx`
+- Displays a "Mentioned in" section at the bottom of every blog post showing pages linking back to the current note with contextual snippets.
+
+#### [NEW] `components/blog/PopoverPreview.tsx`
+- Hover preview popovers on internal wikilinks and blog links, fetching preview cards on hover (like Quartz / Wikipedia previews).
+
+#### [NEW] `components/blog/ExplorerTree.tsx`
+- File tree navigation side panel for browsing notes by directory/category.
+
+---
+
+### Component 3: Integration into Blog Detail Page
+
+#### [MODIFY] [`app/blog/[pageId]/page.tsx`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/app/blog/[pageId]/page.tsx)
+- Embed `<GraphView />`, `<Backlinks />`, and `<PopoverPreview />` into the blog detail page layout.
+- Update layout to standard Quartz 3-column architecture (Left: Navigation/Explorer, Center: Content + Backlinks, Right: Table of Contents + Local Graph View).
+
+---
+
+## Verification Plan
+
+### Automated Verification
+- Run TypeScript type checks: `npx tsc --noEmit`
+- Run ESLint check: `npm run lint`
+- Execute Next.js build: `npm run build`
+
+### Manual Verification
+1. Navigate to `/blog` and verify Obsidian wikilinks resolution (`[[note-title]]`).
+2. Verify interactive Graph View renders nodes and edges correctly.
+3. Hover over internal links to verify Popover page preview cards appear with excerpt.
+4. Check Backlinks section at the bottom of blog detail pages.
+5. Verify callout rendering matches Quartz visual styling.

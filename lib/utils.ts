@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { formatDistanceToNow } from "date-fns";
+
+const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -22,11 +23,19 @@ export const timeAgo = (
   const date = new Date(timestamp);
   if (isNaN(date.getTime())) return "Invalid date";
 
-  return formatDistanceToNow(date, { addSuffix: true });
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (Math.abs(seconds) < 60) return rtf.format(-Math.floor(seconds), "second");
+  const minutes = Math.floor(seconds / 60);
+  if (Math.abs(minutes) < 60) return rtf.format(-minutes, "minute");
+  const hours = Math.floor(minutes / 60);
+  if (Math.abs(hours) < 24) return rtf.format(-hours, "hour");
+  const days = Math.floor(hours / 24);
+  if (Math.abs(days) < 30) return rtf.format(-days, "day");
+  const months = Math.floor(days / 30);
+  if (Math.abs(months) < 12) return rtf.format(-months, "month");
+  const years = Math.floor(days / 365);
+  return rtf.format(-years, "year");
 };
-
-export const extractPlainText = (richText: unknown): string =>
-  Array.isArray(richText) ? richText.map((item: { plain_text?: string }) => item.plain_text || "").join("") : ""
 
 export const hexToHSL = (hex: string): string => {
   hex = hex.replace(/^#/, "");

@@ -286,7 +286,8 @@ export default function HeroImage() {
 
             {/* ── Avatar ── */}
             <m.div
-                className="relative bg-theme/80 lg:size-[450px] md:size-[380px] size-[280px] aspect-square rounded-full overflow-hidden animate-profile cursor-pointer shrink-0"
+                className="relative bg-theme/80 size-[280px] md:size-[380px] lg:size-[450px] aspect-square rounded-full overflow-hidden animate-profile cursor-pointer shrink-0"
+                suppressHydrationWarning
                 variants={shaking ? SHAKE_VARIANTS : containerVariants}
                 initial={shaking ? "idle" : "hidden"}
                 animate={shaking ? "shake" : "visible"}
@@ -297,7 +298,7 @@ export default function HeroImage() {
             >
                 {/* Sprite layers — visibility controlled via sprite.css */}
                 <div ref={spriteRef} className={spriteWrapClass}>
-                    <Image priority src="/hero/1.webp" alt="Anuj Joshi" width={500} height={500}
+                    <Image priority unoptimized src="/hero/1.webp" alt="Anuj Joshi" width={500} height={500}
                         className="sprite-base object-cover"
                         sizes="(max-width: 768px) 80vw, (max-width: 1200px) 50vw, 500px" />
 

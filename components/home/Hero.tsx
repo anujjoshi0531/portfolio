@@ -12,7 +12,7 @@ import HeroImage from "./HeroImage";
 
 export default function Hero() {
   return (
-    <div className="flex lg:flex-row-reverse flex-col items-center justify-between gap-4 pt-20 min-h-[85vh]">
+    <div className="flex flex-col lg:flex-row-reverse items-center justify-between gap-4 pt-20 min-h-[85vh]" suppressHydrationWarning>
       {/* Profile Image */}
       <HeroImage />
 

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
@@ -175,7 +175,7 @@ export default function Navbar() {
           </m.nav>
 
           {/* Mobile Actions */}
-          <div className="lg:hidden flex items-center space-x-2">
+          <div className="flex lg:hidden items-center space-x-2" suppressHydrationWarning>
             <SearchButton />
             <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
               <Menu className="size-5" />

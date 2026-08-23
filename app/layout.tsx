@@ -6,17 +6,19 @@ import { Toaster } from "@/components/ui/sonner";
 import NextTopLoader from 'nextjs-toploader';
 import { Metadata } from "next";
 import { PropsWithChildren } from "react";
+import dynamic from "next/dynamic";
 import ThemePicker from '@/components/global/ThemePicker';
 import Navbar from "@/components/site/Navbar";
-import PopupChatbot from "@/components/providers/chatbot-provider";
 import Footer from "@/components/site/Footer";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { clientConfig } from "@/lib/constant/config.client";
 import { LazyMotion, domAnimation } from "framer-motion";
 
+const PopupChatbot = dynamic(() => import("@/components/providers/chatbot-provider"));
+
 const poppins = Poppins({
   subsets: ["latin"],
-  display: "optional",
+  display: "swap",
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
   preload: true,
@@ -24,7 +26,7 @@ const poppins = Poppins({
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  display: "optional",
+  display: "swap",
   variable: "--font-playfair",
 });
 

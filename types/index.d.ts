@@ -90,9 +90,3 @@ type Education = {
     url?: string;
 };
 
-type Rating = {
-    username: string;
-    rating: number;
-    level: string;
-};
-

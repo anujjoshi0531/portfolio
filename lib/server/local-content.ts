@@ -363,3 +363,113 @@ export const searchBlogs = cache(async ({
     has_more: startIndex + limit < total,
   };
 });
+
+/* ------------------------------------------------------------------ */
+/* Quartz Digital Garden Graph & Backlinks Data Access                */
+/* ------------------------------------------------------------------ */
+
+export interface GraphNode {
+  id: string;
+  title: string;
+  category?: string;
+  tags: string[];
+  url: string;
+}
+
+export interface GraphLink {
+  source: string;
+  target: string;
+}
+
+export interface GraphData {
+  nodes: GraphNode[];
+  links: GraphLink[];
+}
+
+export interface BacklinkItem {
+  slug: string;
+  title: string;
+  description: string;
+  category?: string;
+  tags: string[];
+  published?: string;
+}
+
+function extractOutgoingLinksFromContent(content: string): string[] {
+  const links: string[] = [];
+  const wikiRegex = /\[\[([^\]|#]+)?(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = wikiRegex.exec(content)) !== null) {
+    if (match[1]) {
+      const slug = match[1]
+        .trim()
+        .toLowerCase()
+        .replace(/\.md$/, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      if (slug) links.push(slug);
+    }
+  }
+
+  const stdLinkRegex = /\[[^\]]+\]\(\/blog\/([a-zA-Z0-9_-]+)[^)]*\)/g;
+  while ((match = stdLinkRegex.exec(content)) !== null) {
+    if (match[1]) {
+      links.push(match[1].toLowerCase());
+    }
+  }
+
+  return Array.from(new Set(links));
+}
+
+export const getGraphData = cache((): GraphData => {
+  const blogs = getBlogs();
+  const nodes: GraphNode[] = blogs.map((b) => ({
+    id: b.slug,
+    title: b.title,
+    category: b.category,
+    tags: b.tags,
+    url: `/blog/${b.slug}`,
+  }));
+
+  const nodeMap = new Set(nodes.map((n) => n.id));
+  const linkSet = new Set<string>();
+  const links: GraphLink[] = [];
+
+  for (const b of blogs) {
+    const outgoing = extractOutgoingLinksFromContent(b.content);
+    for (const target of outgoing) {
+      if (nodeMap.has(target) && target !== b.slug) {
+        const linkKey = `${b.slug}->${target}`;
+        if (!linkSet.has(linkKey)) {
+          linkSet.add(linkKey);
+          links.push({ source: b.slug, target });
+        }
+      }
+    }
+  }
+
+  return { nodes, links };
+});
+
+export const getBacklinks = cache((targetSlug: string): BacklinkItem[] => {
+  const blogs = getBlogs();
+  const backlinks: BacklinkItem[] = [];
+
+  for (const b of blogs) {
+    if (b.slug === targetSlug) continue;
+    const outgoing = extractOutgoingLinksFromContent(b.content);
+    if (outgoing.includes(targetSlug.toLowerCase())) {
+      backlinks.push({
+        slug: b.slug,
+        title: b.title,
+        description: b.description,
+        category: b.category,
+        tags: b.tags,
+        published: b.published || b.created,
+      });
+    }
+  }
+
+  return backlinks;
+});

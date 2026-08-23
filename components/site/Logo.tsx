@@ -175,6 +175,8 @@ export default function Logo({ className }: { className?: string }) {
                 alt="Logo avatar"
                 fill
                 priority
+                unoptimized
+                suppressHydrationWarning
                 className="object-cover rounded-full"
             />
         </div>
