@@ -45,7 +45,6 @@ const nextConfig = {
     } : false,
   },
   experimental: {
-    clientTraceMetadata: ["baggage", "sentry-trace"],
     optimizePackageImports: [
       "lucide-react",
       "framer-motion",

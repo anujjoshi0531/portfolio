@@ -126,7 +126,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation Links */}
           <m.nav
-            className="hidden lg:flex justify-center items-center space-x-5 xl:space-x-7 uppercase font-semibold text-sm"
+            className="hidden xl:flex justify-center items-center space-x-5 2xl:space-x-7 uppercase font-semibold text-sm"
             variants={{
               initial: { opacity: 0 },
               animate: {
@@ -176,7 +176,7 @@ export default function Navbar() {
           </m.nav>
 
           {/* Mobile Actions */}
-          <div className="lg:hidden flex items-center space-x-2" suppressHydrationWarning>
+          <div className="xl:hidden flex items-center space-x-2" suppressHydrationWarning>
             <SearchButton />
             <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
               <Menu className="size-5" />
