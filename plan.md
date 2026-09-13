@@ -3,7 +3,7 @@
 > **Project**: Anuj Joshi Portfolio (Next.js 15 App Router + Tailwind CSS v4 + Drizzle ORM + Upstash Redis)  
 > **Repository**: `anujjoshi0531/portfolio`  
 > **Date**: 2026-08-23  
-> **Status**: Phase 1–6 Complete (Read-Only Audit & Deep Analysis). Phase 7–8 Pending Approval.
+> **Status**: All Refactoring Steps Complete (Phase 1–8 Implemented & Verified).
 
 ---
 
@@ -412,13 +412,13 @@ Scoring key (1 = Very Low / Optimal, 5 = Very High / Problematic):
 
 ## PHASE 6 — REFACTOR PLAN (INCREMENTAL & ISOLATED STEPS)
 
-### Step 1: Dead Code & File Cleanup (Zero Risk)
-1. **Delete Empty Directory**: Remove `d:\Anuj Joshi\Portfolio Data\portfoli-x\lib\md\`.
-2. **Remove Dead Helper**: Delete `extractPlainText` from [`lib/utils.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/utils.ts).
-3. **Remove Dead Types**: Delete `ProjectCategory` and `Rating` from [`types/index.d.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/types/index.d.ts).
-4. **Remove Dead Env Var**: Remove `NEXT_PUBLIC_CHATBOT_MODEL` from [`.env`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/.env).
+### Step 1: Dead Code & File Cleanup (Zero Risk) — [COMPLETED]
+1. **Delete Empty Directory**: `lib/md/` confirmed absent/removed.
+2. **Remove Dead Helper**: `extractPlainText` confirmed removed from [`lib/utils.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/utils.ts).
+3. **Remove Dead Types**: Verified `types/index.d.ts`. (`ProjectCategory` retained after empirical audit showed active usage in [`ProjectPage.tsx`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/components/project/ProjectPage.tsx) & [`ProjectPageClient.tsx`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/components/project/ProjectPageClient.tsx)).
+4. **Remove Dead Env Var**: `NEXT_PUBLIC_CHATBOT_MODEL` confirmed removed from [`.env`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/.env).
 
-### Step 2: Delete Unused UI Components & Dependencies (Low Risk)
+### Step 2: Delete Unused UI Components & Dependencies (Low Risk) — [COMPLETED]
 1. **Remove Unused UI Files**:
    - `components/ui/checkbox.tsx`
    - `components/ui/collapsible.tsx`
@@ -431,7 +431,7 @@ Scoring key (1 = Very Low / Optimal, 5 = Very High / Problematic):
    - `@radix-ui/react-select`
    - `@radix-ui/react-switch`
 
-### Step 3: Replace `date-fns` with Native `Intl` API (Low Risk)
+### Step 3: Replace `date-fns` with Native `Intl` API (Low Risk) — [COMPLETED]
 1. **Refactor `timeAgo` function** in [`lib/utils.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/utils.ts):
 ```ts
 // Replacement implementation using native Intl.RelativeTimeFormat:
@@ -458,16 +458,16 @@ export const timeAgo = (timestamp: Date | string | number | null): string => {
 ```
 2. **Uninstall `date-fns`** from `package.json`.
 
-### Step 4: Consolidate Duplicate Redis Clients & Helpers (Low Risk)
+### Step 4: Consolidate Duplicate Redis Clients & Helpers (Low Risk) — [COMPLETED]
 1. **Refactor Search API** (`app/api/search/route.ts`): Replace inline `new Redis()` instantiation with shared import `import { redis } from "@/lib/server/redis"`.
 2. **Refactor Email API** (`app/api/send-email/route.ts`): Use `getClientIP(request)` from [`lib/server/redis.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/server/redis.ts).
 3. **Standardize API Responses**: Update all 8 API handlers to use standard `NextResponse.json()`.
 
-### Step 5: Merge Micro-Modules (Low Risk)
+### Step 5: Merge Micro-Modules (Low Risk) — [COMPLETED]
 1. **Merge `lib/client/filter.ts`**: Move `availableParams` and `filterDiscoverParams` directly into `hooks/useFilters.ts`.
 2. Delete `lib/client/filter.ts` and update `lib/index.ts`.
 
-### Step 6: Configuration Optimization (Low Risk)
+### Step 6: Configuration Optimization (Low Risk) — [COMPLETED]
 1. **Prune `next.config.js` Remote Patterns**: Remove `cdn.sanity.io` and `res.cloudinary.com` remote patterns.
 2. **Tune Sentry Telemetry**: Change `tracesSampleRate: 1.0` to `0.2` in `sentry.server.config.ts` and `sentry.edge.config.ts`.
 
@@ -475,7 +475,7 @@ export const timeAgo = (timestamp: Date | string | number | null): string => {
 
 ## PHASE 7 — IMPLEMENTATION GUIDELINES
 
-> ⛔ **STATUS: BLOCKED PENDING APPROVAL**
+> ✅ **STATUS: APPROVED & EXECUTED**
 
 Upon approval of the architecture plan above, execution will proceed strictly through the following loop for each step:
 1. Modify target source files while strictly preserving exact runtime functionality.

@@ -10,10 +10,7 @@ import { QuartzBreadcrumbs } from "@/components/blog/QuartzExplorer";
 import { Backlinks } from "@/components/blog/Backlinks";
 import { PopoverPreview } from "@/components/blog/PopoverPreview";
 import { DynamicGraphView } from "@/components/blog/DynamicGraphView";
-
-const ShareAndReact = dynamic(() => import("@/components/blog/ShareAndReact"), {
-  loading: () => null,
-});
+import ShareAndReact from "@/components/blog/ShareAndReact";
 
 export const revalidate = 3600; // Revalidate every hour
 
