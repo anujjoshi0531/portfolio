@@ -120,7 +120,7 @@ const nextConfig = {
 
 // Injected content via Sentry wizard below
 
-const { withSentryConfig } = require("@sentry/nextjs");
+const { withSentryConfig } = require("@sentry/nextjs/config");
 
 module.exports = withSentryConfig(nextConfig, {
   org: "anujjoshi",
