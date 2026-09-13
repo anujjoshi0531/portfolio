@@ -18,7 +18,7 @@ const Footer = () => {
         </p>
         <p className="text-xs sm:text-sm text-center">
           All rights are reserved by&nbsp;
-          <Link className="link hover:text-theme hover:font-semibold" href="/" aria-label="Go to homepage">
+          <Link className="link hover:text-theme hover:font-semibold" href="/">
             Anuj Joshi
           </Link>
           &nbsp;&copy; {new Date().getFullYear()}

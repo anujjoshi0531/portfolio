@@ -14,7 +14,7 @@ import {
 type LinkPreviewProps = {
     children: React.ReactNode;
     title?: string;
-    url: string;
+    url?: string;
     className?: string;
     width?: number;
     height?: number;
@@ -39,6 +39,24 @@ export const LinkPreview = ({
     layout: _layout = "fixed",
     ariaLabel,
 }: LinkPreviewProps) => {
+    const [isOpen, setOpen] = React.useState(false);
+
+    const springConfig = { stiffness: 100, damping: 15 };
+    const x = useMotionValue(0);
+
+    const translateX = useSpring(x, springConfig);
+
+    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
+        const targetRect = event.currentTarget.getBoundingClientRect();
+        const eventOffsetX = event.clientX - targetRect.left;
+        const offsetFromCenter = (eventOffsetX - targetRect.width / 2) / 2; // Reduce the effect to make it subtle
+        x.set(offsetFromCenter);
+    };
+
+    if (!url || url.trim() === "" || url === "#") {
+        return <span className={className}>{children}</span>;
+    }
+
     let src: string;
     if (!isStatic) {
         const params = new URLSearchParams({
@@ -57,20 +75,6 @@ export const LinkPreview = ({
         src = imageSrc;
     }
 
-    const [isOpen, setOpen] = React.useState(false);
-
-    const springConfig = { stiffness: 100, damping: 15 };
-    const x = useMotionValue(0);
-
-    const translateX = useSpring(x, springConfig);
-
-    const handleMouseMove = (event: React.MouseEvent<HTMLElement>) => {
-        const targetRect = event.currentTarget.getBoundingClientRect();
-        const eventOffsetX = event.clientX - targetRect.left;
-        const offsetFromCenter = (eventOffsetX - targetRect.width / 2) / 2; // Reduce the effect to make it subtle
-        x.set(offsetFromCenter);
-    };
-
     return (
         <>
             {/* Preload the preview image when the card opens */}
@@ -88,13 +92,17 @@ export const LinkPreview = ({
                     setOpen(open);
                 }}
             >
-                <HoverCardPrimitive.Trigger
-                    onMouseMove={handleMouseMove}
-                    className={className}
-                    href={url}
-                    aria-label={ariaLabel}
-                >
-                    {children}
+                <HoverCardPrimitive.Trigger asChild>
+                    <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onMouseMove={handleMouseMove}
+                        className={className}
+                        aria-label={ariaLabel}
+                    >
+                        {children}
+                    </a>
                 </HoverCardPrimitive.Trigger>
 
                 <HoverCardPrimitive.Content

@@ -45,7 +45,7 @@ export default function ThemePicker() {
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className="fixed z-50 bottom-4 left-6 p-1 size-8 rounded-full shadow-lg bg-theme text-background transition-all duration-150 hover:scale-110 flex items-center justify-center"
+          className="fixed z-50 bottom-4 left-6 p-1 size-8 rounded-full shadow-lg bg-theme text-neutral-950 transition-all duration-150 hover:scale-110 flex items-center justify-center"
           aria-label="Change theme color">
           <TooltipComponent message="Change theme color">
             <Palette className="size-5" />

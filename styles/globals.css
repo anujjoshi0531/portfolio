@@ -229,7 +229,7 @@
 @layer base {
 
   :root {
-    --theme: 140 100% 55%;
+    --theme: 142 72% 38%;
     --chatbot-theme: hsl(var(--theme));
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -259,6 +259,8 @@
   }
 
   .dark {
+    --theme: 140 100% 55%;
+    --chatbot-theme: hsl(var(--theme));
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;

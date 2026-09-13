@@ -18,7 +18,11 @@ export default function ChatbotProvider() {
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    setUserId(getUserId());
+    // Delay chatbot initialization slightly so chatui bundle execution does not block initial main thread / TBT
+    const timer = setTimeout(() => {
+      setUserId(getUserId());
+    }, 1200);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!userId) return null;

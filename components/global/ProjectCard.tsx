@@ -31,8 +31,8 @@ const ProjectCard = ({
   const title = project.title || "Untitled Project";
   const description = project.description || "No description available";
   const image = project.thumbnail || '/icon.webp';
-  const githubUrl = project.github || "#";
-  const liveUrl = project.url || "#";
+  const githubUrl = project.github;
+  const liveUrl = project.url;
   const pid = project.slug || project.id || "unknown";
 
   // FocusCard interaction: blur & scale down when a sibling is hovered
@@ -66,22 +66,26 @@ const ProjectCard = ({
       >
         {/* Action links */}
         <div className="absolute top-4 left-4 flex gap-3">
-          <LinkPreview
-            title={title}
-            url={githubUrl}
-            className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
-            ariaLabel={`View ${title} GitHub repository`}
-          >
-            <Github className="size-5" />
-          </LinkPreview>
-          <LinkPreview
-            title={title}
-            url={liveUrl}
-            className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
-            ariaLabel={`Visit ${title} live website`}
-          >
-            <Globe className="size-5" />
-          </LinkPreview>
+          {githubUrl && (
+            <LinkPreview
+              title={title}
+              url={githubUrl}
+              className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
+              ariaLabel={`View ${title} GitHub repository`}
+            >
+              <Github className="size-5" />
+            </LinkPreview>
+          )}
+          {liveUrl && (
+            <LinkPreview
+              title={title}
+              url={liveUrl}
+              className="text-xl text-white hover:text-theme hover:scale-110 transition-transform"
+              ariaLabel={`Visit ${title} live website`}
+            >
+              <Globe className="size-5" />
+            </LinkPreview>
+          )}
         </div>
 
         {/* Title — FocusCard gradient text style */}

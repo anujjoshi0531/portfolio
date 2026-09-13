@@ -46,24 +46,25 @@ export default function Hero() {
             whileInView="visible"
             className="flex flex-wrap gap-5 py-10 justify-center lg:justify-start">
             <m.div variants={childVariants}>
-              <Link href="/contact" passHref>
-                <Button aria-label="Go to contact page">
+              <Button asChild>
+                <Link href="/contact" aria-label="Contact Me">
                   <Send className="size-4" />
                   Contact Me
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </m.div>
 
             <m.div variants={childVariants}>
-              <Link
-                href="/resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer">
-                <Button variant="secondary" aria-label="Download resume (opens in new tab)">
+              <Button asChild variant="secondary">
+                <Link
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Resume">
                   <Link2 className="size-4" />
                   Resume
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </m.div>
           </m.div>
         </div>

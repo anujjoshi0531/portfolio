@@ -17,13 +17,29 @@ import { Skeleton } from "@/components/ui/skeleton";
 function AboutSkeleton() {
   return (
     <SectionTemplate title="About Me" subtitle="My Introduction" id="about">
-      <div className="space-y-4 max-w-2xl">
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-5/6" />
-        <Skeleton className="h-4 w-4/6" />
-        <div className="flex gap-3 mt-6 flex-wrap">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-8 w-20 rounded-full" />
+      <div className="mb-5 flex flex-col lg:grid lg:grid-cols-5 lg:gap-56 items-center">
+        <div className="relative w-[225px] sm:w-[400px] mb-10 lg:col-span-2" style={{ aspectRatio: "610/752" }}>
+          <Skeleton className="w-full h-full rounded-md" />
+        </div>
+        <div className="flex flex-col gap-4 lg:col-span-3 w-full">
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-11/12" />
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-4/5" />
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-3/4" />
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-5/6" />
+        </div>
+      </div>
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Skeleton className="h-28 rounded-lg w-full" />
+          <Skeleton className="h-28 rounded-lg w-full" />
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-28 rounded-lg w-full" />
           ))}
         </div>
       </div>
@@ -34,20 +50,23 @@ function AboutSkeleton() {
 function ExperienceSkeleton() {
   return (
     <SectionTemplate title="Experience" subtitle="Where I've worked" id="experience">
-      <div className="mx-auto max-w-4xl grid md:grid-cols-7 gap-4 md:gap-8">
+      <div className="mx-auto max-w-4xl grid grid-rows-1 md:min-h-[400px] md:grid-cols-7 gap-4 md:gap-8">
         <ul className="flex md:block md:col-span-2 gap-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-10 w-24 md:w-full rounded" />
+            <li key={i} className="h-10 mb-2">
+              <Skeleton className="h-10 w-24 md:w-full rounded-md" />
+            </li>
           ))}
         </ul>
         <div className="md:col-span-5 space-y-4">
-          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-7 w-48" />
           <Skeleton className="h-4 w-32" />
-          <Skeleton className="h-4 w-full max-w-md" />
-          <Skeleton className="h-4 w-full max-w-md" />
-          <div className="flex flex-wrap gap-2 mt-4">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-5 w-16 rounded-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-5/6" />
+          <Skeleton className="h-4 w-4/5" />
+          <div className="flex flex-wrap gap-2 mt-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-6 w-16 rounded-full" />
             ))}
           </div>
         </div>
@@ -58,7 +77,7 @@ function ExperienceSkeleton() {
 
 function ProjectSkeleton() {
   return (
-    <section className="relative h-[100vh]" aria-label="Projects loading">
+    <section className="relative h-[100vh]" aria-label="Projects showcase">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
         <div className="flex gap-4 px-8">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -75,10 +94,14 @@ function BlogSkeleton() {
     <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories" id="blogs">
       <div className="flex space-x-4 overflow-hidden px-2 py-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="shrink-0 w-[300px] space-y-3">
+          <div key={i} className="shrink-0 w-[300px] md:w-[350px] space-y-3">
             <Skeleton className="aspect-video w-full rounded-lg" />
-            <Skeleton className="h-4 w-4/5" />
+            <Skeleton className="h-5 w-4/5" />
             <Skeleton className="h-4 w-3/5" />
+            <div className="flex gap-2">
+              <Skeleton className="h-4 w-12 rounded-full" />
+              <Skeleton className="h-4 w-16 rounded-full" />
+            </div>
           </div>
         ))}
       </div>
@@ -92,12 +115,19 @@ function TestimonialSkeleton() {
       title="Testimonials"
       subtitle="What others say about me"
       id="testimonials"
+      className="lg:flex items-baseline justify-between"
     >
-      <div className="text-center max-w-xl mx-auto space-y-4 mt-6">
-        <Skeleton className="h-24 w-full rounded-lg" />
-        <Skeleton className="w-12 h-12 rounded-full mx-auto" />
-        <Skeleton className="h-4 w-24 mx-auto" />
-        <Skeleton className="h-3 w-16 mx-auto" />
+      <div className="lg:w-4/5 mx-auto mt-6 sm:grid grid-cols-[40px_auto_40px] items-center gap-4 md:gap-6 min-h-[220px]">
+        <Skeleton className="hidden sm:block size-10 rounded-full" />
+        <div className="text-center w-full space-y-4">
+          <Skeleton className="h-24 w-full rounded-md" />
+          <div className="flex flex-col items-center gap-2">
+            <Skeleton className="size-12 rounded-full" />
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-3 w-20" />
+          </div>
+        </div>
+        <Skeleton className="hidden sm:block size-10 rounded-full" />
       </div>
     </SectionTemplate>
   );
@@ -113,33 +143,23 @@ export const revalidate = 3600; // Revalidate every hour
 
 export default function Page() {
   return (
-    <main className="space-y-24 pb-24">
+    <div className="space-y-24 pb-24">
       {/* Hero is synchronous — always in the first TCP window */}
       <Hero />
 
-      <Suspense fallback={<AboutSkeleton />}>
-        <SectionTemplate title="About Me" subtitle="My Introduction" id="about">
-          <AboutSection />
-        </SectionTemplate>
-      </Suspense>
+      <SectionTemplate title="About Me" subtitle="My Introduction" id="about">
+        <AboutSection />
+      </SectionTemplate>
 
-      <Suspense fallback={<ExperienceSkeleton />}>
-        <ExperienceSection />
-      </Suspense>
+      <ExperienceSection />
 
-      <Suspense fallback={<ProjectSkeleton />}>
-        <ProjectSection />
-      </Suspense>
+      <ProjectSection />
 
-      <Suspense fallback={<BlogSkeleton />}>
-        <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories" id="blogs">
-          <BlogSection />
-        </SectionTemplate>
-      </Suspense>
+      <SectionTemplate title="Recent Blogs" subtitle="Insights, Thoughts, and Stories" id="blogs">
+        <BlogSection />
+      </SectionTemplate>
 
-      <Suspense fallback={<TestimonialSkeleton />}>
-        <TestimonialSection />
-      </Suspense>
-    </main>
+      <TestimonialSection />
+    </div>
   );
 }

@@ -107,9 +107,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           aria-label={loading || isLoading ? "Searching blogs" : "Search blogs"}
         >
           {loading || isLoading ? (
-            <Loader2 className="animate-spin text-white" />
+            <Loader2 className="animate-spin text-neutral-950" />
           ) : (
-            <Search className="text-white" />
+            <Search className="text-neutral-950" />
           )}
         </Button>
       </div>

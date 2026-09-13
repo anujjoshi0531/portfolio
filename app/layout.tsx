@@ -7,20 +7,20 @@ import NextTopLoader from 'nextjs-toploader';
 import { Metadata } from "next";
 import { PropsWithChildren } from "react";
 import dynamic from "next/dynamic";
-import ThemePicker from '@/components/global/ThemePicker';
 import Navbar from "@/components/site/Navbar";
 import Footer from "@/components/site/Footer";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import Script from "next/script";
 import { clientConfig } from "@/lib/constant/config.client";
 import { LazyMotion, domAnimation } from "framer-motion";
 
 const PopupChatbot = dynamic(() => import("@/components/providers/chatbot-provider"));
+const ThemePicker = dynamic(() => import("@/components/global/ThemePicker"));
 
 const poppins = Poppins({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
   preload: true,
 });
 
@@ -173,8 +173,11 @@ export default async function Layout({
     : null;
 
   return (
-    <html suppressHydrationWarning lang="en" className="scroll-smooth overflow-x-clip">
+    <html suppressHydrationWarning lang="en" className="dark scroll-smooth overflow-x-clip">
       <head>
+        <link rel="preload" as="image" href="/hero/1.webp" type="image/webp" fetchPriority="high" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="shortcut icon" href="/icon.webp" type="image/x-icon" />
         {contestApiOrigin && (
           <link rel="dns-prefetch" href={contestApiOrigin} />
@@ -245,7 +248,7 @@ export default async function Layout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var s=localStorage.getItem("themeColor");if(s)document.documentElement.style.setProperty("--theme",s)}catch(e){}`,
+            __html: `try{var s=localStorage.getItem("themeColor");if(s)document.documentElement.style.setProperty("--theme",s)}catch(e){}if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(err){console.error('SW registration failed:',err);});});}`,
           }}
         />
       </head>
@@ -276,7 +279,22 @@ export default async function Layout({
         </ThemeProvider>
       </body>
       {clientConfig.GOOGLE_ANALYTICS_ID && (
-        <GoogleAnalytics gaId={clientConfig.GOOGLE_ANALYTICS_ID} />
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${clientConfig.GOOGLE_ANALYTICS_ID}`}
+            strategy="lazyOnload"
+          />
+          <Script id="google-analytics" strategy="lazyOnload">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${clientConfig.GOOGLE_ANALYTICS_ID}', {
+                page_path: window.location.pathname,
+              });
+            `}
+          </Script>
+        </>
       )}
     </html>
   );
