@@ -258,7 +258,6 @@ export default async function Layout({
         <ThemeProvider>
           <DarkProvider
             attribute="class"
-            enableSystem
             disableTransitionOnChange
             storageKey="station-theme"
             defaultTheme="dark">
@@ -277,25 +276,25 @@ export default async function Layout({
             </LazyMotion>
           </DarkProvider>
         </ThemeProvider>
+        {clientConfig.GOOGLE_ANALYTICS_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${clientConfig.GOOGLE_ANALYTICS_ID}`}
+              strategy="lazyOnload"
+            />
+            <Script id="google-analytics" strategy="lazyOnload">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${clientConfig.GOOGLE_ANALYTICS_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `}
+            </Script>
+          </>
+        )}
       </body>
-      {clientConfig.GOOGLE_ANALYTICS_ID && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${clientConfig.GOOGLE_ANALYTICS_ID}`}
-            strategy="lazyOnload"
-          />
-          <Script id="google-analytics" strategy="lazyOnload">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${clientConfig.GOOGLE_ANALYTICS_ID}', {
-                page_path: window.location.pathname,
-              });
-            `}
-          </Script>
-        </>
-      )}
     </html>
   );
 }

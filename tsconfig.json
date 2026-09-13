@@ -25,6 +25,15 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@lib/*": [
+        "./lib/algorithms/*"
+      ],
+      "@i18n/*": [
+        "./lib/algorithms/i18n/*"
+      ],
+      "@content/*": [
+        "./lib/algorithms/descriptions/*"
       ]
     }
   },
@@ -40,7 +49,8 @@
     "node_modules",
     "agent",
     ".agents",
-    "obsidian"
+    "obsidian",
+    "alg0.dev"
   ],
   "typeRoots": [
     "./node_modules/@types",

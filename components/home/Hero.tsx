@@ -13,8 +13,21 @@ import HeroImage from "./HeroImage";
 export default function Hero() {
   return (
     <div className="flex flex-col lg:flex-row-reverse items-center justify-between gap-4 pt-20 min-h-[85vh]" suppressHydrationWarning>
-      {/* Profile Image */}
-      <HeroImage />
+      {/* Profile Image — static img in server HTML for LCP, HeroImage layers interactivity on top */}
+      <div className="relative shrink-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hero/1.webp"
+          alt="Anuj Joshi"
+          width={450}
+          height={450}
+          fetchPriority="high"
+          decoding="sync"
+          className="absolute inset-0 w-full h-full object-cover rounded-full opacity-0 pointer-events-none"
+          aria-hidden="true"
+        />
+        <HeroImage />
+      </div>
 
       {/* Profile Text */}
       <div className="space-y-12 translate-y-8 w-full">
