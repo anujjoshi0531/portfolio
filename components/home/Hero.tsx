@@ -12,31 +12,18 @@ import HeroImage from "./HeroImage";
 
 export default function Hero() {
   return (
-    <div className="flex flex-col xl:flex-row-reverse items-center justify-between gap-4 pt-20 min-h-[85vh]" suppressHydrationWarning>
-      {/* Profile Image — static img in server HTML for LCP, HeroImage layers interactivity on top */}
-      <div className="relative shrink-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/hero/1.webp"
-          alt="Anuj Joshi"
-          width={450}
-          height={450}
-          fetchPriority="high"
-          decoding="sync"
-          className="absolute inset-0 w-full h-full object-cover rounded-full opacity-0 pointer-events-none"
-          aria-hidden="true"
-        />
-        <HeroImage />
-      </div>
+    <div className="flex flex-col lg:flex-row-reverse items-center justify-between gap-4 pt-20 min-h-[85vh]" suppressHydrationWarning>
+      {/* Profile Image */}
+      <HeroImage />
 
       {/* Profile Text */}
       <div className="space-y-12 translate-y-8 w-full">
-        <div className="md:space-y-8 md:py-12 sm:py-5 px-2 w-full text-center xl:text-left">
+        <div className="md:space-y-8 md:py-12 sm:py-5 px-2 w-full text-center lg:text-left">
           <m.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            className="space-y-2 md:space-y-4 select-none flex flex-col items-center xl:items-start xl:text-left text-center w-full">
+            className="space-y-2 md:space-y-4 select-none flex flex-col items-center lg:items-start lg:text-left text-center w-full">
             <m.h1
               variants={childVariants}
               className="font-bold text-[2rem] sm:text-[3rem] md:text-6xl w-full">
@@ -48,7 +35,7 @@ export default function Hero() {
               className="overflow-hidden w-full">
               <FlipWords
                 words={["A Fullstack Developer", "A Machine Learning Enthusiast", "Software Development Engineer", "Problem Solver at Scale", "Building AI-Powered Systems"]}
-                className="h-8 font-medium text-[1rem] sm:text-[1.5rem] md:text-2xl text-center xl:text-left w-full px-0"
+                className="h-8 font-medium text-[1rem] sm:text-[1.5rem] md:text-2xl text-center lg:text-left w-full px-0"
               />
             </m.h2>
           </m.div>
@@ -57,27 +44,26 @@ export default function Hero() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            className="flex flex-wrap gap-5 py-10 justify-center xl:justify-start">
+            className="flex flex-wrap gap-5 py-10 justify-center lg:justify-start">
             <m.div variants={childVariants}>
-              <Button asChild>
-                <Link href="/contact" aria-label="Contact Me">
+              <Link href="/contact" passHref>
+                <Button aria-label="Go to contact page">
                   <Send className="size-4" />
                   Contact Me
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </m.div>
 
             <m.div variants={childVariants}>
-              <Button asChild variant="secondary">
-                <Link
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Resume">
+              <Link
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer">
+                <Button variant="secondary" aria-label="Download resume (opens in new tab)">
                   <Link2 className="size-4" />
                   Resume
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </m.div>
           </m.div>
         </div>
@@ -87,7 +73,7 @@ export default function Hero() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          className="flex xl:justify-start justify-center items-center xl:gap-20 gap-10">
+          className="flex lg:justify-start justify-center items-center lg:gap-20 gap-10">
           {socialLinks
             .filter((l) => ["LinkedIn", "Twitter", "Telegram"].includes(l.title))
             .map(({ title, name, href, icon }) => (

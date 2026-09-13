@@ -54,14 +54,19 @@ const EduCard = ({ edu }: { edu: Education }) => {
             {/* Icon */}
             <m.div
                 className={`md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative isolate rounded-full p-2 transition-all duration-150 shrink-0 ${hasPassed
-                    ? "bg-theme text-neutral-950 scale-110 shadow-lg shadow-theme"
+                    ? "bg-theme text-muted scale-110 shadow-lg shadow-theme"
                     : "bg-muted text-theme"
                     }`}
             >
                 <GraduationCap className="size-6" />
             </m.div>
-            {/* Card */}
-            <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)]">
+            {/* Card â€” entire card is a LinkPreview for edu.url */}
+            <LinkPreview
+                title={edu.institution}
+                url={edu.certificate || edu.url}
+                className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)]"
+                ariaLabel={`Visit ${edu.institution} website`}
+            >
                 <m.div
                     className="px-8 py-6 rounded-lg shadow-md transition-all bg-muted/40 border border-border group-hover:shadow-lg group-hover:shadow-theme/10"
                     initial={{ opacity: 0, y: 20 }}
@@ -80,12 +85,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
                                     {startAgo} - {endAgo}
                                 </time>
                             </div>
-                            <LinkPreview
-                                title={edu.institution}
-                                url={edu.url}
-                                className="font-medium text-sm my-1 text-muted-foreground hover:text-theme transition-colors inline-block"
-                                ariaLabel={`Visit ${edu.institution} website`}
-                            >
+                            <LinkPreview title={edu.institution} url={edu.url || "#"} className="font-medium text-sm my-1 text-muted-foreground" ariaLabel={`Visit ${edu.institution} website`}>
                                 {edu.institution},&nbsp;
                                 <span>{edu.place}</span>
                             </LinkPreview>
@@ -114,7 +114,7 @@ const EduCard = ({ edu }: { edu: Education }) => {
                         </div>
                     )}
                 </m.div>
-            </div>
+            </LinkPreview>
         </div>
     );
 };

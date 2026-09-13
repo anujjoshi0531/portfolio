@@ -44,7 +44,7 @@ function Perk({ value, link, title, icon: Icon, subtitle }: PerkProps) {
   const content = (
     <div className="p-4 text-center m-1 space-y-1 bg-muted/60 hover:bg-muted/80 rounded-md hover:scale-[1.02] transition-all duration-150 group">
       {Icon && (
-        <Icon className="text-theme text-3xl md:text-4xl my-4 mx-auto group-hover:scale-110" aria-hidden="true" />
+        <Icon className="text-theme text-3xl md:text-4xl my-4 mx-auto group-hover:scale-110" />
       )}
       {subtitle && <Badge>{subtitle}</Badge>}
       <div className="font-semibold mt-1 text-md md:text-lg tracking-[0.05rem] leading-5 text-nowrap capitalize">
@@ -56,13 +56,17 @@ function Perk({ value, link, title, icon: Icon, subtitle }: PerkProps) {
 
   if (link) {
     return (
-      <LinkPreview title={title} url={link} ariaLabel={perkText}>
+      <LinkPreview title={title} url={link} ariaLabel={`View ${perkText}`}>
         {content}
       </LinkPreview>
     );
   }
 
-  return content;
+  return (
+    <Link href="#" target="_self" aria-label={perkText}>
+      {content}
+    </Link>
+  );
 }
 
 function PerkSkeleton() {

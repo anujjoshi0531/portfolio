@@ -288,9 +288,10 @@ export default function HeroImage() {
             <m.div
                 className="relative bg-theme/80 size-[280px] md:size-[380px] lg:size-[450px] aspect-square rounded-full overflow-hidden animate-profile cursor-pointer shrink-0"
                 suppressHydrationWarning
-                variants={shaking ? SHAKE_VARIANTS : undefined}
-                initial={shaking ? "idle" : false}
-                animate={shaking ? "shake" : undefined}
+                variants={shaking ? SHAKE_VARIANTS : containerVariants}
+                initial={shaking ? "idle" : "hidden"}
+                animate={shaking ? "shake" : "visible"}
+                whileInView={shaking ? undefined : "visible"}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}
@@ -299,7 +300,7 @@ export default function HeroImage() {
                 <div ref={spriteRef} className={spriteWrapClass}>
                     <Image priority unoptimized src="/hero/1.webp" alt="Anuj Joshi" width={500} height={500}
                         className="sprite-base object-cover"
-                        sizes="(max-width: 768px) 280px, (max-width: 1024px) 380px, 450px" />
+                        sizes="(max-width: 768px) 80vw, (max-width: 1200px) 50vw, 500px" />
 
                     {/* eslint-disable @next/next/no-img-element */}
                     <img src="/hero/open.webp" alt="" aria-hidden decoding="async" fetchPriority="low" loading="lazy" className="sprite-talk  sprite-frame object-cover" />

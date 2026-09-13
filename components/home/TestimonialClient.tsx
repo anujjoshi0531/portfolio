@@ -43,48 +43,24 @@ const TestimonialCard = ({
                 className={`text-sm flex flex-col items-center gap-2 mt-6 transition-all duration-500 ${isVisible ? "translate-y-0" : "translate-y-24"
                     }`}
             >
-                {testimonial.contact ? (
-                    <LinkPreview
-                        url={testimonial.contact}
-                        title={testimonial.name}
-                        ariaLabel={`Visit ${testimonial.name}'s profile`}
-                        className="flex flex-col items-center gap-2 transition-opacity hover:opacity-80"
-                    >
-                        <Avatar className="w-12 h-12">
-                            <AvatarImage
-                                src={testimonial.avatar || "/icon.webp"}
-                                width={48}
-                                height={48}
-                                alt={testimonial.name}
-                            />
-                            <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="font-bold capitalize inline-flex items-center gap-1">
-                                {testimonial.name}
-                            </p>
-                            <p className="text-xs">{testimonial.position}</p>
-                        </div>
-                    </LinkPreview>
-                ) : (
-                    <div className="flex flex-col items-center gap-2">
-                        <Avatar className="w-12 h-12">
-                            <AvatarImage
-                                src={testimonial.avatar || "/icon.webp"}
-                                width={48}
-                                height={48}
-                                alt={testimonial.name}
-                            />
-                            <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                            <p className="font-bold capitalize inline-flex items-center gap-1">
-                                {testimonial.name}
-                            </p>
-                            <p className="text-xs">{testimonial.position}</p>
-                        </div>
+                <LinkPreview
+                    url={testimonial.contact}
+                    className={cn(
+                        "flex flex-col items-center gap-2 transition-opacity hover:opacity-80",
+                        !testimonial.contact && "pointer-events-none"
+                    )}
+                >
+                    <Avatar className="w-12 h-12">
+                        <AvatarImage src={testimonial.avatar || "/icon.webp"} alt={testimonial.name} />
+                        <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                        <p className="font-bold capitalize inline-flex items-center gap-1">
+                            {testimonial.name}
+                        </p>
+                        <p className="text-xs">{testimonial.position}</p>
                     </div>
-                )}
+                </LinkPreview>
             </div>
         </div>
     );
@@ -127,7 +103,7 @@ export default function TestimonialClient({ testimonials }: TestimonialClientPro
             id="testimonials"
             className="lg:flex items-baseline justify-between"
         >
-            <div className="lg:w-4/5 mx-auto mt-6 sm:grid grid-cols-[40px_auto_40px] items-center [grid-template-areas:'nav-left_slider_nav-right'] gap-4 md:gap-6 min-h-[220px]">
+            <div className="lg:w-4/5 mx-auto mt-6 sm:grid grid-cols-[40px_auto_40px] [grid-template-areas:'nav-left_slider_nav-right'] gap-4 md:gap-6">
                 <button
                     onClick={handlePrev}
                     disabled={testimonials.length === 0}
