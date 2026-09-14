@@ -176,7 +176,7 @@ export default function Navbar() {
           </m.nav>
 
           {/* Mobile Actions */}
-          <div className="lg:hidden flex items-center space-x-2" suppressHydrationWarning>
+          <div className="flex lg:hidden items-center space-x-2" suppressHydrationWarning>
             <SearchButton />
             <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
               <Menu className="size-5" />

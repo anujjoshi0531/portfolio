@@ -6,7 +6,7 @@ import { Maximize2, Minimize2, Network } from "lucide-react";
 import type { GraphData } from "@/lib/server/local-content";
 
 interface GraphViewProps {
-  data?: GraphData;
+  data: GraphData;
   currentSlug?: string;
   className?: string;
   title?: string;
@@ -30,29 +30,24 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mode, setMode] = useState<"local" | "global">(currentSlug ? "local" : "global");
-  const hoveredNodeIdRef = useRef<string | null>(null);
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
 
-  // Filter nodes/links safely based on mode
+  // Filter nodes/links based on mode
   const filteredData = useMemo(() => {
-    const safeNodes = Array.isArray(data?.nodes) ? data.nodes : [];
-    const safeLinks = Array.isArray(data?.links) ? data.links : [];
-
     if (mode === "local" && currentSlug) {
       const neighborSlugs = new Set<string>();
       neighborSlugs.add(currentSlug);
 
-      safeLinks.forEach((l) => {
-        if (l?.source === currentSlug && l?.target) neighborSlugs.add(l.target);
-        if (l?.target === currentSlug && l?.source) neighborSlugs.add(l.source);
+      data.links.forEach((l) => {
+        if (l.source === currentSlug) neighborSlugs.add(l.target);
+        if (l.target === currentSlug) neighborSlugs.add(l.source);
       });
 
-      const nodes = safeNodes.filter((n) => n?.id && neighborSlugs.has(n.id));
-      const links = safeLinks.filter(
-        (l) => l?.source && l?.target && neighborSlugs.has(l.source) && neighborSlugs.has(l.target)
-      );
+      const nodes = data.nodes.filter((n) => neighborSlugs.has(n.id));
+      const links = data.links.filter((l) => neighborSlugs.has(l.source) && neighborSlugs.has(l.target));
       return { nodes, links };
     }
-    return { nodes: safeNodes, links: safeLinks };
+    return data;
   }, [data, currentSlug, mode]);
 
   useEffect(() => {
@@ -63,12 +58,12 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
     if (!ctx) return;
 
     let width = (canvas.width = containerRef.current?.clientWidth || 320);
-    let height = (canvas.height = isFullscreen ? Math.max(300, window.innerHeight - 100) : 280);
+    let height = (canvas.height = isFullscreen ? window.innerHeight - 100 : 280);
 
     const handleResize = () => {
       if (!canvas || !containerRef.current) return;
-      width = canvas.width = Math.max(200, containerRef.current.clientWidth);
-      height = canvas.height = isFullscreen ? Math.max(300, window.innerHeight - 100) : 280;
+      width = canvas.width = containerRef.current.clientWidth;
+      height = canvas.height = isFullscreen ? window.innerHeight - 100 : 280;
     };
 
     window.addEventListener("resize", handleResize);
@@ -79,14 +74,11 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
     const center = { x: width / 2, y: height / 2 };
 
     filteredData.nodes.forEach((n, idx) => {
-      if (!n || !n.id) return;
       const angle = (idx / (nodeCount || 1)) * 2 * Math.PI;
       const radiusOffset = 60 + Math.random() * 50;
-      const displayTitle = typeof n.title === "string" && n.title ? n.title : n.id || "Untitled";
-
       nodeMap.set(n.id, {
         id: n.id,
-        title: displayTitle,
+        title: n.title,
         x: center.x + Math.cos(angle) * radiusOffset,
         y: center.y + Math.sin(angle) * radiusOffset,
         vx: (Math.random() - 0.5) * 2,
@@ -98,7 +90,6 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
     });
 
     filteredData.links.forEach((l) => {
-      if (!l?.source || !l?.target) return;
       const sourceNode = nodeMap.get(l.source);
       const targetNode = nodeMap.get(l.target);
       if (sourceNode && targetNode) {
@@ -110,7 +101,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
     const nodesArray = Array.from(nodeMap.values());
     let animationFrameId: number;
 
-    // 2D Physics Step & Rendering
+    // Simple 2D Physics Step
     const simulate = () => {
       ctx.clearRect(0, 0, width, height);
 
@@ -125,7 +116,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
           const dist = Math.sqrt(distSq);
 
           if (dist < 180) {
-            const force = ((180 - dist) / dist) * 0.05;
+            const force = (180 - dist) / dist * 0.05;
             const fx = dx * force;
             const fy = dy * force;
             n1.vx -= fx;
@@ -138,7 +129,6 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
 
       // Link attraction
       filteredData.links.forEach((l) => {
-        if (!l?.source || !l?.target) return;
         const n1 = nodeMap.get(l.source);
         const n2 = nodeMap.get(l.target);
         if (n1 && n2) {
@@ -174,20 +164,17 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
         n.y = Math.max(pad, Math.min(height - pad, n.y));
       });
 
-      const currentHoveredId = hoveredNodeIdRef.current;
-
       // Render Edges
       ctx.lineWidth = 1;
       filteredData.links.forEach((l) => {
-        if (!l?.source || !l?.target) return;
         const n1 = nodeMap.get(l.source);
         const n2 = nodeMap.get(l.target);
         if (n1 && n2) {
           const isHighlighted =
-            currentHoveredId && (l.source === currentHoveredId || l.target === currentHoveredId);
+            hoveredNodeId && (l.source === hoveredNodeId || l.target === hoveredNodeId);
           ctx.strokeStyle = isHighlighted
             ? "rgba(59, 130, 246, 0.8)"
-            : currentHoveredId
+            : hoveredNodeId
             ? "rgba(255, 255, 255, 0.04)"
             : "rgba(255, 255, 255, 0.15)";
           ctx.beginPath();
@@ -199,8 +186,8 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
 
       // Render Nodes
       nodesArray.forEach((n) => {
-        const isHovered = currentHoveredId === n.id;
-        const isNeighbor = currentHoveredId ? n.neighbors.has(currentHoveredId) : false;
+        const isHovered = hoveredNodeId === n.id;
+        const isNeighbor = hoveredNodeId ? n.neighbors.has(hoveredNodeId) : false;
         const active = n.isCurrent;
 
         ctx.beginPath();
@@ -214,7 +201,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
           ctx.fillStyle = "#60a5fa";
           ctx.shadowColor = "#60a5fa";
           ctx.shadowBlur = 8;
-        } else if (currentHoveredId) {
+        } else if (hoveredNodeId) {
           ctx.fillStyle = "rgba(156, 163, 175, 0.2)";
           ctx.shadowBlur = 0;
         } else {
@@ -227,15 +214,10 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
 
         // Render Labels for active, hovered, or neighbors
         if (active || isHovered || isNeighbor || nodesArray.length <= 15) {
-          const safeTitle = typeof n.title === "string" ? n.title : String(n.title || "");
           ctx.font = active || isHovered ? "600 12px Inter, sans-serif" : "400 11px Inter, sans-serif";
           ctx.fillStyle = active || isHovered ? "#f3f4f6" : "rgba(209, 213, 219, 0.75)";
           ctx.textAlign = "center";
-          ctx.fillText(
-            safeTitle.length > 22 ? safeTitle.slice(0, 20) + "…" : safeTitle,
-            n.x,
-            n.y + n.radius + 14
-          );
+          ctx.fillText(n.title.length > 22 ? n.title.slice(0, 20) + "…" : n.title, n.x, n.y + n.radius + 14);
         }
       });
 
@@ -260,7 +242,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
         }
       }
 
-      hoveredNodeIdRef.current = foundId;
+      setHoveredNodeId(foundId);
       canvas.style.cursor = foundId ? "pointer" : "default";
     };
 
@@ -290,7 +272,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
       canvas.removeEventListener("click", handleClick);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [filteredData, currentSlug, isFullscreen, router]);
+  }, [filteredData, currentSlug, isFullscreen, hoveredNodeId, router]);
 
   return (
     <div
@@ -364,5 +346,3 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
     </div>
   );
 }
-
-export default GraphView;

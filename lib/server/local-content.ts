@@ -347,9 +347,9 @@ export const searchBlogs = cache(async ({
     const q = query.toLowerCase();
     blogs = blogs.filter(
       (b) =>
-        (b.title || "").toLowerCase().includes(q) ||
-        (b.description || "").toLowerCase().includes(q) ||
-        (b.content || "").toLowerCase().includes(q)
+        b.title.toLowerCase().includes(q) ||
+        b.description.toLowerCase().includes(q) ||
+        b.content.toLowerCase().includes(q)
     );
   }
 
@@ -423,12 +423,12 @@ function extractOutgoingLinksFromContent(content: string): string[] {
 }
 
 export const getGraphData = cache((): GraphData => {
-  const blogs = getBlogs() || [];
+  const blogs = getBlogs();
   const nodes: GraphNode[] = blogs.map((b) => ({
     id: b.slug,
-    title: b.title || b.slug || "Untitled",
+    title: b.title,
     category: b.category,
-    tags: Array.isArray(b.tags) ? b.tags : [],
+    tags: b.tags,
     url: `/blog/${b.slug}`,
   }));
 
@@ -436,12 +436,11 @@ export const getGraphData = cache((): GraphData => {
   const linkSet = new Set<string>();
   const links: GraphLink[] = [];
 
-  // 1. Wikilink-based connections (explicit references)
   for (const b of blogs) {
     const outgoing = extractOutgoingLinksFromContent(b.content);
     for (const target of outgoing) {
       if (nodeMap.has(target) && target !== b.slug) {
-        const linkKey = [b.slug, target].sort().join("<->");
+        const linkKey = `${b.slug}->${target}`;
         if (!linkSet.has(linkKey)) {
           linkSet.add(linkKey);
           links.push({ source: b.slug, target });
@@ -450,46 +449,8 @@ export const getGraphData = cache((): GraphData => {
     }
   }
 
-  // 2. Tag-based connections (posts sharing ≥1 tag)
-  for (let i = 0; i < blogs.length; i++) {
-    const a = blogs[i];
-    const aTags = new Set(Array.isArray(a.tags) ? a.tags.map((t) => t.toLowerCase()) : []);
-    if (aTags.size === 0) continue;
-
-    for (let j = i + 1; j < blogs.length; j++) {
-      const b = blogs[j];
-      const bTags = Array.isArray(b.tags) ? b.tags : [];
-      const hasSharedTag = bTags.some((t) => aTags.has(t.toLowerCase()));
-      if (hasSharedTag) {
-        const linkKey = [a.slug, b.slug].sort().join("<->");
-        if (!linkSet.has(linkKey)) {
-          linkSet.add(linkKey);
-          links.push({ source: a.slug, target: b.slug });
-        }
-      }
-    }
-  }
-
-  // 3. Category-based connections (posts in same category)
-  for (let i = 0; i < blogs.length; i++) {
-    const a = blogs[i];
-    if (!a.category) continue;
-
-    for (let j = i + 1; j < blogs.length; j++) {
-      const b = blogs[j];
-      if (a.category.toLowerCase() === (b.category || "").toLowerCase()) {
-        const linkKey = [a.slug, b.slug].sort().join("<->");
-        if (!linkSet.has(linkKey)) {
-          linkSet.add(linkKey);
-          links.push({ source: a.slug, target: b.slug });
-        }
-      }
-    }
-  }
-
   return { nodes, links };
 });
-
 
 export const getBacklinks = cache((targetSlug: string): BacklinkItem[] => {
   const blogs = getBlogs();

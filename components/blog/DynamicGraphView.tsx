@@ -1,11 +1,10 @@
 "use client";
 
-import React, { Component, ReactNode } from "react";
 import dynamic from "next/dynamic";
 import type { GraphData } from "@/lib/server/local-content";
 
 const GraphViewInner = dynamic(
-  () => import("./GraphView"),
+  () => import("./GraphView").then((mod) => mod.GraphView),
   {
     ssr: false,
     loading: () => (
@@ -16,40 +15,6 @@ const GraphViewInner = dynamic(
   }
 );
 
-interface ErrorBoundaryProps {
-  children: ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-}
-
-class GraphErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("Knowledge Graph Rendering Error:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="h-[280px] w-full rounded-xl border border-neutral-800 bg-neutral-900/40 p-4 flex items-center justify-center text-xs text-neutral-500">
-          Knowledge graph unavailable
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-
 interface DynamicGraphViewProps {
   data: GraphData;
   currentSlug?: string;
@@ -58,9 +23,5 @@ interface DynamicGraphViewProps {
 }
 
 export function DynamicGraphView(props: DynamicGraphViewProps) {
-  return (
-    <GraphErrorBoundary>
-      <GraphViewInner {...props} />
-    </GraphErrorBoundary>
-  );
+  return <GraphViewInner {...props} />;
 }

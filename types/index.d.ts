@@ -89,3 +89,4 @@ type Education = {
     type?: string;
     url?: string;
 };
+

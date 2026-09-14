@@ -1,6 +1,5 @@
 import { searchBlogs } from "@/lib/server/local-content";
 import { redis } from "@/lib/server/redis";
-import { NextResponse } from "next/server";
 
 export const revalidate = 3600;
 
@@ -13,7 +12,7 @@ export async function POST(req: Request) {
     if (redis) {
       const cachedData = await redis.get(cacheKey);
       if (cachedData) {
-        return NextResponse.json(cachedData);
+        return Response.json(cachedData);
       }
     }
 
@@ -23,9 +22,14 @@ export async function POST(req: Request) {
       await redis.set(cacheKey, res, { ex: 3600 });
     }
     
-    return NextResponse.json(res);
+    return Response.json(res);
   } catch (error) {
-    console.error('Error in search-blogs:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error('Error in search-blogs:', error)
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
   }
 }

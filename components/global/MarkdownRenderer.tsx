@@ -12,20 +12,14 @@ interface MarkdownRendererProps {
   slug?: string;
 }
 
-interface MarkdownRenderResult {
-  element: React.ReactElement;
-  toc: TocEntry[];
-}
-
 /**
  * Server component that renders markdown via the unified pipeline and
  * optionally shows a reading-progress bar with reading time + counters.
- * Returns both the rendered JSX element and the ToC data.
  */
-export async function renderMarkdownWithToc({ content, slug }: MarkdownRendererProps): Promise<MarkdownRenderResult> {
-  if (!content?.trim()) return { element: <></>, toc: [] };
-  const { html, toc, wordCount } = await renderMarkdown(content);
-  const element = (
+export async function MarkdownRenderer({ content, slug }: MarkdownRendererProps) {
+  if (!content?.trim()) return null;
+  const { html, wordCount } = await renderMarkdown(content);
+  return (
     <>
       {slug && <ReadingProgress wordCount={wordCount} slug={slug} />}
       <article
@@ -35,16 +29,6 @@ export async function renderMarkdownWithToc({ content, slug }: MarkdownRendererP
       />
     </>
   );
-  return { element, toc };
-}
-
-/**
- * Original server component for backwards compatibility.
- * Renders markdown and discards ToC data.
- */
-export async function MarkdownRenderer({ content, slug }: MarkdownRendererProps) {
-  const { element } = await renderMarkdownWithToc({ content, slug });
-  return element;
 }
 
 /**

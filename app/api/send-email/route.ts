@@ -5,8 +5,6 @@ import { z } from "zod";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-import { getClientIP } from "@/lib/server/redis";
-
 // Create a new ratelimiter, that allows 5 requests per 1 hour
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -21,7 +19,7 @@ const EmailSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const ip = getClientIP(request);
+  const ip = request.headers.get("x-forwarded-for") || "unknown";
 
   // Check rate limit via Upstash Redis
   const { success } = await ratelimit.limit(`ratelimit_${ip}`);
