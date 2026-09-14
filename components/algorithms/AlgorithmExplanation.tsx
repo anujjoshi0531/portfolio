@@ -7,7 +7,7 @@ import 'katex/dist/katex.min.css'
 import React, { useEffect, useState } from 'react'
 import type { Algorithm } from '@/lib/algorithms/types'
 import { renderMarkdown } from '@/lib/markdown'
-import { BookOpen, CheckCircle2, Layers } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
 
 interface AlgorithmExplanationProps {
   algorithm: Algorithm
@@ -15,29 +15,44 @@ interface AlgorithmExplanationProps {
 }
 
 export function AlgorithmExplanation({ algorithm, className = '' }: AlgorithmExplanationProps) {
-  const { description, prerequisites, howItWorks = [] } = algorithm
+  const { description } = algorithm
   const [renderedDescription, setRenderedDescription] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
 
-    if (!description || algorithm.descriptionFormat !== 'markdown') {
-      setRenderedDescription(null)
-      return
-    }
-
-    renderMarkdown(description)
+    fetch(`/api/algorithms/${algorithm.id}/content`)
+      .then((response) => {
+        if (!response.ok) throw new Error('Algorithm markdown not found')
+        return response.json() as Promise<{ content?: string }>
+      })
+      .then(({ content }) => {
+        if (!content) throw new Error('Algorithm markdown is empty')
+        return renderMarkdown(content)
+      })
       .then(({ html }) => {
         if (!cancelled) setRenderedDescription(html)
       })
       .catch(() => {
-        if (!cancelled) setRenderedDescription(null)
+        if (cancelled) return
+
+        if (description) {
+          renderMarkdown(description)
+            .then(({ html }) => {
+              if (!cancelled) setRenderedDescription(html)
+            })
+            .catch(() => {
+              if (!cancelled) setRenderedDescription(null)
+            })
+        } else {
+          setRenderedDescription(null)
+        }
       })
 
     return () => {
       cancelled = true
     }
-  }, [description, algorithm.descriptionFormat])
+  }, [algorithm.id, description])
 
   return (
     <div
@@ -48,8 +63,7 @@ export function AlgorithmExplanation({ algorithm, className = '' }: AlgorithmExp
         <h2>About {algorithm.name}</h2>
       </div>
 
-      {/* Description text */}
-      {description && renderedDescription ? (
+      {renderedDescription ? (
         <div
           className="markdown-body algorithm-description"
           dangerouslySetInnerHTML={{ __html: renderedDescription }}
@@ -59,32 +73,6 @@ export function AlgorithmExplanation({ algorithm, className = '' }: AlgorithmExp
           {description}
         </div>
       ) : null}
-
-      {/* Prerequisites */}
-      {prerequisites && (
-        <div className="p-3.5 bg-muted/40 rounded-xl border border-border/60 text-xs sm:text-sm">
-          <span className="font-semibold text-foreground">Prerequisite: </span>
-          <span className="text-muted-foreground">{prerequisites}</span>
-        </div>
-      )}
-
-      {/* How it works steps */}
-      {howItWorks.length > 0 && (
-        <div className="flex flex-col gap-2.5 pt-2 border-t border-border/50">
-          <h3 className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-1.5">
-            <Layers className="size-4 text-primary" />
-            How It Works
-          </h3>
-          <ol className="flex flex-col gap-2 pl-1">
-            {howItWorks.map((stepText, idx) => (
-              <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground">
-                <CheckCircle2 className="size-4 text-primary/80 shrink-0 mt-0.5" />
-                <span>{stepText}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
     </div>
   )
 }

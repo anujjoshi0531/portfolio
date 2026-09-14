@@ -437,10 +437,6 @@ const algorithmCache = new Map<string, Promise<Algorithm>>()
 
 type ModuleLoader = () => Promise<Record<string, unknown>>
 
-type DescriptionModule = {
-  default?: string | { en?: string }
-}
-
 const MODULE_LOADERS: Record<string, { loader: ModuleLoader; exportName: string }> = {
   // Concepts & DS in concepts.ts
   'big-o-notation': { loader: () => import('./definitions/concepts'), exportName: 'bigONotation' },
@@ -525,20 +521,6 @@ export async function loadAlgorithm(id: string): Promise<Algorithm> {
     const algo = mod[entry.exportName] as Algorithm
     if (!algo) {
       throw new Error(`Algorithm export '${entry.exportName}' not found for ${id}`)
-    }
-
-    // Try to load detailed description and multi-language implementations lazily
-    try {
-      const descMod = (await import(`./descriptions/${id}`).catch(() => null)) as DescriptionModule | null
-      const description =
-        typeof descMod?.default === 'string' ? descMod.default : descMod?.default?.en
-
-      if (description) {
-        algo.description = description
-        algo.descriptionFormat = 'markdown'
-      }
-    } catch {
-      // description is optional
     }
 
     // Load multi-language packs in parallel

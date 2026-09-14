@@ -294,6 +294,11 @@ export const getTestimonials = cache(() => {
   return items.sort((a, b) => (b.date || b.created || "").localeCompare(a.date || a.created || ""));
 });
 
+export const getAlgorithmContentBySlug = cache((slug: string): ContentItem | null => {
+  const algorithms = readCollection("algorithms");
+  return algorithms.find((algorithm) => algorithm.slug === slug || algorithm.id === slug) || null;
+});
+
 export const getBlogBySlug = cache((slug: string): BlogPost | null => {
   const blogs = getBlogs();
   return blogs.find((b) => b.slug === slug || b.id === slug) || null;
