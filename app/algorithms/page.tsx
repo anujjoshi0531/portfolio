@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Metadata } from 'next'
-import { getAlgorithmCatalog, getAlgorithmCatalogCategories } from '@/lib/server/local-content'
+import { getAlgorithmCatalog, getAlgorithmCatalogCategories } from '@/features/algorithms/lib/catalog'
 import { AlgorithmCatalogClient } from './AlgorithmCatalogClient'
 
 export const metadata: Metadata = {

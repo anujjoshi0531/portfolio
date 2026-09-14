@@ -204,9 +204,6 @@ export const perkData = [
     rating: 900,
   },
 ];
-// `socialLink` has been removed — use `socialLinks` (the unified array) instead.
-// Hero.tsx filters to LinkedIn, X, and Telegram using .filter().
-
 export const sortOptions = [
   {
     label: "Recent Published",

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
-import { sendWeeklyNewsletter } from "@/lib/server/mail";
+import { sendWeeklyNewsletter } from "@/lib/server/email";
 
 // This queue handler will be called by QStash
 async function handler(request: Request) {

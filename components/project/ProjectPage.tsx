@@ -1,4 +1,4 @@
-import { getProjects } from "@/lib/server/local-content"
+import { getProjects } from "@/features/projects/lib/content"
 import ProjectPageClient from "./ProjectPageClient"
 import { Suspense } from "react"
 import { PageTemplate } from '@/components/global/SectionTemplate'

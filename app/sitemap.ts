@@ -1,6 +1,6 @@
-import { getBlogs } from '@/lib/server/local-content';
+import { getBlogs } from '@/features/blog/lib/content';
 import type { MetadataRoute } from 'next';
-import { clientConfig } from "@/lib/constant/config.client";
+import { clientConfig } from "@/lib/config/client";
 
 export const revalidate = 3600; // Revalidate every hour
 

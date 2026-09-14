@@ -3,7 +3,8 @@
 import { SectionTemplate } from '@/components/global/SectionTemplate'
 import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
-import { cn, formatDate } from "@/lib"
+import { cn } from "@/lib/utils/styles";
+import { formatDate } from "@/lib/utils/dates";
 import { Award, ChevronRight } from "lucide-react"
 import { LinkPreview } from "@/components/animate/LinkPreview"
 

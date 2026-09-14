@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { cn } from "@/lib"
+import { cn } from "@/lib/utils/styles";
 
 interface BlogCardSkeletonProps {
   variant?: "vertical" | "horizontal"

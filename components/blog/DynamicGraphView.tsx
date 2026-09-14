@@ -2,7 +2,7 @@
 
 import React, { Component, ReactNode } from "react";
 import dynamic from "next/dynamic";
-import type { GraphData } from "@/lib/server/local-content";
+import type { GraphData } from "@/features/blog/lib/graph";
 
 const GraphViewInner = dynamic(
   () => import("./GraphView"),

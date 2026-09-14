@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { useFilters } from "@/hooks";
+import { useFilters } from "@/hooks/useFilters";
 import {
   Pagination,
   PaginationContent,

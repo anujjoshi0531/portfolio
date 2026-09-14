@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react'
 import { createRoot } from 'react-dom/client'
-import { AlgorithmVisualizer } from '@/components/algorithms/AlgorithmVisualizer'
+import { AlgorithmVisualizer } from '@/features/algorithms/components/AlgorithmVisualizer'
 
 export function AlgorithmEmbedHydrator({ containerSelector = '.markdown-body' }: { containerSelector?: string }) {
   const rootsRef = useRef<ReturnType<typeof createRoot>[]>([])

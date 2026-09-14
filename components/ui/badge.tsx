@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib";
+import { cn } from "@/lib/utils/styles";
 
 const badgeVariants = cva(
   "select-none text-nowrap capitalize hover:scale-[0.98] duration-300 inline-flex items-center rounded-full border transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",

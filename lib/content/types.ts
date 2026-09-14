@@ -1,0 +1,62 @@
+export interface Frontmatter {
+  title?: string;
+  name?: string;
+  description?: string;
+  category?: string;
+  status?: string;
+  start?: string;
+  end?: string;
+  date?: string;
+  published?: string;
+  tags?: string[];
+  skills?: string[];
+  url?: string;
+  github?: string;
+  thumbnail?: string;
+  avatar?: string;
+  company?: string;
+  position?: string;
+  institution?: string;
+  organization?: string;
+  location?: string;
+  grade?: string;
+  type?: string;
+  slug?: string;
+  likes?: number;
+  views?: number;
+  created?: string;
+  updated?: string;
+  [key: string]: unknown;
+}
+
+export interface ContentItem {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  category?: string;
+  status?: string;
+  start?: string;
+  end?: string;
+  date?: string;
+  published?: string;
+  tags: string[];
+  skills: string[];
+  url?: string;
+  github?: string;
+  thumbnail?: string;
+  avatar?: string;
+  company?: string;
+  position?: string;
+  institution?: string;
+  organization?: string;
+  location?: string;
+  grade?: string;
+  type?: string;
+  likes: number;
+  views: number;
+  created?: string;
+  updated?: string;
+  content: string;
+  frontmatter: Frontmatter;
+}

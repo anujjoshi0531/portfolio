@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
-import { cn } from "@/lib";
-import { numberFormatter } from "@/lib/utils";
+import { cn } from "@/lib/utils/styles";
+import { numberFormatter } from "@/lib/utils/format";
 
 interface ViewCounterProps {
   slug: string;

@@ -1,4 +1,4 @@
-import { searchBlogs } from "@/lib/server/local-content";
+import { searchBlogs } from "@/features/blog/lib/content";
 import { redis } from "@/lib/server/redis";
 import { NextResponse } from "next/server";
 

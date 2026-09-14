@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CalendarIcon } from "lucide-react";
-import { formatDate } from "@/lib";
+import { formatDate } from "@/lib/utils/dates";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";

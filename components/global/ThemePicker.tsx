@@ -7,7 +7,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn, hexToHSL } from "@/lib"
+import { cn } from "@/lib/utils/styles";
+import { hexToHSL } from "@/lib/utils/format";
 import TooltipComponent from './TooltipComponent';
 import { Palette, Plus } from "lucide-react";
 

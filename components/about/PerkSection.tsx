@@ -1,8 +1,8 @@
 import { Award, Code2 } from "lucide-react";
-import { perkData } from "@/lib";
+import { perkData } from "@/lib/client/data";
 import { Perk, PerkAnimation } from '@/components/global/Perk';
-import { useEffect, useState, useRef } from "react";
-import { clientConfig } from "@/lib/constant/config.client";
+import { useCallback, useEffect, useState, useRef } from "react";
+import { clientConfig } from "@/lib/config/client";
 
 interface PerkSectionProps {
   totalProjects: number;
@@ -15,32 +15,7 @@ export default function PerkSection({ totalProjects }: PerkSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
 
-  useEffect(() => {
-    if (hasLoaded) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasLoaded) {
-          setHasLoaded(true);
-          fetchData();
-        }
-      },
-      { rootMargin: '100px' }
-    );
-
-    const currentRef = sectionRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [hasLoaded]);
-
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     try {
       const ratingPromises = perkData.map((perk) =>
         fetch(
@@ -71,7 +46,32 @@ export default function PerkSection({ totalProjects }: PerkSectionProps) {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    if (hasLoaded) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasLoaded) {
+          setHasLoaded(true);
+          fetchData();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [fetchData, hasLoaded]);
 
   return (
     <div ref={sectionRef}>

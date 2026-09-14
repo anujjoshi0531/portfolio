@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { after } from "next/server";
-import { sendToRecipient, sendThankYouEmail } from "@/lib/server/mail";
+import { sendToRecipient, sendThankYouEmail } from "@/lib/server/email";
 import { z } from "zod";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";

@@ -4,7 +4,7 @@ import { m, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { GraduationCap } from "lucide-react";
-import { formatDate } from "@/lib";
+import { formatDate } from "@/lib/utils/dates";
 import { Badge } from "../ui/badge";
 import { LinkPreview } from "@/components/animate/LinkPreview";
 

@@ -12,8 +12,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useFilters } from "@/hooks";
-import { cn } from "@/lib";
+import { useFilters } from "@/hooks/useFilters";
+import { cn } from "@/lib/utils/styles";
 import { SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";

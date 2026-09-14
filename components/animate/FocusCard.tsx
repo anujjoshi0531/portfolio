@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { cn } from "@/lib";
+import { cn } from "@/lib/utils/styles";
 
 type Card = {
     title: string;

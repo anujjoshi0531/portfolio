@@ -3,7 +3,7 @@
 import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { m } from "framer-motion";
 import { childVariants, containerVariants } from '@/lib/animate';
-import { skills } from "@/lib";
+import { skills } from "@/lib/client/data";
 
 interface SkillGroup {
   title: string;

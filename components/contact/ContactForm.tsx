@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { m } from "framer-motion";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/styles";
 
 import { Label } from "@/components/ui/label";
 

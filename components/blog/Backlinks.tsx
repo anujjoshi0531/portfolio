@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Link2, Tag, Calendar } from "lucide-react";
-import type { BacklinkItem } from "@/lib/server/local-content";
+import type { BacklinkItem } from "@/features/blog/lib/graph";
 
 interface BacklinksProps {
   backlinks: BacklinkItem[];

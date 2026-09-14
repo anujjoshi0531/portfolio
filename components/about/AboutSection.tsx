@@ -1,4 +1,4 @@
-import { getProjects } from "@/lib/server/local-content";
+import { getProjects } from "@/features/projects/lib/content";
 import AboutClient from "./AboutClient";
 
 export default async function AboutSection() {

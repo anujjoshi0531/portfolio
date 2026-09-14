@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib";
+import { cn } from "@/lib/utils/styles";
 import { LinkPreview } from "../animate/LinkPreview";
 
 interface Testimonial {

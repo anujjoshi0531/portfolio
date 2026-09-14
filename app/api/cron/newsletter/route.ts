@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getAllSubscribers } from "@/lib/server/newsletter";
+import { getAllSubscribers } from "@/lib/server/newsletter/index";
 import { Client } from "@upstash/qstash";
-import { searchBlogs } from "@/lib/server/local-content";
+import { searchBlogs } from "@/features/blog/lib/content";
 
 const qstashClient = new Client({
   token: process.env.QSTASH_TOKEN || "",

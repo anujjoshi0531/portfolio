@@ -1,4 +1,5 @@
-import { getExperiences, ContentItem } from "@/lib/server/local-content"
+import { getExperiences } from "@/features/about/lib/content"
+import type { ContentItem } from "@/lib/content/types"
 import ExperienceClient from "./ExperienceClient"
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"

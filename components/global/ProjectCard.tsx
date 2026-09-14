@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { memo } from "react";
 import { LinkPreview } from "@/components/animate/LinkPreview";
-import { cn } from "@/lib";
+import { cn } from "@/lib/utils/styles";
 
 interface ProjectTag {
   id: string;

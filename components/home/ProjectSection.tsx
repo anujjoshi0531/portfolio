@@ -1,4 +1,4 @@
-import { getProjects } from "@/lib/server/local-content"
+import { getProjects } from "@/features/projects/lib/content"
 import ProjectClient from "./ProjectClient"
 import { Suspense } from "react"
 import { Skeleton } from "../ui/skeleton"

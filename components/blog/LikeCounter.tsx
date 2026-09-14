@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
-import { cn } from "@/lib";
-import { numberFormatter } from "@/lib/utils";
+import { cn } from "@/lib/utils/styles";
+import { numberFormatter } from "@/lib/utils/format";
 import { toast } from "sonner";
 
 interface LikeCounterProps {

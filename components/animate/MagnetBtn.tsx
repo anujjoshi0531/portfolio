@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { m } from "framer-motion";
-import { cn } from "@/lib";
+import { cn } from "@/lib/utils/styles";
 import { ReactNode, useRef, useState } from "react";
 
 type MagnetBtnProps = {

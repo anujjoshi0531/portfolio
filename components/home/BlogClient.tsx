@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
 import BlogCard from '@/components/blog/BlogCard'
 import { MagnetBtn } from "@/components/animate/MagnetBtn"
 import { ArrowUpRight } from "lucide-react"
-import { cn } from "@/lib"
+import { cn } from "@/lib/utils/styles";
 import { Card } from "@/components/ui/card"
 import { useScrollCarousel } from '@/hooks/useScrollCarousel'
 

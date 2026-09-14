@@ -3,7 +3,8 @@ import "highlight.js/styles/github-dark.min.css";
 import "@/styles/markdown.css";
 
 import React from "react";
-import { renderMarkdown, type TocEntry } from "@/lib/markdown";
+import { renderMarkdown } from "@/lib/content/markdown/render";
+import type { TocEntry } from "@/lib/content/markdown/types";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
 import { AlgorithmEmbedHydrator } from "@/components/blog/AlgorithmEmbedHydrator";
 

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Maximize2, Minimize2, Network } from "lucide-react";
-import type { GraphData } from "@/lib/server/local-content";
+import type { GraphData } from "@/features/blog/lib/graph";
 
 interface GraphViewProps {
   data?: GraphData;

@@ -1,4 +1,5 @@
-import { getTestimonials, ContentItem } from "@/lib/server/local-content";
+import { getTestimonials } from "@/features/about/lib/content";
+import type { ContentItem } from "@/lib/content/types";
 import TestimonialClient from "./TestimonialClient";
 import { Suspense } from "react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';

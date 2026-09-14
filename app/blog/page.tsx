@@ -1,5 +1,5 @@
 import Blog from "@/components/blog/Blog";
-import { getBlogFilters, searchBlogs } from "@/lib/server/local-content";
+import { getBlogFilters, searchBlogs } from "@/features/blog/lib/content";
 
 export const revalidate = 3600; // Revalidate every hour
 

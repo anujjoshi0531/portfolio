@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { after } from "next/server";
 import { z } from "zod";
-import { checkSubscriberExists, addSubscriber, updateSubscriberStatus } from "@/lib/server/newsletter";
-import { sendSubscriptionEmail } from "@/lib/server/mail";
+import { checkSubscriberExists, addSubscriber, updateSubscriberStatus } from "@/lib/server/newsletter/index";
+import { sendSubscriptionEmail } from "@/lib/server/email";
 
 const subscribeSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),

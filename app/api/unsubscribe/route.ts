@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { updateSubscriberStatus } from "@/lib/server/newsletter";
+import { updateSubscriberStatus } from "@/lib/server/newsletter/index";
 
 const unsubscribeSchema = z.object({
   id: z.string().min(1, { message: "Subscriber ID is required" }),

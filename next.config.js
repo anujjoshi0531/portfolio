@@ -113,12 +113,7 @@ const nextConfig = {
     ];
   },
   productionBrowserSourceMaps: false,
-  webpack: (config) => {
-    return config;
-  },
 }
-
-// Injected content via Sentry wizard below
 
 const { withSentryConfig } = require("@sentry/nextjs/config");
 

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import type { AlgorithmSummary, CategorySummary } from '@/lib/algorithms/types'
+import type { AlgorithmSummary, CategorySummary } from '@/features/algorithms/lib/types'
 import Link from 'next/link'
 import { Search, ArrowRight, BarChart2, GitFork, Grid, Box } from 'lucide-react'
 

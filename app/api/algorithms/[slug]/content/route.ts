@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAlgorithmCatalogEntry, getAlgorithmContentBySlug } from "@/lib/server/local-content";
+import { getAlgorithmCatalogEntry, getAlgorithmContentBySlug } from "@/features/algorithms/lib/catalog";
 
 interface AlgorithmContentRouteProps {
   params: Promise<{ slug: string }>;

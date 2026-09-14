@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { List } from "lucide-react";
-import type { TocEntry } from "@/lib/markdown";
+import type { TocEntry } from "@/lib/content/markdown/types";
 
 interface TableOfContentsProps {
   toc: TocEntry[];

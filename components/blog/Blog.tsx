@@ -9,7 +9,7 @@ import { BlogFilter } from "./filter/BlogFilter";
 import { BlogPagination } from './BlogPagination';
 import { PageTemplate } from '../global/SectionTemplate';
 import Image from "next/image";
-import { useFilters } from '@/hooks';
+import { useFilters } from '@/hooks/useFilters';
 
 interface BlogProps {
   posts: BlogPost[];

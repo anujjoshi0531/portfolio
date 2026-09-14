@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getBlogBySlug } from "@/lib/server/local-content";
+import { getBlogBySlug } from "@/features/blog/lib/content";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

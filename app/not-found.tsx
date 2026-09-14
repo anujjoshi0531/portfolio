@@ -2,7 +2,7 @@ import { PageTemplate } from '@/components/global/SectionTemplate'
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import GoBackButton from "@/components/site/GoBackButton"
+import GoBackButton from "@/components/layout/GoBackButton"
 
 export default function NotFound() {
   return (

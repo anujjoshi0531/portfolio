@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { extractMarkdownCodeBlocks } from "@/lib/algorithms/markdown-runtime";
-import { getAlgorithmCatalogEntry, getAlgorithmContentBySlug } from "@/lib/server/local-content";
+import { extractMarkdownCodeBlocks } from "@/features/algorithms/lib/markdown-runtime";
+import { getAlgorithmCatalogEntry, getAlgorithmContentBySlug } from "@/features/algorithms/lib/catalog";
 
 interface AlgorithmRuntimeRouteProps {
   params: Promise<{ slug: string }>;

@@ -1,13 +1,13 @@
 "use client";
 
-import { clientConfig } from "@/lib/constant/config.client";
+import { clientConfig } from "@/lib/config/client";
 import dynamic from "next/dynamic";
 import "chatui/dist/chatui.css";
 import { Sparkles } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { getUserId } from "@/lib/utils";
+import { getUserId } from "@/lib/utils/ids";
 import { MagnetBtn } from "@/components/animate/MagnetBtn";
-import Logo from "../site/Logo";
+import Logo from "../layout/Logo";
 
 const PopupChatbot = dynamic(
   () => import("chatui").then((mod) => mod.PopupChatbot),

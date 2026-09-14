@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn, timeAgo } from "@/lib";
+import { cn } from "@/lib/utils/styles";
+import { timeAgo } from "@/lib/utils/dates";
 import Image from "next/image";
 import Link from "next/link";
 import ViewCounter from "./ViewCounter";

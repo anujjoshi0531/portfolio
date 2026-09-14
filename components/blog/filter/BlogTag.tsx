@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { useMultiSelect } from "@/hooks";
+import { useMultiSelect } from "@/hooks/useMultiSelect";
 import { useState, useMemo } from "react";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";

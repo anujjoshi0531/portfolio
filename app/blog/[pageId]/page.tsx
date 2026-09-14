@@ -1,7 +1,8 @@
 import Image from "next/image";
 import NotFound from "@/app/not-found";
 import BlogSection from "@/components/home/BlogSection";
-import { getBlogBySlug, getGraphData, getBacklinks } from "@/lib/server/local-content";
+import { getBlogBySlug } from "@/features/blog/lib/content";
+import { getBacklinks, getGraphData } from "@/features/blog/lib/graph";
 import { MarkdownRenderer } from "@/components/global/MarkdownRenderer";
 import { NewsletterSubscription } from "@/components/blog/NewsletterSubscription";
 import JsonLd from "@/components/global/JsonLd";

@@ -1,4 +1,5 @@
-import { getEducations, ContentItem } from "@/lib/server/local-content";
+import { getEducations } from "@/features/about/lib/content";
+import type { ContentItem } from "@/lib/content/types";
 import EducationClient from "./EducationClient";
 import { Suspense } from "react";
 import { SectionTemplate } from '@/components/global/SectionTemplate';

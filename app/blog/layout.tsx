@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getMetadata } from "@/lib";
+import { getMetadata } from "@/lib/config/metadata";
 import { Inter, Lora, JetBrains_Mono } from "next/font/google";
 
 const inter = Inter({

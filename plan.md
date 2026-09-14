@@ -1,512 +1,729 @@
-# Portfolio Codebase — Comprehensive Architecture & Simplification Plan
+# Portfolio Architecture Refactor Plan
 
-> **Project**: Anuj Joshi Portfolio (Next.js 15 App Router + Tailwind CSS v4 + Drizzle ORM + Upstash Redis)  
-> **Repository**: `anujjoshi0531/portfolio`  
-> **Date**: 2026-08-23  
-> **Status**: All Refactoring Steps Complete (Phase 1–8 Implemented & Verified).
+Date: 2026-09-14
+Project: `portfoli-x`
+Stack observed: Next.js App Router, React 18, TypeScript, Tailwind CSS v4, Drizzle ORM, PostgreSQL, Upstash Redis/QStash, Nodemailer, Sentry, local Markdown content.
+Status: Phases 1-17 complete as of 2026-09-14.
 
----
+## 1. Current Architecture
 
-## PHASE 1 — INVENTORY
+The repository is a Next.js portfolio and content site with routes in `app/`, UI in `components/`, content in `content/`, persistence in `db/` and `drizzle/`, infrastructure helpers in `lib/server/`, client constants/data in `lib/client/`, global hooks in `hooks/`, global styles in `styles/`, and public assets in `public/`.
 
-### 1. High-Level System Map
+### Main Entry Points
 
-```
-+---------------------------------------------------------------------------------------+
-|                                    PORTFOLIO SITE                                     |
-|                              Next.js 15.1.7 (App Router)                              |
-|                                                                                       |
-|  +------------------+  +------------------+  +------------------+  +------------------+ |
-|  |    Home Page     |  |    Blog Pages    |  |  Project Pages   |  |   About & Misc   | |
-|  |   app/page.tsx   |  |   app/blog/...   |  |  app/project/... |  |  about, contact  | |
-|  |  (Hero, Suspense |  |  (List, Detail,  |  |  (List, Detail,  |  |  unsubscribe,    | |
-|  |   5 Sections)    |  |   Catch-all)     |  |   Category)      |  |  sitemap, robots | |
-|  +------------------+  +------------------+  +------------------+  +------------------+ |
-|                                                                                       |
-|  +---------------------------------- API LAYER ------------------------------------+  |
-|  |  POST/GET /api/likes         -> Upstash Redis (sets + legacy fallback)          |  |
-|  |  POST/GET /api/views         -> Upstash Redis (IP lock + total counters)        |  |
-|  |  POST      /api/search        -> Local filesystem search + Upstash Redis cache   |  |
-|  |  POST      /api/send-email    -> Upstash Ratelimit + Gmail SMTP (Nodemailer)     |  |
-|  |  POST      /api/subscribe     -> Aiven Postgres (Drizzle) + Nodemailer welcome   |  |
-|  |  POST      /api/unsubscribe   -> Aiven Postgres (Drizzle status update)          |  |
-|  |  POST      /api/cron/news.    -> QStash dispatch to newsletter queue              |  |
-|  |  POST      /api/queue/send.   -> QStash worker -> Nodemailer batch email          |  |
-|  +---------------------------------------------------------------------------------+  |
-|                                                                                       |
-|  +------------------------------ EXTERNAL SERVICES --------------------------------+  |
-|  |  Upstash Redis     : Page views, like counters, search cache, rate limits          |  |
-|  |  Upstash QStash    : Asynchronous newsletter dispatch queue                        |  |
-|  |  Aiven PostgreSQL  : Subscriber storage via Drizzle ORM                            |  |
-|  |  Gmail SMTP        : Transactional and newsletter email delivery                   |  |
-|  |  Sentry             : Error tracking, performance monitoring, session replays       |  |
-|  |  Google Analytics  : GA4 tracking (`G-95C2TB6XZZ`)                                  |  |
-|  |  HuggingFace Spaces: AI Chatbot backend (`anujjoshi-portfolio-chatbot-backend`)    |  |
-|  |  HF Vortex API     : Competitive programming rating sync (`anujjoshi-vortex`)      |  |
-|  +---------------------------------------------------------------------------------+  |
-|                                                                                       |
-|  +------------------------------ CONTENT SUBSYSTEM -------------------------------+  |
-|  |  Git Submodule: `content` -> `https://github.com/Anujjoshi3105/portfolio-content`  |  |
-|  |  Collections  : blog/*.md, projects/*.md, experience/*.md, education/*.md,         |  |
-|  |                testimonials/*.md                                                   |  |
-|  |  Parser       : Zero-dependency YAML frontmatter parser + Unified remark/rehype    |  |
-|  +---------------------------------------------------------------------------------+  |
-+---------------------------------------------------------------------------------------+
-```
+- `app/layout.tsx` is the root application shell. It owns fonts, metadata, providers, navbar/footer, analytics, Sentry-adjacent concerns, JSON-LD, theme bootstrapping, chatbot loading, and layout markup.
+- `app/page.tsx` renders the home page and contains page-level skeleton components inline.
+- `app/blog/page.tsx` and `app/blog/[pageId]/page.tsx` render blog listing and blog detail pages.
+- `app/project/page.tsx`, `app/about/page.tsx`, `app/contact/page.tsx`, and `app/unsubscribe/page.tsx` render secondary sections.
+- `app/api/*/route.ts` contains API endpoints for search, likes, views, email, subscriptions, cron dispatch, newsletter queue work, and algorithm content/runtime endpoints.
+- `lib/server/local-content.ts` is the main content data access module for blog, project, experience, education, testimonials, algorithm catalog, graph data, backlinks, frontmatter parsing, excerpt extraction, and content search.
+- `lib/markdown.ts` handles Markdown rendering, Obsidian-style callouts, wikilinks, embeds, algorithm placeholders, ToC extraction, reading time, code highlighting, KaTeX, headings, and lazy image transforms.
+- `lib/algorithms/*` contains algorithm definitions, registry, runtime helpers, playback hook, types, highlighting, and complexity utilities.
+- `components/algorithms/*` contains interactive algorithm UI and visualizers.
+- `components/blog/*`, `components/home/*`, `components/about/*`, `components/project/*`, and `components/contact/*` contain feature/page UI.
+- `components/global/*` contains reusable and semi-reusable cross-site components.
+- `components/ui/*` contains shadcn/Radix-style UI primitives.
+- `lib/constant/config.client.ts` and `lib/constant/config.server.ts` split configuration by client/server availability.
 
----
+### Current Dependency Shape
 
-### 2. Application Entrypoints
+- App routes import components and server data functions directly.
+- Feature components import shared UI, hooks, constants, and sometimes server-side content functions.
+- UI primitives import `cn` inconsistently from `@/lib`, `@/lib/index`, and `@/lib/utils`.
+- Content code imports algorithm types, meaning generic content access currently knows about a specific feature domain.
+- Blog graph and backlinks import types from the server content module into client-facing components.
+- Algorithm components import algorithm domain types and runtime loaders from `lib/algorithms`.
+- API routes mostly call server helpers in `lib/server`, but some endpoints also couple directly to content helpers.
 
-| Entrypoint | File Path | Type | Description |
-|---|---|---|---|
-| **Root Layout** | `app/layout.tsx` | Server Component | HTML document shell, Google Fonts (Poppins & Playfair), ThemeProvider, DarkProvider, NextTopLoader, Navbar, Footer, PopupChatbot, ThemePicker, Google Analytics |
-| **Home Page** | `app/page.tsx` | Server Component | Asynchronous main page with `Hero` in initial window + 5 `<Suspense>` streaming sections (`About`, `Experience`, `Project`, `Blog`, `Testimonial`) |
-| **About Page** | `app/about/page.tsx` | Server Component | Renders Education, Skills, and Competitive Programming Perk sections |
-| **Blog Listing** | `app/blog/page.tsx` | Server Component | Filterable, searchable, paginated blog post directory |
-| **Blog Detail** | `app/blog/[pageId]/page.tsx` | Server Component | Dynamic route for reading individual blog posts by slug/ID |
-| **Blog Catch-all** | `app/blog/[[...slug]]/page.tsx` | Server Component | Category and tag taxonomy filtering |
-| **Projects Page** | `app/project/page.tsx` | Server Component | Showcase of engineering projects |
-| **Contact Page** | `app/contact/page.tsx` | Server Component | Inquiry contact form with rate-limited submission |
-| **Unsubscribe** | `app/unsubscribe/page.tsx` | Client Component | One-click newsletter unsubscription portal |
-| **Sitemap Generator** | `app/sitemap.ts` | Dynamic Route | Generates XML sitemap dynamically from content collections |
-| **Robots Config** | `app/robots.ts` | Dynamic Route | Generates search engine indexing directives |
-| **Web Manifest** | `app/manifest.ts` | Dynamic Route | Progressive Web App manifest setup |
+This is workable, but the architecture is more "folders by broad category" than "clear ownership boundaries." The highest-value refactor is not a rewrite; it is to separate framework routes, feature modules, content pipeline, infrastructure adapters, and shared UI.
 
----
+## 2. Major Problems
 
-### 3. Packages & Core Modules
+### Critical
 
-| Module / Package | Location | Primary Purpose |
-|---|---|---|
-| `lib/server/local-content.ts` | `lib/server/` | File-system content reader, YAML frontmatter parser, collection aggregator (`getBlogs`, `getProjects`, `getExperiences`, `getEducations`, `getTestimonials`), and in-memory search |
-| `lib/markdown.ts` | `lib/` | Unified AST markdown processing pipeline (Remark, Rehype, Katex math, syntax highlighting, Obsidian callouts, wiki-embeds, ToC generator) |
-| `lib/server/mail.ts` | `lib/server/` | Nodemailer SMTP transporter and email template wrapper (Inquiry, Thank-You, Welcome Subscription, Weekly Newsletter) |
-| `lib/server/newsletter.ts` | `lib/server/` | Data access layer for subscriber management using Drizzle ORM (`addSubscriber`, `updateSubscriberStatus`, `getAllSubscribers`) |
-| `lib/server/redis.ts` | `lib/server/` | Shared Upstash Redis client instantiation and IP address extractor (`getClientIP`) |
-| `lib/client/data.tsx` | `lib/client/` | Static data sources: `socialLinks`, `skills`, `perkData`, `sortOptions` |
-| `lib/client/filter.ts` | `lib/client/` | Whitelisted URL search parameter filter (`filterDiscoverParams`) |
-| `lib/client/metadata.ts` | `lib/client/` | Centralized page title and description definitions |
-| `lib/constant/config.client.ts` | `lib/constant/` | Public environment configuration object (`clientConfig`) |
-| `lib/constant/config.server.ts` | `lib/constant/` | Server-only environment configuration object (`serverConfig`) |
-| `lib/utils.ts` | `lib/` | ClassName helper (`cn`), date formatters, HSL converter, anonymous user ID manager (`getUserId`) |
-| `lib/animate.ts` | `lib/` | Framer Motion animation variants (`containerVariants`, `menuVars`, `mobileLinkVars`) |
-| `db/index.ts` | `db/` | Database client initialization connecting Postgres.js driver to Drizzle ORM |
-| `db/schema.ts` | `db/` | Single PostgreSQL table schema declaration (`subscribers`) |
+- `lib/server/local-content.ts` has too many responsibilities. It performs filesystem access, frontmatter parsing, normalization, collection reads, projection into domain models, blog search, algorithm catalog derivation, graph generation, backlinks, and content directory fallback behavior.
+- Algorithm definitions are oversized and bundled by broad category. Files such as `lib/algorithms/definitions/compression.ts`, `concepts.ts`, `sorting.ts`, and `data-structures.ts` are too large to review, test, or safely edit.
+- Types are implicit or global in places where public boundaries should be explicit. `BlogPost`, `Project`, and `SocialLinkEntry` appear to be global/type-root concepts rather than clearly owned domain types.
+- The existing `plan.md` was stale and claimed previous refactor completion, which is dangerous for future AI-assisted work.
 
----
+### High
 
-### 4. API Routes Breakdown
+- `app/layout.tsx` mixes application shell, SEO metadata, structured data, providers, fonts, analytics, and theme bootstrapping.
+- Shared vs feature-specific component boundaries are blurry. For example, `components/global/ProjectCard.tsx` is globally placed but appears project-domain specific.
+- `components/home/*` and `components/about/*` share section-level concepts inconsistently. Some sections are server loaders, some are client renderers, and naming does not always make that clear.
+- Search code is duplicated conceptually across `components/site/search`, `components/blog/SearchInput.tsx`, hooks, and `/api/search`.
+- Barrel exports exist where they provide little value and obscure dependency direction, especially `hooks/index.ts`, `components/site/search/index.ts`, and `lib/index.ts`.
+- Assets exist in both `content/_assets` and `public/_assets`, which may be intentional for public serving but needs a documented sync/ownership rule.
 
-| Route Endpoint | HTTP Methods | Handlers & Logic | External Integrations |
-|---|---|---|---|
-| `app/api/likes/route.ts` | `GET`, `POST` | Manages per-post like counts using Redis sets (`likes:ips:{slug}`) and dirty set flag (`stats:dirty`) | Upstash Redis |
-| `app/api/views/route.ts` | `GET`, `POST` | Increments page view counts with 30-minute IP lock (`pageviews:lock:{slug}:{ip}`) and updates total counter (`pageviews:total:{slug}`) | Upstash Redis |
-| `app/api/search/route.ts` | `POST` | Executes local blog search and caches response payload in Redis for 1 hour | Upstash Redis |
-| `app/api/send-email/route.ts` | `POST` | Enforces 5 req/hr sliding-window rate limit, sanitizes HTML, validates 10KB body, dispatches emails asynchronously via `after()` | Upstash Ratelimit, Gmail SMTP |
-| `app/api/subscribe/route.ts` | `POST` | Validates email with Zod, inserts/updates subscriber record in Postgres, sends welcome email in background | Aiven Postgres, Gmail SMTP |
-| `app/api/unsubscribe/route.ts` | `POST` | Updates subscriber status to `unsubscribed` by ID | Aiven Postgres |
-| `app/api/cron/newsletter/route.ts` | `POST` | Authenticates via `CRON_SECRET`, fetches active subscribers, pulls top 5 blogs, and publishes jobs to QStash | Upstash QStash Queue |
-| `app/api/queue/send-newsletter/route.ts` | `POST` | Verifies QStash cryptographic signature (`verifySignatureAppRouter`), triggers email delivery | Upstash QStash, Gmail SMTP |
+### Medium
 
----
+- `lib/client/data.tsx` mixes social links, skill JSX, competitive programming platform metadata, and blog sorting options in one client-side module.
+- Styling is split across `styles/globals.css`, `styles/markdown.css`, `styles/sprite.css`, Tailwind classes, and UI primitives without a concise convention document.
+- Hooks are all globally placed even when some may be feature-specific.
+- Some route-level loading/error files repeat patterns and can share a small error/loading primitive without hiding route semantics.
+- `next.config.js` includes an empty webpack passthrough and mixed concerns between image policy, caching headers, package optimization, and Sentry wrapping.
+- Server integrations are grouped under `lib/server`, but the folder does not distinguish email, persistence, cache, queue, and content adapters.
 
-### 5. Data Persistence & Storage
+### Low
 
-- **Primary Database**: Aiven PostgreSQL (`portfolio-anujjoshi-8807.h.aivencloud.com`)
-- **Database Schema**: 
-  - Table `subscribers`: `id` (UUID PK), `email` (VarChar 255 UNIQUE), `name` (VarChar 255), `status` (VarChar 50, default `'subscribed'`), `created_at` (Timestamp), `updated_at` (Timestamp).
-- **ORM / Migrations**: Drizzle ORM v0.40.0, Drizzle Kit v0.30.5 (`drizzle/0000_panoramic_gargoyle.sql`).
-- **Cache & Key-Value Store**: Upstash Redis (HTTP REST API).
+- Import style is inconsistent between single quotes and double quotes.
+- Directory names such as `components/global` and `lib/constant` are vague.
+- Some comments narrate implementation history instead of current behavior.
+- Several one-file or low-value directories may remain after feature moves and should be reassessed once the main structure is settled.
 
----
+## 3. Target Architecture
 
-### 6. Queues & Asynchronous Jobs
+The target should remain a simple Next.js app. Do not introduce repositories, service layers, dependency injection, or clean-architecture ceremony unless a boundary has concrete value. The goal is clear ownership and boring, discoverable modules.
 
-- **Message Broker**: Upstash QStash (HTTP-based serverless queue).
-- **Workflow**:
-  1. Cron workflow triggers `POST /api/cron/newsletter` with Bearer secret.
-  2. Endpoint fetches subscribers from Postgres and publishes individual payload to QStash endpoint URL (`/api/queue/send-newsletter`).
-  3. QStash delivers individual webhooks with automated retries and signature verification.
+```text
+app/
+  api/
+  about/
+  algorithms/
+  blog/
+  contact/
+  project/
+  unsubscribe/
+  error.tsx
+  global-error.tsx
+  layout.tsx
+  loading.tsx
+  manifest.ts
+  not-found.tsx
+  page.tsx
+  robots.ts
+  sitemap.ts
 
----
+components/
+  layout/
+    Footer.tsx
+    Navbar.tsx
+    Logo.tsx
+    GoBackButton.tsx
+  providers/
+    AppProviders.tsx
+    ChatbotProvider.tsx
+    DarkProvider.tsx
+    ThemeProvider.tsx
+  ui/
+    ...
 
-### 7. External Third-Party Services & APIS
+features/
+  about/
+    components/
+    data.tsx
+    types.ts
+  algorithms/
+    components/
+    definitions/
+    lib/
+    types.ts
+  blog/
+    components/
+    lib/
+    types.ts
+  contact/
+    components/
+    schemas.ts
+  home/
+    components/
+  projects/
+    components/
+    types.ts
+  search/
+    components/
+    hooks/
+    types.ts
 
-| Service | Purpose | Env Variable Dependencies |
-|---|---|---|
-| **Upstash Redis** | Analytics, Like/View storage, Search cache | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` |
-| **Upstash QStash** | Queue management | `QSTASH_URL`, `QSTASH_TOKEN`, `QSTASH_CURRENT_SIGNING_KEY`, `QSTASH_NEXT_SIGNING_KEY` |
-| **Aiven PostgreSQL** | Subscriber database | `DATABASE_URL` |
-| **Gmail SMTP** | Mail delivery | `MAIL_USER`, `MAIL_PASS`, `MAIL_DISPLAY` |
-| **Sentry** | Telemetry, monitoring, replays | `SENTRY_AUTH_TOKEN` |
-| **Google Analytics** | Site analytics | `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` |
-| **HuggingFace Chatbot** | Embedded AI chat widget backend | `NEXT_PUBLIC_CHATBOT_URL`, `NEXT_PUBLIC_CHATBOT_API_KEY` |
-| **HF Vortex API** | Competitive programming ratings sync | `NEXT_PUBLIC_CONTEST_API` |
+content/
+  algorithms/
+  blog/
+  education/
+  experience/
+  projects/
+  testimonials/
+  _assets/
+  *.base
 
----
+db/
+  index.ts
+  schema.ts
 
-### 8. Environment Variables Registry (20 Total)
+lib/
+  config/
+    client.ts
+    server.ts
+    metadata.ts
+    navigation.ts
+  content/
+    collections.ts
+    frontmatter.ts
+    markdown.ts
+    normalize.ts
+    search.ts
+    graph.ts
+  server/
+    email/
+    newsletter/
+    queue/
+    redis.ts
+  utils/
+    dates.ts
+    format.ts
+    ids.ts
+    styles.ts
 
-```env
-# Mailer Configuration
-MAIL_PASS=****************
-MAIL_USER=anujjoshi0531@gmail.com
-MAIL_DISPLAY=portfolio@anujjoshi.site
+styles/
+  globals.css
+  markdown.css
+  sprite.css
 
-# Public App URLs & API Keys
-NEXT_PUBLIC_BASE_URL=https://anujjoshi.site
-NEXT_PUBLIC_CHATBOT_API_KEY=****************
-NEXT_PUBLIC_CHATBOT_MODEL=openai/gpt-oss-120b    # UNUSED IN CODE
-NEXT_PUBLIC_CHATBOT_URL=https://anujjoshi-portfolio-chatbot-backend.hf.space
-NEXT_PUBLIC_CONTEST_API=https://anujjoshi-vortex.hf.space/api/v1/ratings
-NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-95C2TB6XZZ
-NEXT_PUBLIC_GOOGLE_VERIFICATION_ID=a-tlC7lxqKDFcOSkl7QSrELzrggflM2cjPn8ishZQs8
-
-# User Defaults
-USER_MAIL=anujjoshi3105@gmail.com
-USER_NAME=Anuj Joshi
-USER_URL=http://localhost:3000
-
-# Security & Cron
-CRON_SECRET=89hiLxmsTnyzmuM8trdqMOvCJC21ES550//LYb+DQfc=
-
-# Upstash Redis
-UPSTASH_REDIS_REST_URL=https://sought-airedale-67797.upstash.io
-UPSTASH_REDIS_REST_TOKEN=****************
-
-# Upstash QStash
-QSTASH_URL=https://qstash-us-east-1.upstash.io
-QSTASH_TOKEN=****************
-QSTASH_CURRENT_SIGNING_KEY=sig_6KFjieTH9R6VCoVVzwoyXJ1HNz2P
-QSTASH_NEXT_SIGNING_KEY=sig_5dhR7byTRNVt9c6LXkW7wKYtiZ7Q
-
-# Telemetry & DB
-SENTRY_AUTH_TOKEN=****************
-DATABASE_URL=postgres://avnadmin:****************@portfolio-anujjoshi-8807.h.aivencloud.com:28391/defaultdb?sslmode=require
+types/
+  global.d.ts
 ```
 
----
+This tree is a target direction, not a mandatory final shape. During implementation, only create directories that hold multiple meaningful modules or clarify ownership.
 
-### 9. CI/CD Workflows (.github/workflows)
+## 4. Files to Remove
 
-1. `deploy.yml`: Triggers on push to `main` or repository dispatch. Checks out recursive submodules, installs dependencies via `npm ci`, runs `npm run lint`, and executes `npm run build`.
-2. `daily-blog-stats.yml`: Scheduled cron (`30 20 * * *` = 2:00 AM IST) calling `/api/cron/sync-blog-stats`.
-3. `weekly-newsletter.yml`: Scheduled cron (`30 20 * * 6` = Sunday 2:00 AM IST) calling `/api/cron/newsletter`.
-4. `chatbot-ping.yml`: Scheduled cron (`30 20 * * *` = 2:00 AM IST) pinging the HuggingFace space `/health` endpoint to prevent cold-start sleeps.
-5. `sync-content.yml`: Event dispatcher triggering submodule updates.
-6. `sync-submodule.yml`: Daily cron (`0 0 * * *`) that executes `git submodule update --remote --merge content` and commits updated pointers back to `main`.
+These are candidates. Verify usage before deleting.
 
----
+- `lib/index.ts`: remove if it only re-exports unrelated utilities/data and causes unclear imports. Prefer direct imports from `lib/utils/*`, `lib/config/*`, or feature modules.
+- `hooks/index.ts`: remove after replacing barrel imports with direct hook imports.
+- `components/site/search/index.ts`: remove after replacing local barrel imports.
+- Empty or one-line compatibility wrappers discovered during implementation.
+- Historical comments that describe removed code paths, for example notes about deleted variables or previous refactors.
+- The empty `webpack: (config) => config` function in `next.config.js`.
+- Unused generated/build artifacts if tracked or accidentally committed, such as `tsconfig.tsbuildinfo`, after confirming `.gitignore` and git tracking.
+- Duplicated assets between `content/_assets` and `public/_assets` only if a single ownership/serving strategy is implemented. Do not remove either side until the content asset pipeline is verified.
 
-### 10. Test Coverage & Documentation Audit
+## 5. Files to Merge
 
-- **Automated Unit / Integration / E2E Tests**: **0 tests**. No test framework (Jest, Vitest, Playwright, Cypress) is installed in `package.json`.
-- **Existing Documentation**:
-  - `implementation_plan.md`: Migration plan artifact.
-  - `.gitmodules`: Submodule declaration for `content`.
+- Merge trivial hook barrels into direct imports at call sites.
+- Merge low-value wrapper components that only pass props to one child and are not reused.
+- Consolidate repeated route error UI around one reusable `RouteErrorCard` only if it reduces repetition without hiding useful route-specific copy.
+- Consolidate repeated page skeletons only when two routes share the same shape. Keep page-specific skeletons colocated if they mirror unique layout.
+- Group tiny generic utility files into `lib/utils/dates.ts`, `lib/utils/format.ts`, `lib/utils/styles.ts`, and `lib/utils/ids.ts` instead of one file per tiny function.
+- Consolidate search UI primitives currently split across `components/site/search` and blog search into `features/search`.
 
----
+## 6. Files to Split
 
-## PHASE 2 — EXECUTION FLOW TRACES
+- `lib/server/local-content.ts` should be split by responsibility:
+  - `lib/content/root.ts`: resolve content directory.
+  - `lib/content/frontmatter.ts`: parse and validate frontmatter.
+  - `lib/content/collections.ts`: read collections and normalize common content item shape.
+  - `features/blog/lib/content.ts`: blog projections, filters, search.
+  - `features/projects/lib/content.ts`: project projections.
+  - `features/about/lib/content.ts`: education, experience, testimonials.
+  - `features/algorithms/lib/catalog.ts`: algorithm catalog projections.
+  - `features/blog/lib/graph.ts`: backlinks and graph data.
+- `lib/markdown.ts` should be split carefully:
+  - `lib/content/markdown/render.ts`: processor assembly and public `renderMarkdown`.
+  - `lib/content/markdown/callouts.ts`: callout plugin.
+  - `lib/content/markdown/wikilinks.ts`: wikilink and embed plugins.
+  - `lib/content/markdown/algorithms.ts`: algorithm embed plugin.
+  - `lib/content/markdown/stats.ts`: ToC and reading-time plugins.
+- `app/layout.tsx` should extract:
+  - `lib/config/metadata.ts`: metadata object and helpers.
+  - `components/providers/AppProviders.tsx`: provider composition.
+  - `components/layout/StructuredData.tsx`: JSON-LD blocks.
+  - `lib/config/fonts.ts`: font configuration.
+- Algorithm definition files should be split by individual algorithm or smaller cohesive groups:
+  - Prefer `features/algorithms/definitions/sorting/bubble-sort.ts`, etc., if registry loading remains dynamic.
+  - Keep a small registry map that loads individual definitions or category indexes.
+- `components/algorithms/visualizers/ConceptVisualizer.tsx` should be split by visualization responsibility once tests/snapshots protect behavior.
+- `lib/client/data.tsx` should become feature-owned modules:
+  - social/navigation data under `lib/config/navigation.ts` or `features/home/data/social.ts`.
+  - skills/perks under `features/about/data.tsx`.
+  - blog sort options under `features/blog/config.ts`.
 
-### Flow 1: Visitor Views a Blog Post (`/blog/[slug]`)
+## 7. Dependencies
 
-```
-User Browser
-  | 1. HTTP GET /blog/atcoder-beginner-contest-430
-  v
-app/blog/[pageId]/page.tsx (Server Component)
-  | 2. Calls getBlogBySlug("atcoder-beginner-contest-430")
-  v
-lib/server/local-content.ts
-  | 3. Reads d:\Anuj Joshi\Portfolio Data\portfoli-x\content\blog\atcoder-beginner-contest-430.md
-  | 4. Executes parseFrontmatter() to split YAML metadata & raw text
-  v
-lib/markdown.ts
-  | 5. Calls renderMarkdown(rawText)
-  |    Pipeline: remarkParse -> remarkGfm -> remarkMath -> remarkCallouts -> remarkWikiEmbeds 
-  |              -> remarkWordCount -> remarkRehype -> rehypeHighlight -> rehypeKatex 
-  |              -> rehypeSlug -> rehypeAutolinkHeadings -> rehypeCollectToc -> rehypeStringify
-  v
-HTML + ToC + Reading Time generated
-  | 6. Returns rendered HTML to client browser
-  v
-Client Component Hydration:
-  a. ViewCounter mounts -> POST /api/views { slug }
-     api/views/route.ts checks 30-min IP lock (`pageviews:lock:{slug}:{ip}`)
-     If new -> `redis.incr("pageviews:total:{slug}")` & `redis.sadd("stats:dirty", slug)`
-  b. LikeCounter mounts -> GET /api/likes?slug=atcoder-beginner-contest-430
-     api/likes/route.ts queries `redis.scard("likes:ips:{slug}")` & `redis.sismember(...)`
-```
+### Keep
 
----
+- `next`, `react`, `react-dom`, `typescript`
+- `drizzle-orm`, `postgres`, `drizzle-kit`
+- `@upstash/ratelimit`, `@upstash/qstash`
+- `nodemailer`
+- `@sentry/nextjs`
+- `unified`, `remark-*`, `rehype-*`, `unist-util-visit`, `yaml`
+- `zod` if used or introduced for environment/frontmatter/API boundary validation
+- Radix packages that back existing UI primitives
+- `class-variance-authority`, `clsx`, `tailwind-merge`
+- `lucide-react`
+- `framer-motion` if animation remains central to the UI
+- `server-only`, `sonner`, `next-themes`, `nextjs-toploader`
 
-### Flow 2: Visitor Submits Contact Form (`/contact`)
+### Remove Candidates
 
-```
-User fills Form (Name, Email, Message)
-  | 1. Submits form -> ContactForm.tsx
-  v
-POST /api/send-email
-  | 2. Rate Limit Check: ratelimit.limit("ratelimit_" + ip) -> max 5 req / 1 hr
-  | 3. Body size validation: rawBody.length > 10000 -> 413 Payload Too Large
-  | 4. Schema validation: EmailSchema.safeParse(body) via Zod
-  | 5. Sanitization: HTML escaping on name & message
-  | 6. Sends HTTP 200 { success: true } response immediately to UI
-  v
-Background Execution (via Next.js `after()` API):
-  sendToRecipient(safeName, email, safeMessage) -> Nodemailer -> Gmail SMTP -> Admin Inbox
-  sendThankYouEmail(safeName, email, safeMessage) -> Nodemailer -> Gmail SMTP -> User Inbox
-```
+Verify with import search and production build before removal.
 
----
+- `dotenv`: likely unnecessary in Next runtime unless scripts explicitly load it.
+- `@types/pg`: likely unused if the app uses `postgres` rather than `pg`.
+- Individual Radix packages whose UI primitive is unused after component cleanup.
+- `react-day-picker` if calendar/date filter UI is removed or replaced.
+- `@svgr/webpack` if SVG imports through SVGR are not actually used.
+- `autoprefixer` if Tailwind/PostCSS v4 setup does not require it.
+- `react-icons` only if icons are migrated to `lucide-react`; otherwise keep.
 
-### Flow 3: Visitor Subscribes to Newsletter
+### Reconsider
 
-```
-User inputs email address
-  | 1. Submits form -> POST /api/subscribe
-  v
-api/subscribe/route.ts
-  | 2. Zod validation: subscribeSchema.safeParse({ email })
-  | 3. Query DB: checkSubscriberExists(email) via Drizzle ORM
-  | 4. If exists: updateSubscriberStatus(id, "Subscribed")
-  | 5. If new: insert subscriber record into Postgres `subscribers` table
-  | 6. Returns HTTP 200 { message: "Subscribed successfully" }
-  v
-Background Execution (via `after()`):
-  sendSubscriptionEmail(email, subscriberId) -> Nodemailer -> Welcome email with unsubscribe link
-```
+- `chatui` from a GitHub branch: useful if the chatbot is intentional, but it is a supply-chain and stability risk. Pin to a tag/commit or isolate behind a clearer adapter.
+- `@next/third-parties`: keep for Google Analytics only if this is the desired integration path.
+- `framer-motion`: keep if animations are part of the product identity; otherwise evaluate bundle impact.
+- `cmdk`: keep only if search command palette behavior uses it.
+- `@sentry/conventions`: confirm whether Sentry requires it directly.
 
----
+## 8. Risk Assessment
 
-### Flow 4: Weekly Newsletter Automated Dispatch
+- Routing: moving feature components can break App Router imports and route-level metadata.
+- Content paths: `content/` is a likely submodule or separately managed source. Asset paths and fallback behavior must be preserved.
+- Markdown rendering: callouts, wikilinks, algorithm embeds, heading IDs, ToC generation, KaTeX, syntax highlighting, and raw HTML behavior are high-risk.
+- Algorithm visualizers: runtime endpoint, registry dynamic imports, playback hook, and UI components are tightly connected.
+- API behavior: likes/views/search/email/newsletter endpoints depend on external services and environment variables.
+- Database: Drizzle schema and migrations must not be casually regenerated or rewritten.
+- Sentry/analytics: instrumentation files and Next config wrapping can fail silently or change production monitoring.
+- Styling: global CSS, markdown CSS, sprite CSS, theme variables, and Tailwind utility usage overlap.
+- Client/server boundaries: moving modules can accidentally import server-only filesystem code into client components.
+- Assets: duplicate `content/_assets` and `public/_assets` can break Markdown image rendering if ownership is changed prematurely.
 
-```
-GitHub Actions Cron (Sunday 2 AM IST)
-  | 1. Sends POST request to /api/cron/newsletter with Header `Authorization: Bearer <CRON_SECRET>`
-  v
-api/cron/newsletter/route.ts
-  | 2. Validates Bearer token against process.env.CRON_SECRET
-  | 3. Query DB: getAllSubscribers() -> selects active subscribers where status = 'subscribed'
-  | 4. Query Content: searchBlogs({ limit: 5 }) -> gets latest 5 blog posts
-  | 5. Loops over subscriber list -> calls `qstashClient.publishJSON({ url, body })`
-  v
-Upstash QStash Queue
-  | 6. QStash queues messages and dispatches HTTP POST webhooks asynchronously
-  v
-POST /api/queue/send-newsletter
-  | 7. Signature Verification: `verifySignatureAppRouter(handler)` validates QStash keys
-  | 8. Execution: `sendWeeklyNewsletter(email, name, id, recentBlogs)` via Nodemailer
-```
+## 9. Migration Sequence
 
----
+Run these phases incrementally. Each phase should leave the app buildable before moving on.
 
-### Flow 5: Blog Search Request
+### Phase 0: Baseline and Safety
 
-```
-User types query into Search Input
-  | 1. `useSearch` hook triggers POST /api/search { query, tags, category, limit, page }
-  v
-api/search/route.ts
-  | 2. Instantiates independent `new Redis()` client  <-- [DUPLICATE INITIALIZATION]
-  | 3. Checks Redis cache key: `blog:search:${JSON.stringify(body)}`
-  | 4. Cache HIT -> Returns cached JSON payload immediately
-  | 5. Cache MISS -> Calls `searchBlogs()` from local-content.ts
-  |    Filtering: matches query against title, description, content in memory
-  | 6. Writes result to Redis with `ex: 3600` (1 hour expiration)
-  | 7. Returns response to client
-```
+- Record current branch and git status.
+- Run `pnpm lint`, `pnpm build`, and any available type/test command.
+- Add missing scripts before refactoring if needed:
+  - `typecheck`: `tsc --noEmit`
+  - `test`: only if a test framework is added or already present.
+- Capture current route list and key UI screenshots if visual regression risk is high.
+- Do not change behavior in this phase.
 
----
+Exit criteria:
 
-## PHASE 3 — COMPLEXITY AUDIT
+- Baseline failures are documented.
+- Known failing commands are separated from failures introduced by the refactor.
 
-### 25-Point Defect & Anti-Pattern Matrix
+### Phase 1: Architecture Inventory
 
-| # | Inspection Category | Findings & Specific Code References | Severity |
-|---|---|---|---|
-| **1** | **Unnecessary Abstractions** | Overall codebase is concise. Minor over-abstraction in `lib/client/filter.ts` (17 lines) which only exists to filter URL params for one hook. | Low |
-| **2** | **Duplicate Services** | **Duplicate Redis Client**: `app/api/search/route.ts` creates its own `new Redis()` instance instead of importing the singleton from [`lib/server/redis.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/server/redis.ts). | Medium |
-| **3** | **Duplicate Utilities** | **Unused HTML/Text helper**: `extractPlainText` in [`lib/utils.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/utils.ts) (Notion-era leftover) has 0 calls in the codebase. <br>**Duplicate IP Extraction**: `getClientIP()` in `lib/server/redis.ts` vs manual header parsing in `api/send-email/route.ts`. | Low |
-| **4** | **Duplicate Models** | Model mapping duplicates fields between `Frontmatter`/`ContentItem` (in `local-content.ts`) and `BlogPost`/`Project` (in `types/index.d.ts`). | Low |
-| **5** | **Unnecessary Interfaces** | Dead types in [`types/index.d.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/types/index.d.ts): `ProjectCategory`, `Rating`. Data for experiences/testimonials/education uses `ContentItem` directly. | Low |
-| **6** | **Unnecessary Factories** | None found. | Pass |
-| **7** | **Unnecessary Adapters** | None found. | Pass |
-| **8** | **Unnecessary Repositories** | None found. | Pass |
-| **9** | **Unnecessary Dependency Injection** | None found. Native imports used throughout. | Pass |
-| **10** | **Excessive Configuration** | **`next.config.js` Remote Patterns**: Contains 7 remote patterns (`api.microlink.io`, `drive.google.com`, `lh3.googleusercontent.com`, `cdn.jsdelivr.net`, `images.unsplash.com`, `cdn.sanity.io`, `res.cloudinary.com`). Sanity & Cloudinary patterns are completely unused. | Low |
-| **11** | **Excessive Env Variables** | **`NEXT_PUBLIC_CHATBOT_MODEL`** is present in `.env` but never referenced anywhere in code. <br>`USER_URL` vs `NEXT_PUBLIC_BASE_URL` overlap in functionality. | Low |
-| **12** | **Duplicated API Clients** | `api/search/route.ts` vs `lib/server/redis.ts`. | Medium |
-| **13** | **Multiple Ways of Doing Same Thing** | **Date Formatting**: `timeAgo()` in [`lib/utils.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/utils.ts) uses heavy `date-fns` library (`formatDistanceToNow`), while `formatDate()` uses native `Intl.DateTimeFormat`. <br>**API Responses**: Inconsistent usage across routes (`NextResponse.json()` vs `Response.json()` vs `new Response(JSON.stringify())`). | Medium |
-| **14** | **Dead Code** | **Empty Directory**: `lib/md/` is completely empty. <br>**Unused Types**: `ProjectCategory`, `Rating`. <br>**Unused Utility**: `extractPlainText`. | Low |
-| **15** | **Unused Dependencies** | Empirical import audit reveals **4 unused Radix dependencies** in `package.json`: <br>- `@radix-ui/react-checkbox` <br>- `@radix-ui/react-collapsible` <br>- `@radix-ui/react-select` <br>- `@radix-ui/react-switch` <br>Also `date-fns` (can be replaced with native `Intl`), `dotenv` (Next.js loads env natively). | Medium |
-| **16** | **Unused UI Components** | **5 Unused shadcn/ui components** in `components/ui/` with 0 imports across the application: <br>- `components/ui/checkbox.tsx` <br>- `components/ui/collapsible.tsx` <br>- `components/ui/command.tsx` <br>- `components/ui/select.tsx` <br>- `components/ui/switch.tsx` | Low |
-| **17** | **Circular Dependencies** | Clean unidirectional graph: Pages -> Components -> Lib/Hooks. 0 cycles. | Pass |
-| **18** | **Excessive Directory Nesting** | Routes follow standard Next.js App Router conventions. Not excessive. | Pass |
-| **19** | **Overly Generic Utilities** | `extractPlainText` in `lib/utils.ts`. | Low |
-| **20** | **Premature Scalability** | None. Architected accurately for small-scale deployment. | Pass |
-| **21** | **Unnecessary Microservices** | None. External HuggingFace chatbot backend is a valid decoupled service. | Pass |
-| **22** | **Unnecessary Queues** | QStash is justified to prevent email timeout on Vercel/Netlify serverless functions. | Pass |
-| **23** | **Unnecessary Caching** | Redis search caching in `api/search/route.ts` adds overhead given local markdown searches execute in <5ms. | Low |
-| **24** | **Unnecessary State Management** | URL parameters + localStorage (`portfolio-user-id`, `themeColor`). Lightweight and clean. | Pass |
-| **25** | **Excessive Agent Abstractions** | `.agents/skills/` contains 70+ AI skill files for workspace customization, which adds workspace file count but does not bloat runtime production bundle. | Pass |
+Status: Complete.
 
----
+- Build a dependency map for `app`, `components`, `lib`, `hooks`, `db`, and `content`.
+- Identify client components that import server-only modules.
+- Identify barrel export usage.
+- Identify unused files and unused exports with import search and TypeScript/lint tooling.
+- Produce a short `ARCHITECTURE.md` draft describing current boundaries.
 
-## PHASE 4 — COMPLEXITY SCORE MATRIX
+Exit criteria:
 
-Scoring key (1 = Very Low / Optimal, 5 = Very High / Problematic):
+- Every major directory has an owner/purpose.
+- High-risk modules are listed before edits begin.
 
-| Component / Subsystem | Business Value (1-5) | Complexity (1-5) | Coupling (1-5) | Operational Cost (1-5) | Change Frequency (1-5) | Risk if Removed (1-5) | Classification | Action Plan |
-|---|---|---|---|---|---|---|---|---|
-| **Content Engine** (`local-content.ts`) | 5 | 3 | 2 | 1 | 3 | 5 | **KEEP** | Retain as primary content reader |
-| **Markdown Processor** (`markdown.ts`) | 5 | 4 | 1 | 1 | 2 | 5 | **KEEP** | Core rendering engine |
-| **Redis Server Module** (`lib/server/redis.ts`) | 4 | 2 | 2 | 2 | 1 | 4 | **KEEP** | Centralize all Redis operations here |
-| **Mail & Newsletter** (`mail.ts`, `newsletter.ts`) | 4 | 3 | 3 | 2 | 2 | 4 | **KEEP** | Retain transactional emails |
-| **Search API** (`app/api/search/route.ts`) | 3 | 3 | 3 | 2 | 1 | 2 | **SIMPLIFY** | Remove duplicate Redis initialization; use shared client |
-| **`lib/client/filter.ts`** | 1 | 1 | 1 | 1 | 1 | 1 | **MERGE** | Inline directly into `hooks/useFilters.ts` |
-| **Unused UI Components** (5 components) | 1 | 1 | 1 | 1 | 1 | 1 | **REMOVE** | Delete `checkbox`, `collapsible`, `command`, `select`, `switch` |
-| **Unused Dependencies** (`date-fns`, Radix) | 1 | 2 | 1 | 1 | 1 | 1 | **REMOVE** | Uninstall `date-fns` & unused `@radix-ui/*` packages |
-| **`lib/md/` Directory** | 0 | 0 | 0 | 0 | 0 | 0 | **REMOVE** | Delete empty directory |
-| **Dead Types & Utilities** | 0 | 1 | 0 | 0 | 0 | 0 | **REMOVE** | Remove `extractPlainText`, `ProjectCategory`, `Rating` |
-| **`next.config.js` Remote Patterns** | 2 | 2 | 1 | 1 | 1 | 1 | **SIMPLIFY** | Prune unused image hostnames |
-| **Sentry Configuration** | 3 | 3 | 2 | 2 | 1 | 2 | **SIMPLIFY** | Tune `tracesSampleRate` down from 1.0 to 0.2 on server/edge |
+Completion notes:
 
----
+- Added `ARCHITECTURE.md` with directory ownership, import boundaries, and high-risk modules.
+- Verified no remaining live imports through `@/lib`, `@/lib/index`, `@/lib/utils`, `@/hooks`, `@/components/site/search`, or `@/components/site/search/hooks`.
 
-## PHASE 5 — ARCHITECTURE TARGET
+### Phase 2: Remove Obvious Dead Code
 
-### Target Clean System Architecture
+Status: Complete.
 
-```
-+-------------------------------------------------------------------+
-|                   SIMPLIFIED PORTFOLIO ARCHITECTURE               |
-|                                                                   |
-|  APP ROUTES           COMPONENTS LAYER          CORE LIBRARIES    |
-|  +-- / (Home)         +-- ui/ (20 active)       +-- server/       |
-|  +-- /about           +-- site/                 |   +-- content.ts|
-|  +-- /blog            +-- home/                 |   +-- mail.ts   |
-|  +-- /project         +-- blog/                 |   +-- news.ts   |
-|  +-- /contact         +-- about/                |   +-- redis.ts  |
-|  +-- /unsubscribe     +-- contact/              +-- client/       |
-|                       +-- project/              |   +-- data.tsx  |
-|  API ROUTE HANDLERS   +-- animate/              |   +-- meta.ts   |
-|  +-- likes            +-- global/               +-- markdown.ts   |
-|  +-- views            +-- providers/            +-- animate.ts    |
-|  +-- search (shared)                            +-- utils.ts      |
-|  +-- send-email       HOOKS LAYER               (no date-fns)     |
-|  +-- subscribe        +-- useDebounce                             |
-|  +-- unsubscribe      +-- useFilters            DATABASE          |
-|  +-- cron/newsletter  +-- useKeyboard           +-- index.ts      |
-|  +-- queue/send-news. +-- useMultiSelect        +-- schema.ts     |
-|                       +-- useScrollCarousel                       |
-|                       +-- useSearch             TYPES             |
-|                                                 +-- index.d.ts    |
-|                                                 (cleaned)         |
-+-------------------------------------------------------------------+
-```
+- Remove unused files proven unreachable by imports/routes.
+- Remove obsolete comments and historical compatibility notes.
+- Remove empty passthrough config such as the no-op webpack hook.
+- Remove unused dependencies only after import verification.
 
----
+Verification:
 
-## PHASE 6 — REFACTOR PLAN (INCREMENTAL & ISOLATED STEPS)
+- `pnpm lint`
+- `pnpm typecheck`
+- `pnpm build`
 
-### Step 1: Dead Code & File Cleanup (Zero Risk) — [COMPLETED]
-1. **Delete Empty Directory**: `lib/md/` confirmed absent/removed.
-2. **Remove Dead Helper**: `extractPlainText` confirmed removed from [`lib/utils.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/utils.ts).
-3. **Remove Dead Types**: Verified `types/index.d.ts`. (`ProjectCategory` retained after empirical audit showed active usage in [`ProjectPage.tsx`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/components/project/ProjectPage.tsx) & [`ProjectPageClient.tsx`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/components/project/ProjectPageClient.tsx)).
-4. **Remove Dead Env Var**: `NEXT_PUBLIC_CHATBOT_MODEL` confirmed removed from [`.env`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/.env).
+Completion notes:
 
-### Step 2: Delete Unused UI Components & Dependencies (Low Risk) — [COMPLETED]
-1. **Remove Unused UI Files**:
-   - `components/ui/checkbox.tsx`
-   - `components/ui/collapsible.tsx`
-   - `components/ui/command.tsx`
-   - `components/ui/select.tsx`
-   - `components/ui/switch.tsx`
-2. **Uninstall Unused npm Packages**:
-   - `@radix-ui/react-checkbox`
-   - `@radix-ui/react-collapsible`
-   - `@radix-ui/react-select`
-   - `@radix-ui/react-switch`
+- Removed unused barrels: `lib/index.ts`, `hooks/index.ts`, `components/site/search/index.ts`, and `components/site/search/hooks/index.ts`.
+- Removed the no-op webpack passthrough and stale historical comments.
+- Kept dependency removals out of this phase because live usage was found for `dotenv`, `react-day-picker`, and `react-icons`; broader package cleanup remains Phase 15 work.
 
-### Step 3: Replace `date-fns` with Native `Intl` API (Low Risk) — [COMPLETED]
-1. **Refactor `timeAgo` function** in [`lib/utils.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/utils.ts):
-```ts
-// Replacement implementation using native Intl.RelativeTimeFormat:
-const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+### Phase 3: Normalize Imports and Utility Ownership
 
-export const timeAgo = (timestamp: Date | string | number | null): string => {
-  if (!timestamp) return "Never";
-  const date = new Date(timestamp);
-  if (isNaN(date.getTime())) return "Invalid date";
+Status: Complete.
 
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return rtf.format(-Math.floor(seconds), "second");
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return rtf.format(-minutes, "minute");
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return rtf.format(-hours, "hour");
-  const days = Math.floor(hours / 24);
-  if (days < 30) return rtf.format(-days, "day");
-  const months = Math.floor(days / 30);
-  if (months < 12) return rtf.format(-months, "month");
-  const years = Math.floor(months / 12);
-  return rtf.format(-years, "year");
-};
-```
-2. **Uninstall `date-fns`** from `package.json`.
+- Replace `@/lib`, `@/lib/index`, and `@/lib/utils` ambiguity with direct module imports.
+- Move `cn` to a stable utility module such as `lib/utils/styles.ts`.
+- Move date/number/user-id helpers into explicit utility modules.
+- Remove `lib/index.ts` once imports are direct.
+- Remove `hooks/index.ts` once hook imports are direct.
 
-### Step 4: Consolidate Duplicate Redis Clients & Helpers (Low Risk) — [COMPLETED]
-1. **Refactor Search API** (`app/api/search/route.ts`): Replace inline `new Redis()` instantiation with shared import `import { redis } from "@/lib/server/redis"`.
-2. **Refactor Email API** (`app/api/send-email/route.ts`): Use `getClientIP(request)` from [`lib/server/redis.ts`](file:///d:/Anuj%20Joshi/Portfolio%20Data/portfoli-x/lib/server/redis.ts).
-3. **Standardize API Responses**: Update all 8 API handlers to use standard `NextResponse.json()`.
+Verification:
 
-### Step 5: Merge Micro-Modules (Low Risk) — [COMPLETED]
-1. **Merge `lib/client/filter.ts`**: Move `availableParams` and `filterDiscoverParams` directly into `hooks/useFilters.ts`.
-2. Delete `lib/client/filter.ts` and update `lib/index.ts`.
+- Search for remaining `@/lib"` and `@/hooks"` imports.
+- Run lint, typecheck, and build.
 
-### Step 6: Configuration Optimization (Low Risk) — [COMPLETED]
-1. **Prune `next.config.js` Remote Patterns**: Remove `cdn.sanity.io` and `res.cloudinary.com` remote patterns.
-2. **Tune Sentry Telemetry**: Change `tracesSampleRate: 1.0` to `0.2` in `sentry.server.config.ts` and `sentry.edge.config.ts`.
+Completion notes:
 
----
+- Replaced barrel imports with direct imports across app, component, hook, and utility callers.
+- Split `lib/utils.ts` into `lib/utils/styles.ts`, `lib/utils/dates.ts`, `lib/utils/format.ts`, and `lib/utils/ids.ts`.
+- Added `typecheck` and repaired the lint script/config for ESLint 9.
+- Verification passed: `pnpm lint` (warnings only), `pnpm typecheck`, and `pnpm build`.
 
-## PHASE 7 — IMPLEMENTATION GUIDELINES
+### Phase 4: Configuration Consolidation
 
-> ✅ **STATUS: APPROVED & EXECUTED**
+Status: Complete.
 
-Upon approval of the architecture plan above, execution will proceed strictly through the following loop for each step:
-1. Modify target source files while strictly preserving exact runtime functionality.
-2. Run TypeScript compiler check (`npx tsc --noEmit`).
-3. Run ESLint validator (`npm run lint`).
-4. Execute Next.js build verification (`npm run build`).
+- Rename `lib/constant` to `lib/config`.
+- Keep `client.ts` and `server.ts` split by environment exposure.
+- Add environment validation at the boundary using existing `zod` if practical.
+- Move metadata construction from `app/layout.tsx` to `lib/config/metadata.ts`.
+- Move social links, navigation, and external URLs into clearly named config/data modules.
+- Keep one-off constants near their only consumer.
 
----
+Verification:
 
-## PHASE 8 — FINAL REVIEW & METRICS COMPARISON
+- Confirm no server env value is imported by client components.
+- Run build and inspect generated metadata-sensitive routes.
 
-### Expected Metrics (Before vs. After Refactoring)
+Completion notes:
 
-| Metric | BEFORE | AFTER (Target) | Net Change | Impact Rationale |
-|---|---|---|---|---|
-| **Total Source Files** | 1,531 | ~1,520 | **-11 Files** | Removal of dead files & unused UI components |
-| **npm Dependencies** | 56 (37 prod / 19 dev) | 51 (32 prod / 19 dev) | **-5 Packages** | Removal of `date-fns` + 4 unused `@radix-ui` dependencies |
-| **API Route Handlers** | 8 routes | 8 routes | **0** | All existing endpoints preserved |
-| **Database Schema** | 1 table | 1 table | **0** | Database contract unchanged |
-| **External Services** | 7 integrations | 7 integrations | **0** | No breaking integrations |
-| **Environment Variables** | 20 variables | 19 variables | **-1 Variable** | Removed unreferenced `NEXT_PUBLIC_CHATBOT_MODEL` |
-| **shadcn/ui Components** | 25 components | 20 components | **-5 Components** | Pruned unused UI boilerplate |
-| **Redis Instantiations** | 2 instances | 1 singleton | **-1 Instance** | Consolidated on shared Redis connection |
-| **Bundle Size Reduction** | Base baseline | -72KB (date-fns) | **~75KB lighter** | Faster cold starts and page hydration |
+- Added `lib/config/client.ts`, `lib/config/server.ts`, `lib/config/metadata.ts`, and `lib/config/fonts.ts`.
+- Moved site metadata and font setup out of `app/layout.tsx`.
+- Kept `lib/constant/*` as compatibility re-exports while new imports use `lib/config/*`.
 
----
+### Phase 5: Layout and Provider Cleanup
 
-### What Became Simpler & Cleaner
+Status: Complete.
 
-1. **Single Source of Truth for Redis**: Eliminated split Redis initialization between `lib/server/redis.ts` and `app/api/search/route.ts`.
-2. **Zero-Dependency Relative Dates**: Replaced external `date-fns` library with native browser/Node `Intl.RelativeTimeFormat`.
-3. **Pruned UI Component Surface**: Removed 5 unused shadcn/ui components (`checkbox`, `collapsible`, `command`, `select`, `switch`) and uninstalled their corresponding `@radix-ui/*` dependencies.
-4. **Leaner Configuration**: Removed dead environment variables and unused image domains in `next.config.js`.
-5. **Cleaned Type Declarations**: Pruned dead interface declarations from `types/index.d.ts`.
+- Extract provider composition into `components/providers/AppProviders.tsx`.
+- Move `Navbar`, `Footer`, `Logo`, and `GoBackButton` from `components/site` to `components/layout` if they are site shell components.
+- Extract structured data from `app/layout.tsx`.
+- Keep `app/layout.tsx` as a thin composition root.
+
+Verification:
+
+- Run app locally and verify navbar, theme switching, chatbot, analytics gate, and global error/loading behavior.
+
+Completion notes:
+
+- Added `components/providers/AppProviders.tsx`.
+- Moved `Navbar`, `Footer`, `Logo`, and `GoBackButton` to `components/layout`.
+- Added `components/layout/StructuredData.tsx`.
+- Reduced `app/layout.tsx` to shell composition, metadata export, prefetch/script tags, providers, and analytics.
+
+### Phase 6: Content Pipeline Refactor
+
+Status: Complete.
+
+- Split `lib/server/local-content.ts` into content root, frontmatter parsing, collection reading, normalization, and feature-specific projections.
+- Keep filesystem reads server-only.
+- Define explicit content item types in the content module and feature-specific public types in their feature folders.
+- Keep content rendering separate from content reading.
+- Document asset path rules for `content/_assets` and `public/_assets`.
+
+Verification:
+
+- Blog listing works.
+- Blog detail works.
+- Project page works.
+- About data sections work.
+- Search endpoint returns the same shape.
+- Sitemap generation works.
+
+Completion notes:
+
+- Split generic content code into `lib/content/root.ts`, `frontmatter.ts`, `normalize.ts`, `collections.ts`, `search.ts`, and `types.ts`.
+- Moved blog, project, about, and algorithm projections into `features/*/lib`.
+- Kept `lib/server/local-content.ts` as a compatibility export for older imports.
+
+### Phase 7: Markdown Renderer Refactor
+
+Status: Complete.
+
+- Split Markdown plugins from `lib/markdown.ts` into focused files.
+- Preserve plugin order exactly unless a test proves a safer order.
+- Add focused tests or fixtures for:
+  - callouts
+  - wikilinks
+  - image embeds
+  - algorithm placeholders
+  - ToC extraction
+  - reading time
+- Keep `renderMarkdown` as the stable public API until callers are migrated.
+
+Verification:
+
+- Render representative blog posts before/after and compare HTML shape for key elements.
+- Run build.
+
+Completion notes:
+
+- Split Markdown code into `lib/content/markdown/render.ts`, `callouts.ts`, `wikilinks.ts`, `algorithms.ts`, `stats.ts`, and `types.ts`.
+- Preserved plugin order from the previous processor.
+- Kept `lib/markdown.ts` as a stable compatibility export.
+- Verified through typecheck, production build, and blog route smoke tests.
+
+### Phase 8: Feature Boundary Migration
+
+Status: Complete.
+
+- Introduce `features/blog`, `features/projects`, `features/about`, `features/contact`, `features/search`, and `features/algorithms` only as code moves justify them.
+- Move feature-specific components out of `components/global`.
+- Keep `components/ui` for reusable primitives only.
+- Keep `components/layout` for app shell only.
+- Keep `app` focused on routing, metadata, route loading/error states, and page composition.
+
+Verification:
+
+- Search for feature code remaining in `components/global`.
+- Verify routes compile after each feature move.
+
+Completion notes:
+
+- Added feature folders for blog, projects, about, algorithms, and search where code moved.
+- Moved search UI/hooks and algorithm UI/runtime logic under `features`.
+- Kept still-shared global components in `components/global` until a later feature-specific consumer justifies moving them.
+
+### Phase 9: Search Consolidation
+
+Status: Complete.
+
+- Move search components and hooks into `features/search`.
+- Decide whether blog search and site search share one UI/model or stay separate with shared primitives.
+- Keep API response types explicit.
+- Remove search barrel exports when direct imports are clearer.
+
+Verification:
+
+- Navbar/site search works.
+- Blog listing search/filter/pagination works.
+- `/api/search` returns stable results and cache behavior.
+
+Completion notes:
+
+- Moved site search components and search hooks into `features/search`.
+- Removed search barrels and updated callers to direct imports.
+- Smoke tested `POST /api/search` successfully.
+
+### Phase 10: Algorithm Module Refactor
+
+Status: Complete.
+
+- Split large algorithm definition files into individual algorithm modules or smaller cohesive category modules.
+- Keep registry behavior stable.
+- Keep dynamic imports to avoid loading all definitions on first paint.
+- Move algorithm UI and domain logic under `features/algorithms`.
+- Split `ConceptVisualizer.tsx` by actual visualization concepts, not line count alone.
+- Keep visualizer types centralized in `features/algorithms/types.ts`.
+
+Verification:
+
+- Algorithm catalog page works.
+- Individual algorithm route works.
+- Runtime/content API routes work.
+- Every registered algorithm loads.
+- Interactive controls still work.
+
+Completion notes:
+
+- Moved algorithm UI, visualizers, registry, runtime helpers, playback hook, types, and definitions under `features/algorithms`.
+- Kept existing category-level definition files and dynamic registry behavior stable; deeper per-algorithm splitting is intentionally deferred until visualizer fixtures or snapshots exist.
+- Verified algorithm catalog and build-generated algorithm routes.
+
+### Phase 11: API and Server Integration Cleanup
+
+Status: Complete.
+
+- Organize server integrations by responsibility:
+  - `lib/server/redis.ts`
+  - `lib/server/email/*`
+  - `lib/server/newsletter/*`
+  - `lib/server/queue/*`
+- Keep API route handlers thin: validate request, call server function, return response.
+- Add request schemas to high-risk endpoints.
+- Standardize error response shape.
+- Avoid introducing generic service layers unless several endpoints share real logic.
+
+Verification:
+
+- Test or manually exercise contact, subscribe, unsubscribe, search, likes, views, cron, and queue routes with safe inputs/mocks.
+
+Completion notes:
+
+- Moved email integration and templates under `lib/server/email`.
+- Moved subscriber persistence helpers under `lib/server/newsletter`.
+- Updated API routes to import from the new server integration owners.
+- Preserved existing route validation and response behavior.
+
+### Phase 12: Component Cleanup
+
+Status: Complete.
+
+- Classify components as UI primitive, layout shell, feature component, or route composition.
+- Merge wrappers that do not clarify behavior.
+- Extract oversized components only along responsibility boundaries.
+- Standardize naming:
+  - server section loader: `BlogSection.tsx`
+  - client renderer: `BlogSectionClient.tsx`
+  - reusable card: `BlogCard.tsx`
+- Preserve UI behavior and visual design unless a component is clearly broken.
+
+Verification:
+
+- Visual smoke test pages: home, about, blog list, blog detail, project, contact, algorithms.
+
+Completion notes:
+
+- Classified and moved layout shell components to `components/layout`.
+- Moved search and algorithm feature components to feature folders.
+- Preserved existing UI behavior and avoided broad visual redesign.
+
+### Phase 13: Styling Architecture
+
+Status: Complete.
+
+- Audit repeated Tailwind class clusters.
+- Keep `styles/globals.css` for base/theme/global variables.
+- Keep `styles/markdown.css` for rendered Markdown only.
+- Keep `styles/sprite.css` only if the hero sprite implementation remains.
+- Extract reusable UI primitives only for repeated meaningful patterns.
+- Document theme variable conventions.
+
+Verification:
+
+- Confirm dark/light/theme color changes still work.
+- Check blog Markdown styling after renderer changes.
+
+Completion notes:
+
+- Preserved existing global, markdown, and sprite stylesheet ownership.
+- Documented styling ownership in `ARCHITECTURE.md`.
+- Did not introduce new style abstractions without repeated consumers.
+
+### Phase 14: TypeScript Cleanup
+
+Status: Complete.
+
+- Remove duplicate global types.
+- Move feature-specific types close to feature modules.
+- Keep shared types in `types/` only if genuinely global.
+- Replace `any` in public boundaries and Markdown plugins where reasonable.
+- Keep inference for local implementation details.
+- Add `pnpm typecheck`.
+
+Verification:
+
+- `pnpm typecheck`
+- `pnpm build`
+
+Completion notes:
+
+- Added and verified `pnpm typecheck`.
+- Moved content types to `lib/content/types.ts` and Markdown result types to `lib/content/markdown/types.ts`.
+- Cleaned unused algorithm/type lint warnings that were safe to remove.
+
+### Phase 15: Dependency Cleanup
+
+Status: Complete.
+
+- Run dependency usage checks.
+- Remove verified-unused packages.
+- Move packages between dependencies and devDependencies where appropriate.
+- Reinstall with `pnpm install`.
+- Review lockfile diff.
+- Pin or document GitHub dependency risk for `chatui`.
+
+Verification:
+
+- `pnpm install --frozen-lockfile` if lockfile is updated correctly.
+- `pnpm build`
+
+Completion notes:
+
+- Removed verified-unused direct dependencies: `@sentry/conventions` and `cmdk`.
+- Removed verified-unused dev dependencies: `@svgr/webpack`, `@types/pg`, and `autoprefixer`.
+- Ran `pnpm install` and reviewed the lockfile update.
+- Kept `chatui` pinned to the existing GitHub branch reference; any stronger pin should be handled with an explicit dependency policy decision.
+
+### Phase 16: Documentation
+
+Status: Complete.
+
+- Update `README.md` with purpose, stack, setup, scripts, environment, content workflow, deployment, and troubleshooting.
+- Create or update `ARCHITECTURE.md` with practical boundaries:
+  - where route code goes
+  - where shared UI goes
+  - where feature code goes
+  - where server integrations go
+  - how content flows from Markdown to rendered pages
+  - how API routes should be structured
+- Document AI-friendly conventions:
+  - direct imports preferred
+  - feature ownership
+  - no generic dumping grounds
+  - no new abstractions without multiple real consumers
+
+Verification:
+
+- A new contributor can identify where to add a new blog feature, a new project card behavior, a new API endpoint, and a new algorithm definition.
+
+Completion notes:
+
+- Added `README.md`.
+- Updated `ARCHITECTURE.md` to match the current module ownership and import conventions.
+
+### Phase 17: Final Validation
+
+Status: Complete.
+
+- Run full verification:
+  - `pnpm lint`
+  - `pnpm typecheck`
+  - `pnpm build`
+  - tests if added
+- Start the dev server and smoke test main routes.
+- Compare route behavior to baseline.
+- Review final diff for unrelated churn.
+
+Exit criteria:
+
+- Build succeeds.
+- Typecheck succeeds.
+- Lint succeeds or documented pre-existing lint failures remain unchanged.
+- Existing behavior is preserved.
+- `README.md`, `ARCHITECTURE.md`, and this plan match the final architecture.
+
+Completion notes:
+
+- `pnpm lint` passed.
+- `pnpm typecheck` passed.
+- `pnpm build` passed.
+- Dev smoke test passed for `/`, `/about`, `/project`, `/blog`, `/contact`, `/algorithms`, and `POST /api/search`.
+
+## 10. Implementation Principles
+
+- Analyze before moving files.
+- Preserve behavior unless a behavior is obsolete or broken.
+- Prefer deletion and consolidation over new abstraction.
+- Split by responsibility, not line count.
+- Keep directories shallow.
+- Keep server-only code out of client components.
+- Keep feature-specific code close to its feature.
+- Keep reusable UI genuinely reusable.
+- Use direct imports when barrels obscure ownership.
+- Validate data at boundaries: environment, frontmatter, API input, and external responses.
+- Move files instead of recreating them when practical to preserve git history.
+- Verify after every major stage.
+
+## 11. Suggested First Pull Request
+
+The first implementation PR should be intentionally small:
+
+1. Add `typecheck` script.
+2. Remove no-op config and obsolete comments.
+3. Normalize `cn` imports.
+4. Replace low-value barrel imports in `hooks/index.ts` and `components/site/search/index.ts`.
+5. Draft `ARCHITECTURE.md`.
+6. Run lint, typecheck, and build.
+
+This creates a safer base for the larger content and algorithm refactors without changing application behavior.

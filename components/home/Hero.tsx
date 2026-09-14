@@ -5,7 +5,7 @@ import { HeroSocial } from '@/components/global/Social';
 import { Send, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { childVariants, containerVariants } from '@/lib/animate';
-import { socialLinks } from "@/lib";
+import { socialLinks } from "@/lib/client/data";
 import Link from "next/link";
 import { FlipWords } from "@/components/animate/FlipWords";
 import HeroImage from "./HeroImage";

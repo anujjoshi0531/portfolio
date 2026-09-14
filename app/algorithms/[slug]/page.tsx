@@ -1,8 +1,8 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getAlgorithmCatalog, getAlgorithmCatalogEntry } from '@/lib/server/local-content'
-import { AlgorithmVisualizer } from '@/components/algorithms/AlgorithmVisualizer'
+import { getAlgorithmCatalog, getAlgorithmCatalogEntry } from '@/features/algorithms/lib/catalog'
+import { AlgorithmVisualizer } from '@/features/algorithms/components/AlgorithmVisualizer'
 import Link from 'next/link'
 import { ChevronRight, ArrowLeft } from 'lucide-react'
 

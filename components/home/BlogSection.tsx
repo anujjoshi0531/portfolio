@@ -1,4 +1,4 @@
-import { searchBlogs } from "@/lib/server/local-content"
+import { searchBlogs } from "@/features/blog/lib/content"
 import BlogClient from "./BlogClient"
 import { Suspense } from "react"
 import BlogCardSkeleton from '@/components/blog/BlogCardSkeleton'
