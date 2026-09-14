@@ -31,7 +31,7 @@ export default function BlogCard({
   const slug = blog.slug || blog.id;
   const thumbnail = blog.thumbnail || "/icon.webp";
   const tags = blog.tags.map((t, i) => ({ id: `${i}`, name: t }));
-  const displayDate = blog.published ?? blog.created;
+  const displayDate = blog.created ?? blog.published;
 
   // FocusCard: blur & scale down when a sibling is hovered
   const isOtherHovered = hovered !== null && hovered !== index;
