@@ -12,6 +12,8 @@ import { PopoverPreview } from "@/components/blog/PopoverPreview";
 import { DynamicGraphView } from "@/components/blog/DynamicGraphView";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import ShareAndReact from "@/components/blog/ShareAndReact";
+import { BlogPlaylistContexts } from "@/features/blog/playlists/components/BlogPlaylistContexts";
+import { getBlogPlaylistContexts } from "@/features/blog/playlists/lib/playlists";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -60,16 +62,20 @@ export async function generateMetadata({ params }: { params: Promise<{ pageId: s
   };
 }
 
-export default async function page({ params }: {
+export default async function page({ params, searchParams }: {
   params: Promise<{ pageId: string }>;
+  searchParams?: Promise<{ from?: string | string[] }>;
 }) {
   const { pageId } = await params;
+  const query = await searchParams;
   const localBlog = getBlogBySlug(pageId);
 
   if (!localBlog) return <NotFound />;
 
   const graphData = getGraphData();
   const backlinks = getBacklinks(localBlog.slug);
+  const playlistContexts = getBlogPlaylistContexts(localBlog.slug);
+  const activePlaylistContext = Array.isArray(query?.from) ? query.from[0] : query?.from;
   const { element: renderedContent, toc } = await renderMarkdownWithToc({
     content: localBlog.content,
     slug: localBlog.slug,
@@ -115,6 +121,11 @@ export default async function page({ params }: {
           )}
 
           {showIndex && <TableOfContents toc={toc} className="lg:hidden" />}
+
+          <BlogPlaylistContexts
+            contexts={playlistContexts}
+            activeContextId={activePlaylistContext}
+          />
 
           {renderedContent}
 

@@ -1,0 +1,14 @@
+id: contest-writeups
+title: Contest Writeups
+description: Competitive programming contest reflections and solution sets from the blog.
+summary: Follow contest posts as a practice journal instead of reading them as isolated archive entries.
+sections:
+  - title: LeetCode
+    items:
+      - leetcode-weekly-contest-46
+      - leetcode-weekly-contest-144
+      - leetcode-weekly-contest-476
+      - leetcode-weekly-contest-494
+  - title: AtCoder
+    items:
+      - atcoder-beginner-contest-430

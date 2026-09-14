@@ -83,3 +83,18 @@
  GET /api/algorithms/binary-search/content 200 in 15.4s (next.js: 14.6s, application-code: 809ms)
  GET /api/algorithms/binary-search/content 200 in 445ms (next.js: 141ms, application-code: 304ms)
 ✓ Finished filesystem cache database compaction in 21.5s
+✓ Compiled in 12.9s
+ GET / 200 in 2.6s (next.js: 465ms, application-code: 2.1s)
+ GET /api/views?slug=game-of-xor 200 in 708ms (next.js: 75ms, application-code: 633ms)
+ GET /api/views?slug=greatest-sum-divisible-by-three 200 in 725ms (next.js: 185ms, application-code: 540ms)
+ GET /api/views?slug=subarrays-with-first-element-minimum 200 in 355ms (next.js: 10ms, application-code: 345ms)
+ GET /api/views?slug=sum-of-subarray-minimums 200 in 302ms (next.js: 15ms, application-code: 287ms)
+ GET /api/views?slug=leetcode-weekly-contest-46 200 in 290ms (next.js: 12ms, application-code: 278ms)
+ GET /api/views?slug=game-of-xor 200 in 346ms (next.js: 36ms, application-code: 310ms)
+ GET /api/views?slug=greatest-sum-divisible-by-three 200 in 250ms (next.js: 17ms, application-code: 233ms)
+ GET /api/views?slug=subarrays-with-first-element-minimum 200 in 240ms (next.js: 8ms, application-code: 232ms)
+ GET /api/views?slug=sum-of-subarray-minimums 200 in 347ms (next.js: 15ms, application-code: 332ms)
+ GET /api/views?slug=leetcode-weekly-contest-46 200 in 321ms (next.js: 13ms, application-code: 307ms)
+○ Compiling instrumentation Node.js ...
+✓ Compiled in 11.3s
+[?25h

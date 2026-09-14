@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Grid, List, X } from "lucide-react";
+import { Grid, List, ListChecks, X } from "lucide-react";
 import BlogCard from "./BlogCard";
 import { SearchInput } from './SearchInput';
 import { BlogFilter } from "./filter/BlogFilter";
@@ -97,6 +98,12 @@ export default function Blog({
           <SearchInput placeholder="Search Blogs, Project, Articles.." />
         </div>
         <div className="space-x-2 flex items-center">
+          <Button asChild variant="outline" size="md">
+            <Link href="/blog/playlists">
+              <ListChecks />
+              Playlists
+            </Link>
+          </Button>
           <BlogFilter tags={tags} categories={categories} />
           <Button
             variant="secondary"

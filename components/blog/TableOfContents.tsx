@@ -62,7 +62,7 @@ export function TableOfContents({ toc, className = "", title = "Index" }: TableO
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-3 border-b border-neutral-800/80 pb-2.5">
-        <List className="w-4 h-4 text-blue-400" />
+        <List className="w-4 h-4 text-theme" />
         <span className="text-xs sm:text-sm font-semibold text-neutral-200 uppercase tracking-wider">
           {title}
         </span>
@@ -86,7 +86,7 @@ export function TableOfContents({ toc, className = "", title = "Index" }: TableO
                     transition-all duration-200 ${indent}
                     ${
                       isActive
-                        ? "text-blue-400 bg-blue-500/10 font-medium border-l-2 border-blue-500"
+                        ? "text-theme bg-theme/10 font-medium border-l-2 border-theme"
                         : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60 border-l-2 border-transparent"
                     }
                   `}

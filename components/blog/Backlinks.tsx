@@ -13,7 +13,7 @@ export function Backlinks({ backlinks, className = "" }: BacklinksProps) {
     return (
       <div className={`rounded-xl border border-neutral-800/80 bg-neutral-900/40 p-6 ${className}`}>
         <div className="flex items-center gap-2 mb-2 text-neutral-400">
-          <Link2 className="w-4 h-4 text-blue-400" />
+          <Link2 className="w-4 h-4 text-theme" />
           <h4 className="text-sm font-semibold uppercase tracking-wider text-neutral-300">Backlinks</h4>
         </div>
         <p className="text-xs text-neutral-500 italic">No notes link to this post yet.</p>
@@ -25,7 +25,7 @@ export function Backlinks({ backlinks, className = "" }: BacklinksProps) {
     <div className={`rounded-xl border border-neutral-800/90 bg-neutral-900/50 p-6 backdrop-blur-md ${className}`}>
       <div className="flex items-center justify-between mb-4 border-b border-neutral-800 pb-3">
         <div className="flex items-center gap-2">
-          <Link2 className="w-4.5 h-4.5 text-blue-400" />
+          <Link2 className="w-4.5 h-4.5 text-theme" />
           <h4 className="text-sm font-semibold uppercase tracking-wider text-neutral-200">
             Mentioned In ({backlinks.length})
           </h4>
@@ -38,14 +38,14 @@ export function Backlinks({ backlinks, className = "" }: BacklinksProps) {
           <Link
             key={item.slug}
             href={`/blog/${item.slug}`}
-            className="group relative block rounded-lg border border-neutral-800/70 bg-neutral-950/60 p-4 transition-all duration-200 hover:border-blue-500/40 hover:bg-neutral-800/50 hover:shadow-lg hover:shadow-blue-500/5"
+            className="group relative block rounded-lg border border-neutral-800/70 bg-neutral-950/60 p-4 transition-all duration-200 hover:border-theme/40 hover:bg-neutral-800/50 hover:shadow-lg hover:shadow-theme/5"
           >
             <div className="flex items-center justify-between gap-2 mb-1.5">
-              <h5 className="text-sm font-semibold text-neutral-100 group-hover:text-blue-400 transition-colors line-clamp-1">
+              <h5 className="text-sm font-semibold text-neutral-100 group-hover:text-theme transition-colors line-clamp-1">
                 {item.title}
               </h5>
               {item.category && (
-                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-blue-950/60 border border-blue-800/40 text-blue-300">
+                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-theme/10 border border-theme/30 text-theme">
                   {item.category}
                 </span>
               )}
@@ -66,7 +66,7 @@ export function Backlinks({ backlinks, className = "" }: BacklinksProps) {
               )}
               {item.tags.length > 0 && (
                 <span className="flex items-center gap-1 text-neutral-400">
-                  <Tag className="w-3 h-3 text-blue-400" />
+                  <Tag className="w-3 h-3 text-theme" />
                   {item.tags.slice(0, 2).join(", ")}
                 </span>
               )}

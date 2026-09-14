@@ -27,3 +27,11 @@ Setting a custom Cache-Control header can break Next.js development behavior.
 (node:2564) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added to [ServerResponse]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
 (node:2564) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added to [ServerResponse]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
 (node:2564) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 close listeners added to [ServerResponse]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+
+thread 'tokio-rt-worker' (15716) panicked at turbopack\crates\turbo-tasks-backend\src\backend\operation\mod.rs:292:17:
+Restore of All for task TaskId 706646 failed in another thread: restoring failed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+turbo-tasks: an internal panic occurred outside the per-task panic boundary. This is a bug in turbo-tasks/Turbopack — please report it at https://github.com/vercel/next.js/discussions and include the panic message and stack trace above.
+
+Aborting.
