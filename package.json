@@ -2,6 +2,7 @@
   "name": "portfolio",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.28.2",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
@@ -30,7 +31,7 @@
     "@sentry/nextjs": "^10.74.0",
     "@upstash/qstash": "^2.9.0",
     "@upstash/ratelimit": "^2.0.8",
-    "chatui": "github:Anujjoshi3105/chatui",
+    "chatui": "github:Anujjoshi3105/chatui#refactor",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -83,10 +84,15 @@
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   },
-  "overrides": {
-    "@sentry/conventions": "^0.23.0",
-    "@esbuild-kit/core-utils": {
-      "esbuild": "^0.25.12"
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@sentry/cli",
+      "esbuild",
+      "unrs-resolver"
+    ],
+    "overrides": {
+      "@sentry/conventions": "^0.23.0",
+      "@esbuild-kit/core-utils>esbuild": "^0.25.12"
     }
   }
 }
