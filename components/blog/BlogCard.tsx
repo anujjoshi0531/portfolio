@@ -92,6 +92,12 @@ export default function BlogCard({
           >
           </div>
 
+          {isPlaylist && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/35 text-white" aria-hidden="true">
+              <ListVideo className="size-12 drop-shadow-lg" />
+            </div>
+          )}
+
           <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/60 backdrop-blur-md rounded-md px-2 py-1 text-white">
             {isVisualizer ? (
               <span className="text-xs capitalize">{blog.difficulty}</span>
@@ -104,11 +110,6 @@ export default function BlogCard({
               <ViewCounter slug={slug} increment={false} className="text-white text-xs scale-90" />
             )}
           </div>
-          {isPlaylist && (
-            <div className="absolute inset-y-0 right-0 flex w-14 items-center justify-center bg-black/45 text-white">
-              <ListVideo className="size-6" aria-hidden="true" />
-            </div>
-          )}
 
           <div className="absolute bottom-1 left-2 flex gap-1">
             {tags.map((topic) => (

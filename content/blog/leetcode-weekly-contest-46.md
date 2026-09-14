@@ -7,6 +7,7 @@ tags:
   - Leetcode
   - Sparse-Tree
 category: Blog
+thumbnail: _assets/thumbnails/lc-contest.png
 likes: 0
 views: 0
 created: 2025-06-11T14:50

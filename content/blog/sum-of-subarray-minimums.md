@@ -8,6 +8,7 @@ tags:
   - POTD
   - Arrays
 category: Blog
+thumbnail: _assets/thumbnails/gfg-subarrays.webp
 likes: 2
 views: 16
 created: 2025-06-11T14:50

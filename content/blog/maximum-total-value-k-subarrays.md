@@ -8,6 +8,7 @@ tags:
   - Sparse-Tree
   - Range Query
 category: Blog
+thumbnail: _assets/thumbnails/gfg-subarrays.webp
 likes: 0
 views: 2
 created: 2025-06-11T14:50

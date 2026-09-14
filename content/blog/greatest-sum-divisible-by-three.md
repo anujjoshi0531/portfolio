@@ -2,7 +2,7 @@
 title: "Greatest Sum Divisible by Three"
 description: "Optimal approach and explanation to find the maximum sum of elements divisible by three on LeetCode."
 published: 2001-11-23
-thumbnail: _assets/thumbnails/divisibleBy3.webp
+thumbnail: _assets/thumbnails/gfg-subarrays.webp
 tags:
   - Leetcode
   - POTD
