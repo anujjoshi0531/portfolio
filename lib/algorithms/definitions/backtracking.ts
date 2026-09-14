@@ -6,42 +6,7 @@ const nQueens: Algorithm = {
   name: 'N-Queens Problem',
   category: 'Backtracking',
   difficulty: 'advanced',
-  visualization: 'matrix',
-  code: `function solveNQueens(n) {
-  const board = Array(n).fill(null)
-    .map(() => Array(n).fill('.'));
-
-  function isSafe(row, col) {
-    for (let i = 0; i < row; i++)
-      if (board[i][col] === 'Q') return false;
-
-    for (let i = row-1, j = col-1; i >= 0 && j >= 0; i--, j--)
-      if (board[i][j] === 'Q') return false;
-
-    for (let i = row-1, j = col+1; i >= 0 && j < n; i--, j++)
-      if (board[i][j] === 'Q') return false;
-
-    return true;
-  }
-
-  function solve(row) {
-    if (row === n) return true;
-
-    for (let col = 0; col < n; col++) {
-      if (isSafe(row, col)) {
-        board[row][col] = 'Q';
-        if (solve(row + 1)) return true;
-        board[row][col] = '.'; // Backtrack
-      }
-    }
-
-    return false;
-  }
-
-  solve(0);
-  return board;
-}`,
-
+  visualization: 'matrix',
   generateSteps(locale = 'en') {
     const N = 5
     const board: (number | string)[][] = Array.from({ length: N }, () =>
@@ -199,46 +164,7 @@ const sudokuSolver: Algorithm = {
   name: 'Sudoku Solver',
   category: 'Backtracking',
   difficulty: 'advanced',
-  visualization: 'matrix',
-  code: `function solveSudoku(board) {
-  function isValid(row, col, num) {
-    for (let c = 0; c < 4; c++)
-      if (board[row][c] === num) return false;
-
-    for (let r = 0; r < 4; r++)
-      if (board[r][col] === num) return false;
-
-    const boxR = Math.floor(row / 2) * 2;
-    const boxC = Math.floor(col / 2) * 2;
-    for (let r = boxR; r < boxR + 2; r++)
-      for (let c = boxC; c < boxC + 2; c++)
-        if (board[r][c] === num) return false;
-
-    return true;
-  }
-
-  function solve() {
-    for (let r = 0; r < 4; r++) {
-      for (let c = 0; c < 4; c++) {
-        if (board[r][c] === 0) {
-          for (let num = 1; num <= 4; num++) {
-            if (isValid(r, c, num)) {
-              board[r][c] = num;
-              if (solve()) return true;
-              board[r][c] = 0; // Backtrack
-            }
-          }
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  solve();
-  return board;
-}`,
-
+  visualization: 'matrix',
   generateSteps(locale = 'en') {
     const board: (number | string)[][] = [
       [0, 0, 3, 0],
@@ -431,48 +357,7 @@ const mazePathfinding: Algorithm = {
   name: 'Maze Pathfinding',
   category: 'Backtracking',
   difficulty: 'intermediate',
-  visualization: 'matrix',
-  code: `function mazeBFS(maze, start, end) {
-  const rows = maze.length;
-  const cols = maze[0].length;
-  const visited = Array(rows).fill(null)
-    .map(() => Array(cols).fill(false));
-  const parent = Array(rows).fill(null)
-    .map(() => Array(cols).fill(null));
-
-  const queue = [start];
-  visited[start[0]][start[1]] = true;
-  const dirs = [[0,1],[1,0],[0,-1],[-1,0]];
-
-  while (queue.length > 0) {
-    const [r, c] = queue.shift();
-
-    if (r === end[0] && c === end[1]) {
-      // Reconstruct path
-      const path = [];
-      let curr = end;
-      while (curr) {
-        path.unshift(curr);
-        curr = parent[curr[0]][curr[1]];
-      }
-      return path;
-    }
-
-    for (const [dr, dc] of dirs) {
-      const nr = r + dr, nc = c + dc;
-      if (nr >= 0 && nr < rows && nc >= 0 &&
-          nc < cols && !visited[nr][nc] &&
-          maze[nr][nc] === 0) {
-        visited[nr][nc] = true;
-        parent[nr][nc] = [r, c];
-        queue.push([nr, nc]);
-      }
-    }
-  }
-
-  return null; // No path found
-}`,
-
+  visualization: 'matrix',
   generateSteps(locale = 'en') {
     const maze = [
       [0, 0, 1, 0, 0, 0],

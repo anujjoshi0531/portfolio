@@ -24,7 +24,7 @@ export function CodeViewer({ algorithm, step, className = '' }: CodeViewerProps)
   const activeLineRef = useRef<HTMLDivElement | null>(null)
 
   // Get code and line map for current selected language
-  let code = algorithm.code
+  let code = algorithm.code ?? ''
   let lineMap: Record<number, number> | undefined = undefined
 
   if (selectedLanguage !== 'javascript' && algorithm.implementations) {

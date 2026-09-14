@@ -9,22 +9,7 @@ const towerOfHanoi: Algorithm = {
   name: 'Tower of Hanoi',
   category: 'Divide and Conquer',
   difficulty: 'intermediate',
-  visualization: 'matrix',
-  code: `function hanoi(n, source, target, auxiliary) {
-  if (n === 0) return;
-
-  // Move n-1 disks from source to auxiliary
-  hanoi(n - 1, source, auxiliary, target);
-
-  // Move the largest disk to target
-  console.log(\`Move disk \${n} from \${source} to \${target}\`);
-
-  // Move n-1 disks from auxiliary to target
-  hanoi(n - 1, auxiliary, target, source);
-}
-
-hanoi(3, 'A', 'C', 'B');`,
-
+  visualization: 'matrix',
   generateSteps(locale = 'en') {
     const numDisks = 3
     const pegs: number[][] = [[3, 2, 1], [], []]

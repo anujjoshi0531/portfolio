@@ -6,19 +6,7 @@ const euclideanAlgorithm: Algorithm = {
   name: 'Euclidean Algorithm',
   category: 'Math',
   difficulty: 'easy',
-  visualization: 'concept',
-  code: `function gcd(a, b) {
-  while (b !== 0) {
-    const q = Math.floor(a / b);
-    const r = a % b;
-    a = b;
-    b = r;
-  }
-  return a;
-}
-
-gcd(48, 36);`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const A0 = 48
     const B0 = 36
@@ -117,26 +105,7 @@ const sieveOfEratosthenes: Algorithm = {
   name: 'Sieve of Eratosthenes',
   category: 'Math',
   difficulty: 'intermediate',
-  visualization: 'matrix',
-  code: `function sieveOfEratosthenes(n) {
-  const isPrime = new Array(n + 1).fill(true);
-  isPrime[0] = isPrime[1] = false;
-
-  for (let i = 2; i * i <= n; i++) {
-    if (isPrime[i]) {
-      for (let j = i * i; j <= n; j += i) {
-        isPrime[j] = false;
-      }
-    }
-  }
-
-  return isPrime
-    .map((p, i) => p ? i : null)
-    .filter(x => x !== null);
-}
-
-sieveOfEratosthenes(30);`,
-
+  visualization: 'matrix',
   generateSteps(locale = 'en') {
     const N = 30
     const COLS = 6

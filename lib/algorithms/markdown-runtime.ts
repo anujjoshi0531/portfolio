@@ -1,4 +1,4 @@
-import type { CodeImplementation, CodeLanguage } from './types'
+import type { Algorithm, CodeImplementation, CodeLanguage } from './types'
 
 export type MarkdownCodeBlocks = Partial<Record<CodeLanguage, string>>
 
@@ -66,4 +66,36 @@ export function toMarkdownCodeImplementations(
   }
 
   return implementations
+}
+
+export async function loadMarkdownRuntime(id: string): Promise<MarkdownAlgorithmRuntime | undefined> {
+  try {
+    const response = await fetch(`/api/algorithms/${id}/runtime`)
+    if (!response.ok) return undefined
+
+    return (await response.json()) as MarkdownAlgorithmRuntime
+  } catch {
+    return undefined
+  }
+}
+
+export function applyMarkdownRuntime(
+  algorithm: Algorithm,
+  runtime?: MarkdownAlgorithmRuntime,
+): Algorithm {
+  if (!runtime) return algorithm
+
+  return {
+    ...algorithm,
+    code: runtime.codeBlocks.javascript ?? algorithm.code,
+    implementations: {
+      ...algorithm.implementations,
+      ...toMarkdownCodeImplementations(runtime.codeBlocks, runtime.lineMaps),
+    },
+    runtimeInput: runtime.input ?? algorithm.runtimeInput,
+    timeComplexity: runtime.complexity ?? algorithm.timeComplexity,
+    spaceComplexity: runtime.spaceComplexity ?? algorithm.spaceComplexity,
+    prerequisites: runtime.prerequisites ?? algorithm.prerequisites,
+    howItWorks: runtime.howItWorks ?? algorithm.howItWorks,
+  }
 }

@@ -21,26 +21,7 @@ const binarySearch: Algorithm = {
   name: 'Binary Search',
   category: 'Searching',
   difficulty: 'easy',
-  visualization: 'array',
-  code: `function binarySearch(array, target) {
-  let low = 0;
-  let high = array.length - 1;
-
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2);
-
-    if (array[mid] === target) {
-      return mid; // Found!
-    } else if (array[mid] < target) {
-      low = mid + 1; // Search right half
-    } else {
-      high = mid - 1; // Search left half
-    }
-  }
-
-  return -1; // Not found
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en', input?: unknown) {
     const { array: arr, target } = readArraySearchInput(input, [2, 5, 8, 12, 16, 23, 38, 56, 72, 91], 23)
     const steps: Step[] = []
@@ -151,17 +132,7 @@ const linearSearch: Algorithm = {
   name: 'Linear Search',
   category: 'Searching',
   difficulty: 'easy',
-  visualization: 'array',
-  code: `function linearSearch(array, target) {
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] === target) {
-      return i; // Found!
-    }
-  }
-
-  return -1; // Not found
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [14, 33, 27, 10, 35, 19, 42, 44]
     const target = 35
@@ -232,29 +203,7 @@ const jumpSearch: Algorithm = {
   name: 'Jump Search',
   category: 'Searching',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function jumpSearch(array, target) {
-  const n = array.length;
-  const jump = Math.floor(Math.sqrt(n));
-  let prev = 0;
-  let curr = jump;
-
-  // Jump in blocks of size √n
-  while (curr < n && array[curr] <= target) {
-    prev = curr;
-    curr += jump;
-  }
-
-  // Linear search in the block
-  for (let i = prev; i < Math.min(curr, n); i++) {
-    if (array[i] === target) {
-      return i; // Found!
-    }
-  }
-
-  return -1; // Not found
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
     const target = 38
@@ -372,30 +321,7 @@ const interpolationSearch: Algorithm = {
   name: 'Interpolation Search',
   category: 'Searching',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function interpolationSearch(array, target) {
-  let low = 0;
-  let high = array.length - 1;
-
-  while (low <= high && target >= array[low] && target <= array[high]) {
-    // Estimate position using interpolation formula
-    const pos = low + Math.floor(
-      ((target - array[low]) * (high - low)) /
-      (array[high] - array[low])
-    );
-
-    if (array[pos] === target) {
-      return pos; // Found!
-    } else if (array[pos] < target) {
-      low = pos + 1;
-    } else {
-      high = pos - 1;
-    }
-  }
-
-  return -1; // Not found
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     const target = 70

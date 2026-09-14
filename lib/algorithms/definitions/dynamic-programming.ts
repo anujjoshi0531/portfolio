@@ -9,18 +9,7 @@ const fibonacciDp: Algorithm = {
   name: 'Fibonacci DP',
   category: 'Dynamic Programming',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function fibonacci(n) {
-  const dp = new Array(n + 1).fill(0);
-  dp[1] = 1;
-
-  for (let i = 2; i <= n; i++) {
-    dp[i] = dp[i - 1] + dp[i - 2];
-  }
-
-  return dp;
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const n = 10
     const arr = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -92,28 +81,7 @@ const knapsack: Algorithm = {
   name: 'Knapsack 0/1',
   category: 'Dynamic Programming',
   difficulty: 'advanced',
-  visualization: 'matrix',
-  code: `function knapsack(weights, values, capacity) {
-  const n = weights.length;
-  const dp = Array(n + 1).fill(null)
-    .map(() => Array(capacity + 1).fill(0));
-
-  for (let i = 1; i <= n; i++) {
-    for (let w = 0; w <= capacity; w++) {
-      if (weights[i - 1] <= w) {
-        dp[i][w] = Math.max(
-          dp[i - 1][w],
-          dp[i - 1][w - weights[i - 1]] + values[i - 1]
-        );
-      } else {
-        dp[i][w] = dp[i - 1][w];
-      }
-    }
-  }
-
-  return dp[n][capacity];
-}`,
-
+  visualization: 'matrix',
   generateSteps(locale = 'en') {
     const weights = [2, 3, 4, 5]
     const values = [3, 4, 5, 6]
@@ -218,26 +186,7 @@ const lcs: Algorithm = {
   name: 'Longest Common Subsequence',
   category: 'Dynamic Programming',
   difficulty: 'advanced',
-  visualization: 'matrix',
-  code: `function lcs(str1, str2) {
-  const m = str1.length;
-  const n = str2.length;
-  const dp = Array(m + 1).fill(null)
-    .map(() => Array(n + 1).fill(0));
-
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (str1[i - 1] === str2[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
-      } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-      }
-    }
-  }
-
-  return dp[m][n];
-}`,
-
+  visualization: 'matrix',
   generateSteps(locale = 'en') {
     const str1 = 'ABCB'
     const str2 = 'BDCB'

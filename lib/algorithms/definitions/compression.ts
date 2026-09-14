@@ -18,50 +18,7 @@ const huffmanCoding: Algorithm = {
   name: 'Huffman Coding',
   category: 'Compression',
   difficulty: 'advanced',
-  visualization: 'concept',
-  code: `function huffmanCoding(text) {
-  // 1. Count character frequencies
-  const freq = {};
-  for (const ch of text) {
-    freq[ch] = (freq[ch] || 0) + 1;
-  }
-
-  // 2. Create a leaf node per character and push
-  //    them all into a min-priority queue
-  let pq = Object.entries(freq).map(
-    ([char, f]) => ({ char, freq: f, left: null, right: null })
-  );
-
-  // 3. Build the tree: repeatedly merge the two
-  //    lowest-frequency nodes into a new parent
-  while (pq.length > 1) {
-    pq.sort((a, b) => a.freq - b.freq);
-    const left = pq.shift();
-    const right = pq.shift();
-    pq.push({ char: null, freq: left.freq + right.freq, left, right });
-  }
-  const root = pq[0];
-
-  // 4. Walk the tree to assign a binary code to
-  //    each character (left = 0, right = 1)
-  const codes = {};
-  function assign(node, code) {
-    if (!node.left && !node.right) {
-      codes[node.char] = code || '0';
-      return;
-    }
-    assign(node.left, code + '0');
-    assign(node.right, code + '1');
-  }
-  assign(root, '');
-
-  // 5. Encode the text using the generated codes
-  const encoded = [...text].map((ch) => codes[ch]).join('');
-  return { codes, encoded };
-}
-
-huffmanCoding('ABRACADABRA');`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const TEXT = 'ABRACADABRA'
     const steps: Step[] = []
@@ -366,29 +323,7 @@ const runLengthEncoding: Algorithm = {
   name: 'Run-Length Encoding',
   category: 'Compression',
   difficulty: 'easy',
-  visualization: 'concept',
-  code: `function runLengthEncode(text) {
-  const tokens = [];
-  let i = 0;
-
-  while (i < text.length) {
-    const char = text[i];
-    let count = 1;
-
-    // Extend the run while the next char matches
-    while (i + count < text.length && text[i + count] === char) {
-      count++;
-    }
-
-    tokens.push([char, count]);
-    i += count;
-  }
-
-  return tokens;
-}
-
-runLengthEncode('AAABBBCCCCDAA');`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const TEXT = 'AAABBBCCCCDAA'
     const steps: Step[] = []
@@ -562,42 +497,7 @@ const lz77: Algorithm = {
   name: 'LZ77',
   category: 'Compression',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `function lz77Compress(text, windowSize = 6) {
-  const tokens = [];
-  let i = 0;
-
-  while (i < text.length) {
-    const windowStart = Math.max(0, i - windowSize);
-    let bestOffset = 0;
-    let bestLength = 0;
-
-    // Search the sliding window for the longest match
-    for (let j = windowStart; j < i; j++) {
-      let length = 0;
-      while (
-        i + length < text.length &&
-        length < windowSize &&
-        text[j + length] === text[i + length]
-      ) {
-        length++;
-      }
-      if (length > bestLength) {
-        bestLength = length;
-        bestOffset = i - j; // distance back into the window
-      }
-    }
-
-    const next = text[i + bestLength] ?? '';
-    tokens.push({ offset: bestOffset, length: bestLength, next });
-    i += bestLength + (next ? 1 : 0);
-  }
-
-  return tokens;
-}
-
-lz77Compress('aacaacabcaba');`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const TEXT = 'aacaacabcaba'
     const WINDOW = 6
@@ -843,35 +743,7 @@ const lzw: Algorithm = {
   name: 'LZW',
   category: 'Compression',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `function lzwCompress(text) {
-  // Seed the dictionary with every unique character
-  const dict = {};
-  let nextCode = 0;
-  for (const ch of text) {
-    if (dict[ch] === undefined) dict[ch] = nextCode++;
-  }
-
-  const output = [];
-  let w = '';
-
-  for (const c of text) {
-    const wc = w + c;
-    if (dict[wc] !== undefined) {
-      w = wc;                 // phrase still in the dictionary
-    } else {
-      output.push(dict[w]);   // emit code for w
-      dict[wc] = nextCode++;  // learn the new phrase
-      w = c;
-    }
-  }
-
-  if (w) output.push(dict[w]);
-  return output;
-}
-
-lzwCompress('TOBEORNOTTOBE');`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const TEXT = 'TOBEORNOTTOBE'
     const steps: Step[] = []
@@ -1156,52 +1028,7 @@ const deflate: Algorithm = {
   name: 'DEFLATE',
   category: 'Compression',
   difficulty: 'advanced',
-  visualization: 'concept',
-  code: `// DEFLATE = LZ77 + Huffman  (engine inside gzip / ZIP / PNG)
-function deflateCompress(text, windowSize = 6) {
-  // ── Stage 1: LZ77 dictionary matches ──
-  const tokens = [];
-  let i = 0;
-  while (i < text.length) {
-    const windowStart = Math.max(0, i - windowSize);
-    let bestOffset = 0, bestLength = 0;
-    for (let j = windowStart; j < i; j++) {
-      let length = 0;
-      while (
-        i + length < text.length &&
-        length < windowSize &&
-        text[j + length] === text[i + length]
-      ) length++;
-      if (length > bestLength) {
-        bestLength = length;
-        bestOffset = i - j;
-      }
-    }
-    const next = text[i + bestLength] ?? '';
-    tokens.push({ offset: bestOffset, length: bestLength, next });
-    i += bestLength + (next ? 1 : 0);
-  }
-
-  // ── Stage 2: Flatten to a symbol stream ──
-  // Match → "M{len}@{offset}", literal → the character
-  const symbols = [];
-  for (const t of tokens) {
-    if (t.length > 0) symbols.push(\`M\${t.length}@\${t.offset}\`);
-    if (t.next) symbols.push(t.next);
-  }
-
-  // ── Stage 3: Huffman codes for those symbols ──
-  const freq = {};
-  for (const s of symbols) freq[s] = (freq[s] || 0) + 1;
-  const codes = buildHuffman(freq); // shorter codes for frequent symbols
-
-  // ── Stage 4: Bitstream ──
-  const bits = symbols.map((s) => codes[s]).join('');
-  return { tokens, symbols, codes, bits };
-}
-
-deflateCompress('aacaacabcaba');`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const TEXT = 'aacaacabcaba'
     const WINDOW = 6
@@ -1548,64 +1375,7 @@ const brotli: Algorithm = {
   name: 'Brotli',
   category: 'Compression',
   difficulty: 'advanced',
-  visualization: 'concept',
-  code: `// Pedagogical Brotli: static dict → LZ back-ref → Huffman
-function brotliCompress(text, dictionary) {
-  // Prefer longer dictionary phrases (real Brotli ships ~120KB of web words)
-  const dict = [...dictionary].sort((a, b) => b.length - a.length);
-  const commands = [];
-  let i = 0;
-
-  while (i < text.length) {
-    // 1) Static dictionary hit?
-    let hit = null;
-    for (const word of dict) {
-      if (text.startsWith(word, i)) { hit = word; break; }
-    }
-    if (hit) {
-      commands.push({ type: 'dict', value: hit });
-      i += hit.length;
-      continue;
-    }
-
-    // 2) LZ-style back-reference into already-seen text
-    let bestOffset = 0, bestLength = 0;
-    for (let j = 0; j < i; j++) {
-      let length = 0;
-      while (
-        i + length < text.length &&
-        text[j + length] === text[i + length]
-      ) length++;
-      if (length > bestLength && length >= 3) {
-        bestLength = length;
-        bestOffset = i - j;
-      }
-    }
-    if (bestLength >= 3) {
-      commands.push({ type: 'match', offset: bestOffset, length: bestLength });
-      i += bestLength;
-      continue;
-    }
-
-    // 3) Literal byte
-    commands.push({ type: 'lit', value: text[i] });
-    i++;
-  }
-
-  // Entropy stage: Huffman over command labels
-  const labels = commands.map(cmdLabel);
-  const freq = {};
-  for (const s of labels) freq[s] = (freq[s] || 0) + 1;
-  const codes = buildHuffman(freq);
-  const bits = labels.map((s) => codes[s]).join('');
-  return { commands, codes, bits };
-}
-
-brotliCompress(
-  'https://www.example.com/https://www.example.com/x',
-  ['https://', 'www.', 'example', '.com/', '/']
-);`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const TEXT = 'https://www.example.com/https://www.example.com/x'
     const DICT_RAW = ['https://', 'www.', 'example', '.com/', '/']

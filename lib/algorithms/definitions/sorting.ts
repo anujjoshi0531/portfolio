@@ -9,22 +9,7 @@ const bubbleSort: Algorithm = {
   name: 'Bubble Sort',
   category: 'Sorting',
   difficulty: 'easy',
-  visualization: 'array',
-  code: `function bubbleSort(array) {
-  const n = array.length;
-
-  for (let i = 0; i < n - 1; i++) {
-    for (let j = 0; j < n - i - 1; j++) {
-      if (array[j] > array[j + 1]) {
-        // Swap adjacent elements
-        [array[j], array[j + 1]] = [array[j + 1], array[j]];
-      }
-    }
-  }
-
-  return array;
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [38, 27, 43, 3, 9, 82, 10]
     const steps: Step[] = []
@@ -104,27 +89,7 @@ const selectionSort: Algorithm = {
   name: 'Selection Sort',
   category: 'Sorting',
   difficulty: 'easy',
-  visualization: 'array',
-  code: `function selectionSort(array) {
-  const n = array.length;
-
-  for (let i = 0; i < n - 1; i++) {
-    let minIndex = i;
-
-    for (let j = i + 1; j < n; j++) {
-      if (array[j] < array[minIndex]) {
-        minIndex = j;
-      }
-    }
-
-    if (minIndex !== i) {
-      [array[i], array[minIndex]] = [array[minIndex], array[i]];
-    }
-  }
-
-  return array;
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [64, 25, 12, 22, 11, 90, 45]
     const steps: Step[] = []
@@ -233,25 +198,7 @@ const insertionSort: Algorithm = {
   name: 'Insertion Sort',
   category: 'Sorting',
   difficulty: 'easy',
-  visualization: 'array',
-  code: `function insertionSort(array) {
-  const n = array.length;
-
-  for (let i = 1; i < n; i++) {
-    const key = array[i];
-    let j = i - 1;
-
-    while (j >= 0 && array[j] > key) {
-      array[j + 1] = array[j];
-      j--;
-    }
-
-    array[j + 1] = key;
-  }
-
-  return array;
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [12, 11, 13, 5, 6, 7, 42]
     const steps: Step[] = []
@@ -361,31 +308,7 @@ const quickSort: Algorithm = {
   name: 'Quick Sort',
   category: 'Sorting',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function quickSort(arr, low = 0, high = arr.length - 1) {
-  if (low < high) {
-    const pivotIdx = partition(arr, low, high);
-    quickSort(arr, low, pivotIdx - 1);
-    quickSort(arr, pivotIdx + 1, high);
-  }
-  return arr;
-}
-
-function partition(arr, low, high) {
-  const pivot = arr[high];
-  let i = low - 1;
-
-  for (let j = low; j < high; j++) {
-    if (arr[j] <= pivot) {
-      i++;
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-  }
-
-  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
-  return i + 1;
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [38, 27, 43, 3, 9, 82, 10]
     const steps: Step[] = []
@@ -523,36 +446,7 @@ const mergeSort: Algorithm = {
   name: 'Merge Sort',
   category: 'Sorting',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function mergeSort(arr, start = 0, end = arr.length - 1) {
-  if (start >= end) return;
-
-  const mid = Math.floor((start + end) / 2);
-  mergeSort(arr, start, mid);
-  mergeSort(arr, mid + 1, end);
-  merge(arr, start, mid, end);
-}
-
-function merge(arr, start, mid, end) {
-  const temp = [];
-  let i = start, j = mid + 1;
-
-  while (i <= mid && j <= end) {
-    if (arr[i] <= arr[j]) {
-      temp.push(arr[i++]);
-    } else {
-      temp.push(arr[j++]);
-    }
-  }
-
-  while (i <= mid) temp.push(arr[i++]);
-  while (j <= end) temp.push(arr[j++]);
-
-  for (let k = 0; k < temp.length; k++) {
-    arr[start + k] = temp[k];
-  }
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [38, 27, 43, 3, 9, 82, 10]
     const steps: Step[] = []
@@ -683,43 +577,7 @@ const heapSort: Algorithm = {
   name: 'Heap Sort',
   category: 'Sorting',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function heapSort(array) {
-  const n = array.length;
-
-  // Build max heap
-  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
-    heapify(array, n, i);
-  }
-
-  // Extract elements from heap
-  for (let i = n - 1; i > 0; i--) {
-    [array[0], array[i]] = [array[i], array[0]];
-    heapify(array, i, 0);
-  }
-
-  return array;
-}
-
-function heapify(array, size, root) {
-  let largest = root;
-  const left = 2 * root + 1;
-  const right = 2 * root + 2;
-
-  if (left < size && array[left] > array[largest]) {
-    largest = left;
-  }
-
-  if (right < size && array[right] > array[largest]) {
-    largest = right;
-  }
-
-  if (largest !== root) {
-    [array[root], array[largest]] = [array[largest], array[root]];
-    heapify(array, size, largest);
-  }
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [38, 27, 43, 3, 9, 82, 10]
     const steps: Step[] = []
@@ -898,31 +756,7 @@ const countingSort: Algorithm = {
   name: 'Counting Sort',
   category: 'Sorting',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function countingSort(array) {
-  const max = Math.max(...array);
-  const count = new Array(max + 1).fill(0);
-  const output = new Array(array.length);
-
-  // Count occurrences
-  for (let i = 0; i < array.length; i++) {
-    count[array[i]]++;
-  }
-
-  // Cumulative count
-  for (let i = 1; i <= max; i++) {
-    count[i] += count[i - 1];
-  }
-
-  // Build output (reverse for stability)
-  for (let i = array.length - 1; i >= 0; i--) {
-    output[count[array[i]] - 1] = array[i];
-    count[array[i]]--;
-  }
-
-  return output;
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [4, 2, 2, 8, 3, 3, 1]
     const steps: Step[] = []
@@ -1045,42 +879,7 @@ const radixSort: Algorithm = {
   name: 'Radix Sort',
   category: 'Sorting',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function radixSort(array) {
-  const max = Math.max(...array);
-
-  for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
-    countingSortByDigit(array, exp);
-  }
-
-  return array;
-}
-
-function countingSortByDigit(array, exp) {
-  const n = array.length;
-  const output = new Array(n);
-  const count = new Array(10).fill(0);
-
-  for (let i = 0; i < n; i++) {
-    const digit = Math.floor(array[i] / exp) % 10;
-    count[digit]++;
-  }
-
-  for (let i = 1; i < 10; i++) {
-    count[i] += count[i - 1];
-  }
-
-  for (let i = n - 1; i >= 0; i--) {
-    const digit = Math.floor(array[i] / exp) % 10;
-    output[count[digit] - 1] = array[i];
-    count[digit]--;
-  }
-
-  for (let i = 0; i < n; i++) {
-    array[i] = output[i];
-  }
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [170, 45, 75, 90, 802, 24, 2, 66]
     const steps: Step[] = []
@@ -1186,27 +985,7 @@ const shellSort: Algorithm = {
   name: 'Shell Sort',
   category: 'Sorting',
   difficulty: 'intermediate',
-  visualization: 'array',
-  code: `function shellSort(array) {
-  const n = array.length;
-
-  for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
-    for (let i = gap; i < n; i++) {
-      const temp = array[i];
-      let j = i;
-
-      while (j >= gap && array[j - gap] > temp) {
-        array[j] = array[j - gap];
-        j -= gap;
-      }
-
-      array[j] = temp;
-    }
-  }
-
-  return array;
-}`,
-
+  visualization: 'array',
   generateSteps(locale = 'en') {
     const arr = [38, 27, 43, 3, 9, 82, 10]
     const steps: Step[] = []
@@ -1343,43 +1122,7 @@ const bucketSort: Algorithm = {
   name: 'Bucket Sort',
   category: 'Sorting',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `function bucketSort(array, bucketSize = 5) {
-  if (array.length === 0) return array;
-
-  // 1. Find min and max values
-  let min = array[0];
-  let max = array[0];
-  for (let i = 1; i < array.length; i++) {
-    if (array[i] < min) min = array[i];
-    else if (array[i] > max) max = array[i];
-  }
-
-  // 2. Initialize buckets
-  const bucketCount = Math.floor((max - min) / bucketSize) + 1;
-  const buckets = new Array(bucketCount);
-  for (let i = 0; i < buckets.length; i++) {
-    buckets[i] = [];
-  }
-
-  // 3. Distribute elements into buckets
-  for (let i = 0; i < array.length; i++) {
-    const bucketIndex = Math.floor((array[i] - min) / bucketSize);
-    buckets[bucketIndex].push(array[i]);
-  }
-
-  // 4. Sort buckets and concatenate
-  array.length = 0;
-  for (let i = 0; i < buckets.length; i++) {
-    insertionSort(buckets[i]);
-    for (let j = 0; j < buckets[i].length; j++) {
-      array.push(buckets[i][j]);
-    }
-  }
-
-  return array;
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const arr = [22, 45, 12, 8, 10, 6, 72, 81, 33, 18, 50, 14]
     const steps: Step[] = []

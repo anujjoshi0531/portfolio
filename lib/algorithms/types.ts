@@ -434,7 +434,7 @@ export interface Algorithm {
   name: string
   category: string
   difficulty: Difficulty
-  code: string
+  code?: string
   implementations?: Partial<Record<Exclude<CodeLanguage, 'javascript'>, CodeImplementation>>
   visualization: VisualizationType
   runtimeInput?: unknown

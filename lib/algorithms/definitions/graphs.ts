@@ -6,29 +6,7 @@ const bfs: Algorithm = {
   name: 'Breadth-First Search',
   category: 'Graphs',
   difficulty: 'intermediate',
-  visualization: 'graph',
-  code: `function bfs(graph, start) {
-  const visited = new Set();
-  const queue = [start];
-  const result = [];
-
-  visited.add(start);
-
-  while (queue.length > 0) {
-    const node = queue.shift();
-    result.push(node);
-
-    for (const neighbor of graph[node]) {
-      if (!visited.has(neighbor)) {
-        visited.add(neighbor);
-        queue.push(neighbor);
-      }
-    }
-  }
-
-  return result;
-}`,
-
+  visualization: 'graph',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const visited = new Set<number>()
@@ -143,26 +121,7 @@ const dfs: Algorithm = {
   name: 'Depth-First Search',
   category: 'Graphs',
   difficulty: 'intermediate',
-  visualization: 'graph',
-  code: `function dfs(graph, start) {
-  const visited = new Set();
-  const result = [];
-
-  function explore(node) {
-    visited.add(node);
-    result.push(node);
-
-    for (const neighbor of graph[node]) {
-      if (!visited.has(neighbor)) {
-        explore(neighbor);
-      }
-    }
-  }
-
-  explore(start);
-  return result;
-}`,
-
+  visualization: 'graph',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const visited = new Set<number>()
@@ -307,35 +266,7 @@ const dijkstra: Algorithm = {
   name: "Dijkstra's Algorithm",
   category: 'Graphs',
   difficulty: 'advanced',
-  visualization: 'graph',
-  code: `function dijkstra(graph, start) {
-  const n = graph.length;
-  const dist = new Array(n).fill(Infinity);
-  const visited = new Array(n).fill(false);
-  dist[start] = 0;
-
-  for (let i = 0; i < n; i++) {
-    // Pick unvisited node with minimum distance
-    let u = -1;
-    for (let v = 0; v < n; v++) {
-      if (!visited[v] && (u === -1 || dist[v] < dist[u])) {
-        u = v;
-      }
-    }
-
-    visited[u] = true;
-
-    // Relax neighbors
-    for (const { node: v, weight: w } of graph[u]) {
-      if (!visited[v] && dist[u] + w < dist[v]) {
-        dist[v] = dist[u] + w;
-      }
-    }
-  }
-
-  return dist;
-}`,
-
+  visualization: 'graph',
   generateSteps(locale = 'en') {
     const djNodes: GraphNode[] = [
       { id: 0, label: 'A', x: 150, y: 50 },
@@ -530,37 +461,7 @@ const prim: Algorithm = {
   name: "Prim's Algorithm",
   category: 'Graphs',
   difficulty: 'advanced',
-  visualization: 'graph',
-  code: `function prim(graph, start) {
-  const n = graph.length;
-  const key = new Array(n).fill(Infinity);
-  const inMST = new Array(n).fill(false);
-  const parent = new Array(n).fill(-1);
-  key[start] = 0;
-
-  for (let i = 0; i < n; i++) {
-    // Pick node with minimum key not in MST
-    let u = -1;
-    for (let v = 0; v < n; v++) {
-      if (!inMST[v] && (u === -1 || key[v] < key[u])) {
-        u = v;
-      }
-    }
-
-    inMST[u] = true;
-
-    // Update neighbor keys
-    for (const { node: v, weight: w } of graph[u]) {
-      if (!inMST[v] && w < key[v]) {
-        key[v] = w;
-        parent[v] = u;
-      }
-    }
-  }
-
-  return parent;
-}`,
-
+  visualization: 'graph',
   generateSteps(locale = 'en') {
     const prNodes: GraphNode[] = [
       { id: 0, label: 'A', x: 100, y: 50 },
@@ -747,39 +648,7 @@ const topologicalSort: Algorithm = {
   name: 'Topological Sort',
   category: 'Graphs',
   difficulty: 'advanced',
-  visualization: 'graph',
-  code: `function topologicalSort(graph, numNodes) {
-  const inDegree = new Array(numNodes).fill(0);
-
-  // Compute in-degrees
-  for (let u = 0; u < numNodes; u++) {
-    for (const v of graph[u]) {
-      inDegree[v]++;
-    }
-  }
-
-  // Start with nodes of in-degree 0
-  const queue = [];
-  for (let i = 0; i < numNodes; i++) {
-    if (inDegree[i] === 0) queue.push(i);
-  }
-
-  const order = [];
-  while (queue.length > 0) {
-    const node = queue.shift();
-    order.push(node);
-
-    for (const neighbor of graph[node]) {
-      inDegree[neighbor]--;
-      if (inDegree[neighbor] === 0) {
-        queue.push(neighbor);
-      }
-    }
-  }
-
-  return order;
-}`,
-
+  visualization: 'graph',
   generateSteps(locale = 'en') {
     const tsNodes: GraphNode[] = [
       { id: 0, label: 'A', x: 50, y: 50 },

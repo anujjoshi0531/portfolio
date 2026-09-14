@@ -27,67 +27,7 @@ export const linkedList: Algorithm = {
   name: 'Linked List',
   category: 'Data Structures',
   difficulty: 'easy',
-  visualization: 'concept',
-  code: `class Node {
-  constructor(value) {
-    this.value = value;
-    this.next = null;
-  }
-}
-
-class LinkedList {
-  constructor() {
-    this.head = null;
-    this.tail = null;
-  }
-
-  append(value) {
-    const node = new Node(value);
-    if (!this.head) {
-      this.head = this.tail = node;
-    } else {
-      this.tail.next = node;
-      this.tail = node;
-    }
-  }
-
-  prepend(value) {
-    const node = new Node(value);
-    node.next = this.head;
-    this.head = node;
-    if (!this.tail) this.tail = node;
-  }
-
-  search(value) {
-    let current = this.head;
-    while (current) {
-      if (current.value === value) return current;
-      current = current.next;
-    }
-    return null;
-  }
-
-  delete(value) {
-    if (!this.head) return;
-    if (this.head.value === value) {
-      this.head = this.head.next;
-      if (!this.head) this.tail = null;
-      return;
-    }
-    let current = this.head;
-    while (current.next) {
-      if (current.next.value === value) {
-        if (current.next === this.tail) {
-          this.tail = current;
-        }
-        current.next = current.next.next;
-        return;
-      }
-      current = current.next;
-    }
-  }
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
 
@@ -303,43 +243,7 @@ export const hashTable: Algorithm = {
   name: 'Hash Table',
   category: 'Data Structures',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `class HashTable {
-  constructor(size = 7) {
-    this.buckets = new Array(size)
-      .fill(null).map(() => []);
-  }
-
-  hash(key) {
-    let h = 0;
-    for (const ch of key)
-      h = (h + ch.charCodeAt(0)) % this.buckets.length;
-    return h;
-  }
-
-  set(key, value) {
-    const idx = this.hash(key);
-    const bucket = this.buckets[idx];
-    const existing = bucket.find(e => e.key === key);
-    if (existing) existing.value = value;
-    else bucket.push({ key, value });
-  }
-
-  get(key) {
-    const idx = this.hash(key);
-    const entry = this.buckets[idx]
-      .find(e => e.key === key);
-    return entry?.value;
-  }
-
-  delete(key) {
-    const idx = this.hash(key);
-    const bucket = this.buckets[idx];
-    const i = bucket.findIndex(e => e.key === key);
-    if (i !== -1) bucket.splice(i, 1);
-  }
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const SIZE = 7
@@ -558,48 +462,7 @@ export const binarySearchTree: Algorithm = {
   name: 'Binary Search Tree',
   category: 'Data Structures',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `class BSTNode {
-  constructor(value) {
-    this.value = value;
-    this.left = null;
-    this.right = null;
-  }
-}
-
-class BST {
-  constructor() { this.root = null; }
-
-  insert(value) {
-    const node = new BSTNode(value);
-    if (!this.root) { this.root = node; return; }
-    let current = this.root;
-    while (true) {
-      if (value < current.value) {
-        if (!current.left) {
-          current.left = node; return;
-        }
-        current = current.left;
-      } else {
-        if (!current.right) {
-          current.right = node; return;
-        }
-        current = current.right;
-      }
-    }
-  }
-
-  search(value) {
-    let current = this.root;
-    while (current) {
-      if (value === current.value) return current;
-      current = value < current.value
-        ? current.left : current.right;
-    }
-    return null;
-  }
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
 
@@ -834,50 +697,7 @@ export const heap: Algorithm = {
   name: 'Heap',
   category: 'Data Structures',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `class MinHeap {
-  constructor() { this.heap = []; }
-
-  insert(value) {
-    this.heap.push(value);
-    this.bubbleUp(this.heap.length - 1);
-  }
-
-  bubbleUp(i) {
-    while (i > 0) {
-      const parent = Math.floor((i - 1) / 2);
-      if (this.heap[parent] <= this.heap[i]) break;
-      [this.heap[parent], this.heap[i]] =
-        [this.heap[i], this.heap[parent]];
-      i = parent;
-    }
-  }
-
-  extractMin() {
-    const min = this.heap[0];
-    const last = this.heap.pop();
-    if (this.heap.length > 0) {
-      this.heap[0] = last;
-      this.bubbleDown(0);
-    }
-    return min;
-  }
-
-  bubbleDown(i) {
-    while (2 * i + 1 < this.heap.length) {
-      let smallest = 2 * i + 1;
-      const right = smallest + 1;
-      if (right < this.heap.length &&
-          this.heap[right] < this.heap[smallest])
-        smallest = right;
-      if (this.heap[i] <= this.heap[smallest]) break;
-      [this.heap[i], this.heap[smallest]] =
-        [this.heap[smallest], this.heap[i]];
-      i = smallest;
-    }
-  }
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
 
@@ -1143,61 +963,7 @@ export const trie: Algorithm = {
   name: 'Trie',
   category: 'Data Structures',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `class TrieNode {
-  constructor() {
-    this.children = new Map();
-    this.isEnd = false;
-  }
-}
-
-class Trie {
-  constructor() {
-    this.root = new TrieNode();
-  }
-
-  insert(word) {
-    let node = this.root;
-    for (const char of word) {
-      if (!node.children.has(char)) {
-        node.children.set(char, new TrieNode());
-      }
-      node = node.children.get(char);
-    }
-    node.isEnd = true;
-  }
-
-  traverse(prefix) {
-    let node = this.root;
-    for (const char of prefix) {
-      node = node.children.get(char);
-      if (!node) return null;
-    }
-    return node;
-  }
-
-  search(word) {
-    const node = this.traverse(word);
-    return node != null && node.isEnd;
-  }
-
-  startsWith(prefix) {
-    return this.traverse(prefix) != null;
-  }
-
-  wordsWithPrefix(prefix) {
-    const out = [];
-    const walk = (node, acc) => {
-      if (!node) return;
-      if (node.isEnd) out.push(acc);
-      for (const [c, child] of node.children)
-        walk(child, acc + c);
-    };
-    walk(this.traverse(prefix), prefix);
-    return out;
-  }
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
 
@@ -1446,66 +1212,7 @@ export const lruCache: Algorithm = {
   name: 'LRU Cache',
   category: 'Data Structures',
   difficulty: 'advanced',
-  visualization: 'concept',
-  code: `class Node {
-  constructor(key, value) {
-    this.key = key;
-    this.value = value;
-    this.prev = null;
-    this.next = null;
-  }
-}
-
-class LRUCache {
-  constructor(capacity) {
-    this.capacity = capacity;
-    this.map = new Map();
-    // sentinels: head side = MRU, tail = LRU
-    this.head = new Node(null, null);
-    this.tail = new Node(null, null);
-    this.head.next = this.tail;
-    this.tail.prev = this.head;
-  }
-
-  remove(node) {
-    node.prev.next = node.next;
-    node.next.prev = node.prev;
-  }
-
-  addToFront(node) {
-    node.next = this.head.next;
-    node.prev = this.head;
-    this.head.next.prev = node;
-    this.head.next = node;
-  }
-
-  get(key) {
-    const node = this.map.get(key);
-    if (!node) return -1;
-    this.remove(node);
-    this.addToFront(node);
-    return node.value;
-  }
-
-  put(key, value) {
-    const existing = this.map.get(key);
-    if (existing) {
-      existing.value = value;
-      this.remove(existing);
-      this.addToFront(existing);
-      return;
-    }
-    const node = new Node(key, value);
-    this.map.set(key, node);
-    this.addToFront(node);
-    if (this.map.size > this.capacity) {
-      const lru = this.tail.prev;
-      this.remove(lru);
-      this.map.delete(lru.key);
-    }
-  }
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const CAPACITY = 3

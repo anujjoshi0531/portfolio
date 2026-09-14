@@ -26,62 +26,7 @@ export const bigONotation: Algorithm = {
   name: 'Big O Notation',
   category: 'Concepts',
   difficulty: 'easy',
-  visualization: 'concept',
-  code: `// O(1) — Constant time
-function getFirst(arr) {
-  return arr[0];
-}
-
-// O(n) — Linear time
-function findMax(arr) {
-  let max = arr[0];
-  for (let i = 1; i < arr.length; i++) {
-    if (arr[i] > max) max = arr[i];
-  }
-  return max;
-}
-
-// O(n²) — Quadratic time
-function hasDuplicate(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = i + 1; j < arr.length; j++) {
-      if (arr[i] === arr[j]) return true;
-    }
-  }
-  return false;
-}
-
-// O(log n) — Logarithmic time
-function binarySearch(arr, target) {
-  let lo = 0, hi = arr.length - 1;
-  while (lo <= hi) {
-    const mid = Math.floor((lo + hi) / 2);
-    if (arr[mid] === target) return mid;
-    if (arr[mid] < target) lo = mid + 1;
-    else hi = mid - 1;
-  }
-  return -1;
-}
-  
-
-// O(n log n) — Linearithmic time
-function mergeSort(arr) {
-  if (arr.length <= 1) return arr;
-  const mid = Math.floor(arr.length / 2);
-  const left = mergeSort(arr.slice(0, mid));
-  const right = mergeSort(arr.slice(mid));
-  return merge(left, right);
-}
-
-function merge(left, right) {
-  const result = [];
-  while (left.length && right.length) {
-    if (left[0] < right[0]) result.push(left.shift());
-    else result.push(right.shift());
-  }
-  return [...result, ...left, ...right];
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const all = BIG_O_CURVES.map((c) => c.name)
@@ -263,26 +208,7 @@ export const recursion: Algorithm = {
   name: 'Recursion',
   category: 'Concepts',
   difficulty: 'easy',
-  visualization: 'concept',
-  code: `function factorial(n) {
-  // Base case: factorial of 0 or 1 is 1
-  if (n <= 1) return 1;
-
-  // Recursive case: n * factorial(n - 1)
-  return n * factorial(n - 1);
-}
-
-// factorial(5) unfolds as:
-// 5 * factorial(4)
-//   4 * factorial(3)
-//     3 * factorial(2)
-//       2 * factorial(1)
-//         → 1 (base case)
-//       → 2 * 1 = 2
-//     → 3 * 2 = 6
-//   → 4 * 6 = 24
-// → 5 * 24 = 120`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
 
@@ -487,31 +413,7 @@ export const stack: Algorithm = {
   name: 'Stack',
   category: 'Data Structures',
   difficulty: 'easy',
-  visualization: 'concept',
-  code: `class Stack {
-  constructor() { this.items = []; }
-
-  push(item) {
-    this.items.push(item);
-  }
-
-  pop() {
-    return this.items.pop();
-  }
-
-  peek() {
-    return this.items[this.items.length - 1];
-  }
-
-  isEmpty() {
-    return this.items.length === 0;
-  }
-
-  get size() {
-    return this.items.length;
-  }
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
 
@@ -671,31 +573,7 @@ export const queue: Algorithm = {
   name: 'Queue',
   category: 'Data Structures',
   difficulty: 'easy',
-  visualization: 'concept',
-  code: `class Queue {
-  constructor() { this.items = []; }
-
-  enqueue(item) {
-    this.items.push(item);
-  }
-
-  dequeue() {
-    return this.items.shift();
-  }
-
-  front() {
-    return this.items[0];
-  }
-
-  isEmpty() {
-    return this.items.length === 0;
-  }
-
-  get size() {
-    return this.items.length;
-  }
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
 
@@ -859,24 +737,7 @@ export const twoPointers: Algorithm = {
   name: 'Two Pointers',
   category: 'Concepts',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `function twoSumSorted(arr, target) {
-  let left = 0;
-  let right = arr.length - 1;
-
-  while (left < right) {
-    const sum = arr[left] + arr[right];
-    if (sum === target) {
-      return [left, right];
-    } else if (sum < target) {
-      left++;   // need bigger sum
-    } else {
-      right--;  // need smaller sum
-    }
-  }
-  return null; // no pair found
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const arr = [1, 3, 5, 7, 9, 12, 15]
@@ -1014,25 +875,7 @@ export const slidingWindow: Algorithm = {
   name: 'Sliding Window',
   category: 'Concepts',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `function longestUniqueSubstring(s) {
-  const seen = new Set();
-  let start = 0, best = 0, bestStart = 0;
-
-  for (let end = 0; end < s.length; end++) {
-    while (seen.has(s[end])) {
-      seen.delete(s[start]);
-      start++;
-    }
-    seen.add(s[end]);
-    if (end - start + 1 > best) {
-      best = end - start + 1;
-      bestStart = start;
-    }
-  }
-  return s.slice(bestStart, bestStart + best);
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const str = 'abcbad'
@@ -1229,36 +1072,7 @@ export const spaceComplexity: Algorithm = {
   name: 'Space Complexity',
   category: 'Concepts',
   difficulty: 'easy',
-  visualization: 'concept',
-  code: `// O(1) space — fixed variables
-function swap(arr, i, j) {
-  const temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp;
-}
-
-// O(log n) space — recursive call stack
-function binarySearch(arr, target, lo, hi) {
-  if (lo > hi) return -1;
-  const mid = Math.floor((lo + hi) / 2);
-  if (arr[mid] === target) return mid;
-  if (arr[mid] < target)
-    return binarySearch(arr, target, mid + 1, hi);
-  return binarySearch(arr, target, lo, mid - 1);
-}
-
-// O(n) space — copy of input
-function reversed(arr) {
-  const copy = [...arr]; // allocates n elements
-  return copy.reverse();
-}
-
-// O(n²) space — 2D matrix
-function createMatrix(n) {
-  return Array.from({ length: n },
-    () => new Array(n).fill(0));
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const all = SPACE_CURVES.map((c) => c.name)
@@ -1357,26 +1171,7 @@ export const memoization: Algorithm = {
   name: 'Memoization',
   category: 'Concepts',
   difficulty: 'intermediate',
-  visualization: 'concept',
-  code: `// Without memoization — O(2^n) time!
-function fib(n) {
-  if (n <= 1) return n;
-  return fib(n - 1) + fib(n - 2);
-}
-
-// With memoization — O(n) time!
-function fibMemo(n, memo = {}) {
-  if (n in memo) return memo[n]; // cache hit!
-  if (n <= 1) return n;
-  memo[n] = fibMemo(n - 1, memo)
-           + fibMemo(n - 2, memo);
-  return memo[n];
-}
-
-// fibMemo(7):
-// Only computes each value ONCE
-// Then reuses cached results`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
 
@@ -1534,40 +1329,7 @@ export const greedyVsDp: Algorithm = {
   name: 'Greedy vs DP',
   category: 'Concepts',
   difficulty: 'advanced',
-  visualization: 'concept',
-  code: `// GREEDY: always pick the largest coin first
-function greedyCoinChange(coins, amount) {
-  coins.sort((a, b) => b - a); // largest first
-  const result = [];
-  for (const coin of coins) {
-    while (amount >= coin) {
-      result.push(coin);
-      amount -= coin;
-    }
-  }
-  return amount === 0 ? result : null;
-}
-
-// DP: find the optimal solution
-function dpCoinChange(coins, amount) {
-  const dp = Array(amount + 1).fill(Infinity);
-  const used = Array(amount + 1).fill(-1);
-  dp[0] = 0;
-  for (let i = 1; i <= amount; i++) {
-    for (const coin of coins) {
-      if (coin <= i && dp[i - coin] + 1 < dp[i]) {
-        dp[i] = dp[i - coin] + 1;
-        used[i] = coin;
-      }
-    }
-  }
-  // Reconstruct solution
-  const result = [];
-  let rem = amount;
-  while (rem > 0) { result.push(used[rem]); rem -= used[rem]; }
-  return result;
-}`,
-
+  visualization: 'concept',
   generateSteps(locale = 'en') {
     const steps: Step[] = []
     const coins = [1, 4, 6]
