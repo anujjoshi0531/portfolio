@@ -7,9 +7,10 @@ import type { TocEntry } from "@/lib/content/markdown/types";
 interface TableOfContentsProps {
   toc: TocEntry[];
   className?: string;
+  title?: string;
 }
 
-export function TableOfContents({ toc, className = "" }: TableOfContentsProps) {
+export function TableOfContents({ toc, className = "", title = "Index" }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -63,12 +64,12 @@ export function TableOfContents({ toc, className = "" }: TableOfContentsProps) {
       <div className="flex items-center gap-2 mb-3 border-b border-neutral-800/80 pb-2.5">
         <List className="w-4 h-4 text-blue-400" />
         <span className="text-xs sm:text-sm font-semibold text-neutral-200 uppercase tracking-wider">
-          Table of Contents
+          {title}
         </span>
       </div>
 
       {/* ToC List */}
-      <nav aria-label="Table of Contents">
+      <nav aria-label={title}>
         <ul className="space-y-0.5 max-h-[50vh] overflow-y-auto pr-1 scrollbar-thin">
           {toc.map((entry) => {
             const isActive = activeId === entry.id;

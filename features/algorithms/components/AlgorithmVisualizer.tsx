@@ -20,6 +20,7 @@ export interface AlgorithmVisualizerProps {
   mode?: 'full' | 'embedded'
   autoPlay?: boolean
   initialSpeed?: number
+  caption?: string
   className?: string
 }
 
@@ -28,6 +29,7 @@ export function AlgorithmVisualizer({
   mode = 'full',
   autoPlay = false,
   initialSpeed = 1,
+  caption,
   className = '',
 }: AlgorithmVisualizerProps) {
   const [algo, setAlgo] = useState<Algorithm | null>(
@@ -82,7 +84,7 @@ export function AlgorithmVisualizer({
   if (loading) {
     return (
       <div
-        className={`flex flex-col items-center justify-center p-12 bg-card/40 rounded-2xl border border-border/80 min-h-[300px] gap-3 text-muted-foreground ${className}`}
+        className={`flex flex-col items-center justify-center p-12 bg-card/40 rounded-lg border border-border/80 min-h-[300px] gap-3 text-muted-foreground ${className}`}
       >
         <Loader2 className="size-6 animate-spin text-primary" />
         <span className="text-xs font-mono">Loading algorithm visualizer...</span>
@@ -93,12 +95,15 @@ export function AlgorithmVisualizer({
   if (error || !algo) {
     return (
       <div
-        className={`flex flex-col items-center justify-center p-8 bg-destructive/10 rounded-2xl border border-destructive/30 text-destructive min-h-[200px] text-center gap-2 ${className}`}
+        className={`flex flex-col items-center justify-center p-8 bg-destructive/10 rounded-lg border border-destructive/30 text-destructive min-h-[200px] text-center gap-2 ${className}`}
       >
         <span className="font-semibold text-sm">{error || 'Algorithm not found'}</span>
         <span className="text-xs opacity-80">
-          Make sure algorithm ID is valid in catalog.
+          Make sure the algorithm ID is valid in the catalog.
         </span>
+        <Link href="/algorithms" className="mt-2 text-xs font-mono underline underline-offset-4">
+          Browse algorithms
+        </Link>
       </div>
     )
   }
@@ -107,13 +112,13 @@ export function AlgorithmVisualizer({
   if (isEmbedded) {
     return (
       <div
-        className={`my-8 flex flex-col gap-3 p-4 bg-muted/20 backdrop-blur-sm rounded-2xl border border-border/80 shadow-md ${className}`}
+        className={`my-8 flex flex-col gap-3 p-3 sm:p-4 bg-muted/20 backdrop-blur-sm rounded-lg border border-border/80 shadow-md ${className}`}
       >
         {/* Compact Header */}
-        <div className="flex items-center justify-between pb-2 border-b border-border/60">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" />
-            <span className="font-bold text-sm tracking-tight">{algo.name}</span>
+        <div className="flex flex-col gap-2 pb-2 border-b border-border/60 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-primary animate-pulse" />
+            <span className="min-w-0 font-bold text-sm tracking-tight">{algo.name}</span>
             <span className="text-[11px] font-mono text-muted-foreground px-1.5 py-0.5 rounded bg-muted/60">
               {algo.category}
             </span>
@@ -121,7 +126,7 @@ export function AlgorithmVisualizer({
 
           <Link
             href={`/algorithms/${algo.id}`}
-            className="flex items-center gap-1 text-xs font-mono text-primary hover:underline"
+            className="flex items-center gap-1 self-start text-xs font-mono text-primary hover:underline sm:self-auto"
             target="_blank"
           >
             <span>Open Standalone</span>
@@ -133,6 +138,12 @@ export function AlgorithmVisualizer({
         <div className="h-[280px] sm:h-[320px]">
           <AlgorithmCanvas algorithm={algo} step={currentStepData} />
         </div>
+
+        {caption && (
+          <p className="m-0 text-xs leading-relaxed text-muted-foreground">
+            {caption}
+          </p>
+        )}
 
         {/* Live Variable Inspector & Step Description */}
         <VariableInspector step={currentStepData} />

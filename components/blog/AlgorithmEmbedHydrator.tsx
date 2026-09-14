@@ -20,6 +20,10 @@ export function AlgorithmEmbedHydrator({ containerSelector = '.markdown-body' }:
     placeholders.forEach((el) => {
       const algorithmId = el.getAttribute('data-algorithm')
       if (!algorithmId) return
+      const caption = el.getAttribute('data-caption') || undefined
+      const autoPlay = el.getAttribute('data-autoplay') === 'true'
+      const speedValue = Number(el.getAttribute('data-speed'))
+      const initialSpeed = Number.isFinite(speedValue) && speedValue > 0 ? speedValue : undefined
 
       // Avoid double hydration
       if (el.getAttribute('data-hydrated') === 'true') return
@@ -28,7 +32,15 @@ export function AlgorithmEmbedHydrator({ containerSelector = '.markdown-body' }:
       try {
         const root = createRoot(el)
         rootsRef.current.push(root)
-        root.render(<AlgorithmVisualizer algorithm={algorithmId} mode="embedded" />)
+        root.render(
+          <AlgorithmVisualizer
+            algorithm={algorithmId}
+            mode="embedded"
+            caption={caption}
+            autoPlay={autoPlay}
+            initialSpeed={initialSpeed}
+          />
+        )
       } catch (err) {
         console.error('Failed to hydrate algorithm visualizer for:', algorithmId, err)
       }

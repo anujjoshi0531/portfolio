@@ -3,13 +3,14 @@ import NotFound from "@/app/not-found";
 import BlogSection from "@/components/home/BlogSection";
 import { getBlogBySlug } from "@/features/blog/lib/content";
 import { getBacklinks, getGraphData } from "@/features/blog/lib/graph";
-import { MarkdownRenderer } from "@/components/global/MarkdownRenderer";
+import { renderMarkdownWithToc } from "@/components/global/MarkdownRenderer";
+import { PageTemplate } from "@/components/global/SectionTemplate";
 import { NewsletterSubscription } from "@/components/blog/NewsletterSubscription";
 import JsonLd from "@/components/global/JsonLd";
-import { QuartzBreadcrumbs } from "@/components/blog/QuartzExplorer";
 import { Backlinks } from "@/components/blog/Backlinks";
 import { PopoverPreview } from "@/components/blog/PopoverPreview";
 import { DynamicGraphView } from "@/components/blog/DynamicGraphView";
+import { TableOfContents } from "@/components/blog/TableOfContents";
 import ShareAndReact from "@/components/blog/ShareAndReact";
 
 export const revalidate = 3600; // Revalidate every hour
@@ -69,6 +70,11 @@ export default async function page({ params }: {
 
   const graphData = getGraphData();
   const backlinks = getBacklinks(localBlog.slug);
+  const { element: renderedContent, toc } = await renderMarkdownWithToc({
+    content: localBlog.content,
+    slug: localBlog.slug,
+  });
+  const showIndex = toc.length >= 3;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -85,38 +91,32 @@ export default async function page({ params }: {
   };
 
   return (
-    <div className="pt-16 max-w-[1150px] mx-auto relative px-4 sm:px-6 lg:px-8">
+    <>
       <JsonLd data={jsonLd} />
       <PopoverPreview />
       <ShareAndReact title={localBlog.title} slug={localBlog.slug} />
+      <PageTemplate title={localBlog.title} subtitle={localBlog.description} />
 
-      <div className="mb-6">
-        <QuartzBreadcrumbs category={localBlog.category} title={localBlog.title} />
-      </div>
-
+      <main className="max-w-[1150px] mx-auto relative px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Main Content Area */}
         <div className="lg:col-span-8 space-y-8">
-          <div>
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 text-neutral-100">
-              {localBlog.title}
-            </h1>
-            <p className="text-lg text-neutral-400 mb-6">{localBlog.description}</p>
-            {localBlog.thumbnail && (
-              <div className="relative aspect-video w-full rounded-xl overflow-hidden mb-8 border border-neutral-800">
-                <Image
-                  src={localBlog.thumbnail}
-                  alt={localBlog.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 900px) 100vw, 900px"
-                  priority
-                />
-              </div>
-            )}
-          </div>
+          {localBlog.thumbnail && (
+            <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-neutral-800">
+              <Image
+                src={localBlog.thumbnail}
+                alt={localBlog.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 900px) 100vw, 900px"
+                priority
+              />
+            </div>
+          )}
 
-          <MarkdownRenderer content={localBlog.content} slug={localBlog.slug} />
+          {showIndex && <TableOfContents toc={toc} className="lg:hidden" />}
+
+          {renderedContent}
 
           {/* Quartz Backlinks Section */}
           <div className="pt-8">
@@ -126,6 +126,7 @@ export default async function page({ params }: {
 
         {/* Right Sidebar: Quartz Knowledge Graph & Interactive Tools */}
         <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+          {showIndex && <TableOfContents toc={toc} className="hidden lg:block" />}
           <DynamicGraphView data={graphData} currentSlug={localBlog.slug} title="Local Knowledge Graph" />
         </div>
       </div>
@@ -135,6 +136,7 @@ export default async function page({ params }: {
         <BlogSection tags={localBlog.tags} excludeId={localBlog.slug} />
       </div>
       <NewsletterSubscription />
-    </div>
+      </main>
+    </>
   );
 }
