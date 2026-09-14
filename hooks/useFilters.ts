@@ -53,7 +53,11 @@ export const useFilters = (pathname: string = "/blog") => {
       )
     );
     const query = new URLSearchParams(cleanedParams);
-    query.delete("page");
+    // Keep the requested page when pagination calls saveFilters({ page }).
+    // Other filter changes should still start from the first page.
+    if (!value || !Object.prototype.hasOwnProperty.call(value, "page")) {
+      query.delete("page");
+    }
     router.replace(`${pathname}?${query.toString()}`);
   }, [searchParams, filters, router, pathname]);
 

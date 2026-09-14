@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Maximize2, Minimize2, Network } from "lucide-react";
+import { Maximize2, Minimize2, Network, Search, RotateCcw, ExternalLink } from "lucide-react";
 import type { GraphData } from "@/features/blog/lib/graph";
 
 interface GraphViewProps {
@@ -22,6 +22,8 @@ interface NodeSim {
   radius: number;
   isCurrent: boolean;
   neighbors: Set<string>;
+  category?: string;
+  tags: string[];
 }
 
 export function GraphView({ data, currentSlug, className = "", title = "Graph View" }: GraphViewProps) {
@@ -30,7 +32,12 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mode, setMode] = useState<"local" | "global">(currentSlug ? "local" : "global");
+  const [localDepth, setLocalDepth] = useState<1 | 2>(2);
+  const [query, setQuery] = useState("");
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(currentSlug ?? null);
   const hoveredNodeIdRef = useRef<string | null>(null);
+
+  const nodeById = useMemo(() => new Map((data?.nodes ?? []).map((node) => [node.id, node])), [data]);
 
   // Filter nodes/links safely based on mode
   const filteredData = useMemo(() => {
@@ -38,13 +45,17 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
     const safeLinks = Array.isArray(data?.links) ? data.links : [];
 
     if (mode === "local" && currentSlug) {
-      const neighborSlugs = new Set<string>();
-      neighborSlugs.add(currentSlug);
-
-      safeLinks.forEach((l) => {
-        if (l?.source === currentSlug && l?.target) neighborSlugs.add(l.target);
-        if (l?.target === currentSlug && l?.source) neighborSlugs.add(l.source);
-      });
+      const neighborSlugs = new Set<string>([currentSlug]);
+      let frontier = new Set([currentSlug]);
+      for (let depth = 0; depth < localDepth; depth++) {
+        const next = new Set<string>();
+        safeLinks.forEach((l) => {
+          if (frontier.has(l?.source) && l?.target) next.add(l.target);
+          if (frontier.has(l?.target) && l?.source) next.add(l.source);
+        });
+        next.forEach((id) => neighborSlugs.add(id));
+        frontier = next;
+      }
 
       const nodes = safeNodes.filter((n) => n?.id && neighborSlugs.has(n.id));
       const links = safeLinks.filter(
@@ -53,7 +64,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
       return { nodes, links };
     }
     return { nodes: safeNodes, links: safeLinks };
-  }, [data, currentSlug, mode]);
+  }, [data, currentSlug, mode, localDepth]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -106,6 +117,8 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
         radius: n.id === currentSlug ? 7 : 5,
         isCurrent: n.id === currentSlug,
         neighbors: new Set<string>(),
+        category: n.category,
+        tags: n.tags ?? [],
       });
     });
 
@@ -215,12 +228,17 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
       nodesArray.forEach((n) => {
         const isHovered = currentHoveredId === n.id;
         const isNeighbor = currentHoveredId ? n.neighbors.has(currentHoveredId) : false;
-        const active = n.isCurrent;
+        const active = n.isCurrent || selectedNodeId === n.id;
+        const matchesQuery = query.trim().length > 1 && n.title.toLowerCase().includes(query.trim().toLowerCase());
 
         ctx.beginPath();
         ctx.arc(n.x, n.y, isHovered ? n.radius + 3 : n.radius, 0, 2 * Math.PI);
 
-        if (active) {
+        if (matchesQuery) {
+          ctx.fillStyle = "#f59e0b";
+          ctx.shadowColor = "#f59e0b";
+          ctx.shadowBlur = 12;
+        } else if (active) {
           ctx.fillStyle = themeColor;
           ctx.shadowColor = themeColor;
           ctx.shadowBlur = 10;
@@ -289,9 +307,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
         const dx = mouseX - n.x;
         const dy = mouseY - n.y;
         if (dx * dx + dy * dy <= (n.radius + 6) ** 2) {
-          if (n.id !== currentSlug) {
-            router.push(`/blog/${n.id}`);
-          }
+          setSelectedNodeId(n.id);
           break;
         }
       }
@@ -307,7 +323,12 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
       canvas.removeEventListener("click", handleClick);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [filteredData, currentSlug, isFullscreen, router]);
+  }, [filteredData, currentSlug, isFullscreen, router, query, selectedNodeId]);
+
+  const selectedNode = selectedNodeId ? nodeById.get(selectedNodeId) : undefined;
+  const selectedConnections = selectedNodeId
+    ? filteredData.links.filter((link) => link.source === selectedNodeId || link.target === selectedNodeId).length
+    : 0;
 
   return (
     <div
@@ -351,6 +372,11 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
               >
                 Global
               </button>
+              {mode === "local" && (
+                <button type="button" onClick={() => setLocalDepth(localDepth === 1 ? 2 : 1)} className="border-l border-neutral-300 px-2 py-0.5 text-neutral-600 dark:border-neutral-700 dark:text-neutral-400" title="Toggle local graph depth">
+                  {localDepth}-hop
+                </button>
+              )}
             </div>
           )}
 
@@ -365,6 +391,18 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
         </div>
       </div>
 
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <label className="flex min-w-[180px] flex-1 items-center gap-2 rounded-lg border border-neutral-200 bg-white/70 px-2.5 py-1.5 text-xs dark:border-neutral-800 dark:bg-neutral-950/40">
+          <Search className="h-3.5 w-3.5 text-neutral-500" />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Find a concept or article..." className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-neutral-500" aria-label="Find a concept or article in the graph" />
+          {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear graph search"><RotateCcw className="h-3.5 w-3.5 text-neutral-500" /></button>}
+        </label>
+        <div className="flex items-center gap-3 text-[10px] text-neutral-500">
+          <span><i className="mr-1 inline-block h-2 w-2 rounded-full bg-reading-accent" />current</span>
+          <span><i className="mr-1 inline-block h-2 w-2 rounded-full bg-amber-500" />match</span>
+        </div>
+      </div>
+
       <div className="relative w-full flex-1 min-h-[260px] flex items-center justify-center overflow-hidden">
         <canvas ref={canvasRef} className="w-full h-full block rounded-lg text-reading-accent" />
         {filteredData.nodes.length === 0 && (
@@ -372,11 +410,26 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
         )}
       </div>
 
+      {selectedNode && (
+        <div className="mt-3 rounded-lg border border-neutral-200 bg-white/70 p-3 dark:border-neutral-800 dark:bg-neutral-950/40">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-neutral-900 dark:text-neutral-100">{selectedNode.title}</p>
+              <p className="mt-1 text-[11px] text-neutral-500">{selectedConnections} connection{selectedConnections === 1 ? "" : "s"}{selectedNode.category ? ` · ${selectedNode.category}` : ""}</p>
+              {selectedNode.tags.length > 0 && <p className="mt-2 line-clamp-1 text-[11px] text-neutral-500">{selectedNode.tags.join(" · ")}</p>}
+            </div>
+            <button type="button" onClick={() => router.push(`/blog/${selectedNode.id}`)} className="inline-flex shrink-0 items-center gap-1 rounded-md bg-theme/10 px-2 py-1 text-[11px] font-medium text-reading-accent hover:bg-theme/20">
+              Open <ExternalLink className="h-3 w-3" />
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="mt-2.5 flex items-center justify-between text-[11px] text-neutral-600 dark:text-neutral-500">
         <span>
           {filteredData.nodes.length} nodes · {filteredData.links.length} links
         </span>
-        <span className="hidden sm:inline">Click node to navigate</span>
+        <span className="hidden sm:inline">Click to inspect · use Open to read</span>
       </div>
     </div>
   );
