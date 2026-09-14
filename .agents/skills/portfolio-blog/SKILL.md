@@ -62,6 +62,8 @@ Watch the search interval shrink after each comparison.
 
 ## Platform Changes
 
+- Blog playlists live in `content/playlists/*.md`, with `id`, `title`, `description`, optional `summary`, and ordered `sections` (`title` and article-slug `items`) in frontmatter. Edit nested sections in the note source. `content/playlists.base` provides Obsidian views; the website reads the Markdown records, not the Base configuration. Keep playlist IDs and section/item order stable unless intentionally changing navigation.
+
 - For renderer, navigation, search, backlinks, playlists, metadata, sitemap, feed, or newsletter work, inspect the exact modules involved before editing.
 - Preserve the authoring contract when behavior changes. If visibility, metadata, links, or embeds change, update this skill or `AGENTS.md` so future agents do not rely on stale rules.
 - Run relevant checks from `package.json` for application changes. Use focused tests or previews for changed behavior; documentation-only edits only need Markdown/link validation.

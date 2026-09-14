@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Grid, List, ListChecks, X } from "lucide-react";
+import { Grid, List, X } from "lucide-react";
 import BlogCard from "./BlogCard";
 import { SearchInput } from './SearchInput';
 import { BlogFilter } from "./filter/BlogFilter";
@@ -11,9 +10,10 @@ import { BlogPagination } from './BlogPagination';
 import { PageTemplate } from '../global/SectionTemplate';
 import Image from "next/image";
 import { useFilters } from '@/hooks/useFilters';
+import type { BlogListingItem } from "@/features/blog/lib/listing";
 
 interface BlogProps {
-  posts: BlogPost[];
+  posts: BlogListingItem[];
   tags: string[];
   categories: string[];
   totalPages: number;
@@ -37,6 +37,7 @@ export default function Blog({
     activeTags,
     activeDateFrom,
     activeDateTo,
+    activeBlogsFilter,
     hasActiveFilters,
     removeFilter,
     clearAllFilters,
@@ -98,12 +99,6 @@ export default function Blog({
           <SearchInput placeholder="Search Blogs, Project, Articles.." />
         </div>
         <div className="space-x-2 flex items-center">
-          <Button asChild variant="outline" size="md">
-            <Link href="/blog/playlists">
-              <ListChecks />
-              Playlists
-            </Link>
-          </Button>
           <BlogFilter tags={tags} categories={categories} />
           <Button
             variant="secondary"
@@ -146,6 +141,16 @@ export default function Blog({
               aria-label="Remove date to filter"
             >
               To: {new Date(activeDateTo).toLocaleDateString()}
+              <X />
+            </Button>
+          )}
+          {activeBlogsFilter !== "all" && (
+            <Button
+              size="sm"
+              onClick={() => removeFilter("blogsFilter")}
+              aria-label="Remove content type filter"
+            >
+              {activeBlogsFilter === "blogs" ? "Blogs only" : "Playlists only"}
               <X />
             </Button>
           )}

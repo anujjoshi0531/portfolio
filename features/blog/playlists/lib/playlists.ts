@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { cache } from "react";
-import { parse } from "yaml";
+import { parseFrontmatter } from "@/lib/content/frontmatter";
+import { getContentDirectory } from "@/lib/content/root";
 import { getBlogs } from "@/features/blog/lib/content";
 import type {
   BlogPlaylist,
@@ -10,8 +11,6 @@ import type {
   BlogPlaylistManifest,
   BlogPlaylistSectionManifest,
 } from "@/features/blog/playlists/types";
-
-const BLOG_PLAYLIST_DIR = path.join(process.cwd(), "data", "blog-playlists");
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
@@ -62,7 +61,7 @@ function normalizePlaylistManifest(raw: unknown, source: string): BlogPlaylistMa
 
 function readPlaylistManifest(filePath: string): BlogPlaylistManifest {
   const raw = fs.readFileSync(filePath, "utf-8");
-  return normalizePlaylistManifest(parse(raw), path.basename(filePath));
+  return normalizePlaylistManifest(parseFrontmatter(raw).frontmatter, path.basename(filePath));
 }
 
 function getBlogArticleMap() {
@@ -82,13 +81,14 @@ function getBlogArticleMap() {
 }
 
 export const getBlogPlaylistManifests = cache((): BlogPlaylistManifest[] => {
-  if (!fs.existsSync(BLOG_PLAYLIST_DIR)) return [];
+  const playlistDirectory = path.join(getContentDirectory(), "playlists");
+  if (!fs.existsSync(playlistDirectory)) return [];
 
   return fs
-    .readdirSync(BLOG_PLAYLIST_DIR)
-    .filter((file) => file.endsWith(".yaml") || file.endsWith(".yml"))
+    .readdirSync(playlistDirectory)
+    .filter((file) => file.endsWith(".md"))
     .sort()
-    .map((file) => readPlaylistManifest(path.join(BLOG_PLAYLIST_DIR, file)));
+    .map((file) => readPlaylistManifest(path.join(playlistDirectory, file)));
 });
 
 function resolvePlaylist(

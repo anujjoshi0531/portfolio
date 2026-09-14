@@ -57,6 +57,8 @@ This is a Next.js App Router portfolio and content site. The architecture favors
    - `features/algorithms/lib/catalog.ts`
 5. `lib/content/markdown/render.ts` renders Markdown to HTML and reading metadata.
 
+Blog playlists are Markdown records in `content/playlists/`, loaded by `features/blog/playlists/lib/playlists.ts` through the shared content root and frontmatter parser. Their frontmatter preserves playlist IDs and ordered sections/article slugs. `content/playlists.base` is an Obsidian management view over those records; Base files are not website data sources.
+
 ## API Routes
 
 API routes should validate request input, call a server or feature helper, and return a response. Shared server behavior belongs under `lib/server`, grouped by integration responsibility:

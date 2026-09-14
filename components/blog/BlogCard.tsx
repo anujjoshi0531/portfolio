@@ -2,12 +2,14 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils/styles";
 import { timeAgo } from "@/lib/utils/dates";
+import type { BlogListingItem } from "@/features/blog/lib/listing";
 import Image from "next/image";
 import Link from "next/link";
+import { ListVideo } from "lucide-react";
 import ViewCounter from "./ViewCounter";
 
 interface BlogCardProps {
-  blog: BlogPost;
+  blog: BlogPost | BlogListingItem;
   variant?: "vertical" | "horizontal";
   className?: string;
   /** FocusCard-style: index of this card in its sibling list */
@@ -30,21 +32,23 @@ export default function BlogCard({
   const title = blog.title || "Untitled Blog";
   const description = blog.description || "No description available";
   const slug = blog.slug || blog.id;
+  const href = "href" in blog ? blog.href : `/blog/${slug}`;
   const thumbnail = blog.thumbnail || "/icon.webp";
   const tags = blog.tags.map((t, i) => ({ id: `${i}`, name: t }));
   const displayDate = blog.created ?? blog.published;
+  const isPlaylist = "kind" in blog && blog.kind === "playlist";
 
   // FocusCard: blur & scale down when a sibling is hovered
   const isOtherHovered = hovered !== null && hovered !== index;
 
   return (
     <Link
-      href={`/blog/${slug}`}
+      href={href}
       className={cn(
         "block w-full transition-opacity p-1",
         className
       )}
-      aria-label={`Read blog post: ${title}`}
+      aria-label={isPlaylist ? `Open blog playlist: ${title}` : `Read blog post: ${title}`}
       onMouseEnter={() => setHovered?.(index)}
       onMouseLeave={() => setHovered?.(null)}
     >
@@ -80,9 +84,21 @@ export default function BlogCard({
           >
           </div>
 
-          <div className="absolute top-2 right-2 flex gap-1 bg-black/50 backdrop-blur-md rounded-md px-2 py-1">
-            <ViewCounter slug={slug} increment={false} className="text-white text-xs scale-90" />
+          <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/60 backdrop-blur-md rounded-md px-2 py-1 text-white">
+            {isPlaylist ? (
+              <>
+                <ListVideo className="size-4" aria-hidden="true" />
+                <span className="text-xs font-medium">{blog.itemCount ?? 0}</span>
+              </>
+            ) : (
+              <ViewCounter slug={slug} increment={false} className="text-white text-xs scale-90" />
+            )}
           </div>
+          {isPlaylist && (
+            <div className="absolute inset-y-0 right-0 flex w-14 items-center justify-center bg-black/45 text-white">
+              <ListVideo className="size-6" aria-hidden="true" />
+            </div>
+          )}
 
           <div className="absolute bottom-1 left-2 flex gap-1">
             {tags.map((topic) => (
@@ -107,9 +123,13 @@ export default function BlogCard({
           </div>
 
           <CardContent className="flex items-center justify-end text-muted-foreground text-xs font-medium">
-            <time className="text-xs" dateTime={displayDate ? new Date(displayDate).toISOString() : undefined} suppressHydrationWarning>
-              {timeAgo(displayDate ? new Date(displayDate) : new Date())}
-            </time>
+            {isPlaylist ? (
+              <span>{blog.itemCount ?? 0} {(blog.itemCount ?? 0) === 1 ? "post" : "posts"}</span>
+            ) : (
+              <time className="text-xs" dateTime={displayDate ? new Date(displayDate).toISOString() : undefined} suppressHydrationWarning>
+                {timeAgo(displayDate ? new Date(displayDate) : new Date())}
+              </time>
+            )}
           </CardContent>
         </div>
       </Card>

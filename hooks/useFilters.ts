@@ -12,6 +12,8 @@ export const availableParams = new Set([
   "sort_by",
   "page",
   "q",
+  "category",
+  "blogsFilter",
 ]);
 
 export function filterDiscoverParams(
@@ -44,7 +46,12 @@ export const useFilters = (pathname: string = "/blog") => {
   const saveFilters = useCallback((value?: Record<string, string>) => {
     const currentParams = Object.fromEntries(searchParams.entries());
     const updatedParams = { ...currentParams, ...filters, ...value };
-    const query = new URLSearchParams(updatedParams);
+    const cleanedParams = Object.fromEntries(
+      Object.entries(updatedParams).filter(
+        ([key, paramValue]) => paramValue && !(key === "blogsFilter" && paramValue === "all")
+      )
+    );
+    const query = new URLSearchParams(cleanedParams);
     router.replace(`${pathname}?${query.toString()}`);
   }, [searchParams, filters, router, pathname]);
 
@@ -59,13 +66,20 @@ export const useFilters = (pathname: string = "/blog") => {
     router.replace(`${pathname}?${query.toString()}`);
   }, [searchParams, filters, router, pathname]);
 
-  const count = useMemo(() => Object.values(filters).filter((v) => v).length, [filters]);
+  const count = useMemo(
+    () => Object.entries(filters).filter(([key, value]) => value && !(key === "blogsFilter" && value === "all")).length,
+    [filters]
+  );
 
   // ── Derived active-filter state (replaces useBlogFilters) ──
   const activeTags = useMemo(() => searchParams.get("tags")?.split(",").filter(Boolean) ?? [], [searchParams]);
   const activeDateFrom = useMemo(() => searchParams.get("published_gte") ?? null, [searchParams]);
   const activeDateTo = useMemo(() => searchParams.get("published_lte") ?? null, [searchParams]);
-  const hasActiveFilters = useMemo(() => activeTags.length > 0 || !!activeDateFrom || !!activeDateTo, [activeTags, activeDateFrom, activeDateTo]);
+  const activeBlogsFilter = useMemo(() => searchParams.get("blogsFilter") || "all", [searchParams]);
+  const hasActiveFilters = useMemo(
+    () => activeTags.length > 0 || !!activeDateFrom || !!activeDateTo || activeBlogsFilter !== "all",
+    [activeTags, activeDateFrom, activeDateTo, activeBlogsFilter]
+  );
 
   const removeFilter = useCallback((key: string, value?: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -100,6 +114,7 @@ export const useFilters = (pathname: string = "/blog") => {
     activeTags,
     activeDateFrom,
     activeDateTo,
+    activeBlogsFilter,
     hasActiveFilters,
     removeFilter,
     clearAllFilters,

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageTemplate } from "@/components/global/SectionTemplate";
-import { BlogPlaylistSummaryCard } from "@/features/blog/playlists/components/BlogPlaylistSummaryCard";
-import { getBlogPlaylists } from "@/features/blog/playlists/lib/playlists";
+import BlogCard from "@/components/blog/BlogCard";
+import { getBlogPlaylistListingItems } from "@/features/blog/lib/listing";
 
 export const metadata: Metadata = {
   title: "Blog Playlists | Portfolio",
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPlaylistsPage() {
-  const playlists = getBlogPlaylists();
+  const playlists = getBlogPlaylistListingItems();
 
   return (
     <>
@@ -19,9 +19,9 @@ export default function BlogPlaylistsPage() {
       />
 
       <main className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {playlists.map((playlist) => (
-            <BlogPlaylistSummaryCard key={playlist.id} playlist={playlist} />
+            <BlogCard key={playlist.id} blog={playlist} />
           ))}
         </div>
       </main>

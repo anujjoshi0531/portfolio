@@ -1,5 +1,6 @@
 import Blog from "@/components/blog/Blog";
-import { getBlogFilters, searchBlogs } from "@/features/blog/lib/content";
+import { getBlogFilters } from "@/features/blog/lib/content";
+import { searchBlogListings, type BlogsFilter } from "@/features/blog/lib/listing";
 
 export const revalidate = 3600; // Revalidate every hour
 
@@ -12,6 +13,8 @@ interface SearchProps {
     published_lte?: string;
     sort_by?: string;
     tags?: string;
+    category?: string;
+    blogsFilter?: BlogsFilter;
   }>
 }
 export async function generateMetadata({ searchParams }: SearchProps) {
@@ -28,11 +31,16 @@ export default async function BlogPage({ searchParams }: SearchProps) {
   const page = params.page ? Number(params.page) : 1;
   const limit = params.limit ? Number(params.limit) : 9;
   const tags = params.tags ? params.tags.split(",").filter(Boolean) : [];
+  const category = params.category || undefined;
+  const blogsFilter = params.blogsFilter || "all";
 
   // Get posts with pagination
-  const data = await searchBlogs({
+  const data = await searchBlogListings({
     query: q,
     tags: tags.length > 0 ? tags : undefined,
+    category,
+    blogsFilter,
+    sortBy: params.sort_by,
     page,
     limit,
   });

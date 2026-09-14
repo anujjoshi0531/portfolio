@@ -97,6 +97,29 @@ export const BlogFilter = ({ tags, categories }: { tags: string[], categories: s
 
             {/* Content Type Filter */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
+              <Label className="flex text-muted-foreground" htmlFor="blogsFilter">Show</Label>
+              <RadioGroup
+                id="blogsFilter"
+                className="w-full"
+                value={getFilter("blogsFilter") || "all"}
+                onValueChange={(value) => setFilter({ blogsFilter: value })}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem id="blogsFilter-all" value="all" />
+                  <Label htmlFor="blogsFilter-all">Blogs and playlists</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem id="blogsFilter-blogs" value="blogs" />
+                  <Label htmlFor="blogsFilter-blogs">Blogs only</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem id="blogsFilter-playlists" value="playlists" />
+                  <Label htmlFor="blogsFilter-playlists">Playlists only</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
               <Label className="flex text-muted-foreground" htmlFor="category">Content Category</Label>
               <RadioGroup className="w-full" value={getFilter("category")} onValueChange={(value) => setFilter({ category: value })}>
                 {categories.map((category) => (
