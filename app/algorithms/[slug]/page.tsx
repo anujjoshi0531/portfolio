@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getCatalogEntry, algorithmCatalog } from '@/lib/algorithms/registry'
+import { getAlgorithmCatalog, getAlgorithmCatalogEntry } from '@/lib/server/local-content'
 import { AlgorithmVisualizer } from '@/components/algorithms/AlgorithmVisualizer'
 import Link from 'next/link'
 import { ChevronRight, ArrowLeft } from 'lucide-react'
@@ -11,7 +11,7 @@ interface AlgorithmDetailPageProps {
 }
 
 export async function generateStaticParams() {
-  return algorithmCatalog.map((algo) => ({
+  return getAlgorithmCatalog().map((algo) => ({
     slug: algo.id,
   }))
 }
@@ -20,7 +20,7 @@ export async function generateMetadata({
   params,
 }: AlgorithmDetailPageProps): Promise<Metadata> {
   const { slug } = await params
-  const summary = getCatalogEntry(slug)
+  const summary = getAlgorithmCatalogEntry(slug)
 
   if (!summary) {
     return {
@@ -38,7 +38,7 @@ export async function generateMetadata({
 
 export default async function AlgorithmDetailPage({ params }: AlgorithmDetailPageProps) {
   const { slug } = await params
-  const summary = getCatalogEntry(slug)
+  const summary = getAlgorithmCatalogEntry(slug)
 
   if (!summary) {
     notFound()

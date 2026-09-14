@@ -437,7 +437,8 @@ export interface Algorithm {
   code: string
   implementations?: Partial<Record<Exclude<CodeLanguage, 'javascript'>, CodeImplementation>>
   visualization: VisualizationType
-  generateSteps: (locale?: string) => Step[]
+  runtimeInput?: unknown
+  generateSteps: (locale?: string, input?: unknown) => Step[]
   description?: string
   descriptionFormat?: 'plain' | 'markdown'
   timeComplexity?: {

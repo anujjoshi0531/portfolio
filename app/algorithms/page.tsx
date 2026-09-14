@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Metadata } from 'next'
-import { catalogCategories, algorithmCatalog } from '@/lib/algorithms/registry'
+import { getAlgorithmCatalog, getAlgorithmCatalogCategories } from '@/lib/server/local-content'
 import { AlgorithmCatalogClient } from './AlgorithmCatalogClient'
 
 export const metadata: Metadata = {
@@ -10,6 +10,9 @@ export const metadata: Metadata = {
 }
 
 export default function AlgorithmsPage() {
+  const algorithmCatalog = getAlgorithmCatalog()
+  const catalogCategories = getAlgorithmCatalogCategories()
+
   return (
     <div className="pt-24 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Hero Header */}

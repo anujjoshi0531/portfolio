@@ -1,4 +1,6 @@
 import type { Algorithm, AlgorithmSummary, CategorySummary, CodeImplementation, CodeLanguage } from './types'
+import type { MarkdownAlgorithmRuntime } from './markdown-runtime'
+import { toMarkdownCodeImplementations } from './markdown-runtime'
 
 export const algorithmCatalog: AlgorithmSummary[] = [
   // Concepts
@@ -437,6 +439,18 @@ const algorithmCache = new Map<string, Promise<Algorithm>>()
 
 type ModuleLoader = () => Promise<Record<string, unknown>>
 
+async function loadMarkdownRuntime(id: string): Promise<MarkdownAlgorithmRuntime | undefined> {
+  if (typeof fetch !== 'function') return undefined
+
+  try {
+    const response = await fetch(`/api/algorithms/${id}/runtime`)
+    if (!response.ok) return undefined
+    return (await response.json()) as MarkdownAlgorithmRuntime
+  } catch {
+    return undefined
+  }
+}
+
 const MODULE_LOADERS: Record<string, { loader: ModuleLoader; exportName: string }> = {
   // Concepts & DS in concepts.ts
   'big-o-notation': { loader: () => import('./definitions/concepts'), exportName: 'bigONotation' },
@@ -523,6 +537,8 @@ export async function loadAlgorithm(id: string): Promise<Algorithm> {
       throw new Error(`Algorithm export '${entry.exportName}' not found for ${id}`)
     }
 
+    const runtime = await loadMarkdownRuntime(id)
+
     // Load multi-language packs in parallel
     const [py, java, cpp, rust] = await Promise.all([
       loadLanguageImplementation(id, 'python').catch(() => undefined),
@@ -536,6 +552,31 @@ export async function loadAlgorithm(id: string): Promise<Algorithm> {
       java: java,
       cpp: cpp,
       rust: rust,
+      ...toMarkdownCodeImplementations(runtime?.codeBlocks ?? {}, runtime?.lineMaps),
+    }
+
+    if (runtime?.codeBlocks.javascript) {
+      algo.code = runtime.codeBlocks.javascript
+    }
+
+    if (runtime?.input !== undefined) {
+      algo.runtimeInput = runtime.input
+    }
+
+    if (runtime?.complexity) {
+      algo.timeComplexity = runtime.complexity
+    }
+
+    if (runtime?.spaceComplexity) {
+      algo.spaceComplexity = runtime.spaceComplexity
+    }
+
+    if (runtime?.prerequisites) {
+      algo.prerequisites = runtime.prerequisites
+    }
+
+    if (runtime?.howItWorks) {
+      algo.howItWorks = runtime.howItWorks
     }
 
     return algo

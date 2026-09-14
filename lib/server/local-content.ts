@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { cache } from "react";
+import { parse as parseYaml } from "yaml";
+import type { AlgorithmSummary, CategorySummary, Difficulty, VisualizationType } from "@/lib/algorithms/types";
 
 export interface Frontmatter {
   title?: string;
@@ -135,44 +137,8 @@ export function parseFrontmatter(fileContent: string): { frontmatter: Frontmatte
 
   const yamlBlock = match[1];
   const content = match[2];
-  const frontmatter: Frontmatter = {};
-
-  const lines = yamlBlock.split(/\r?\n/);
-  let currentKey: string | null = null;
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) continue;
-
-    if (trimmed.startsWith("- ") && currentKey) {
-      const val = trimmed.slice(2).trim().replace(/^["']|["']$/g, "");
-      if (!Array.isArray(frontmatter[currentKey])) {
-        frontmatter[currentKey] = [];
-      }
-      (frontmatter[currentKey] as string[]).push(val);
-      continue;
-    }
-
-    const colonIdx = line.indexOf(":");
-    if (colonIdx !== -1) {
-      const key = line.slice(0, colonIdx).trim();
-      let rawVal = line.slice(colonIdx + 1).trim();
-
-      if (rawVal === "") {
-        currentKey = key;
-        frontmatter[key] = [];
-      } else {
-        currentKey = null;
-        if ((rawVal.startsWith('"') && rawVal.endsWith('"')) || (rawVal.startsWith("'") && rawVal.endsWith("'"))) {
-          rawVal = rawVal.slice(1, -1);
-        }
-        if (rawVal === "true") frontmatter[key] = true;
-        else if (rawVal === "false") frontmatter[key] = false;
-        else if (!isNaN(Number(rawVal)) && rawVal !== "") frontmatter[key] = Number(rawVal);
-        else frontmatter[key] = rawVal;
-      }
-    }
-  }
+  const parsed = parseYaml(yamlBlock);
+  const frontmatter = parsed && typeof parsed === "object" ? (parsed as Frontmatter) : {};
 
   return { frontmatter, content };
 }
@@ -297,6 +263,68 @@ export const getTestimonials = cache(() => {
 export const getAlgorithmContentBySlug = cache((slug: string): ContentItem | null => {
   const algorithms = readCollection("algorithms");
   return algorithms.find((algorithm) => algorithm.slug === slug || algorithm.id === slug) || null;
+});
+
+export const ALGORITHM_CATEGORY_ORDER = [
+  "Concepts",
+  "Data Structures",
+  "Sorting",
+  "Searching",
+  "Graphs",
+  "Dynamic Programming",
+  "Backtracking",
+  "Divide and Conquer",
+  "Math",
+  "Compression",
+] as const;
+
+function toAlgorithmSummary(item: ContentItem): AlgorithmSummary {
+  return {
+    id: item.slug,
+    name: item.title,
+    category: item.category || "Concepts",
+    difficulty: (item.frontmatter.difficulty || "easy") as Difficulty,
+    visualization: (item.frontmatter.visualization || "concept") as VisualizationType,
+    description: item.description,
+  };
+}
+
+export const getAlgorithmCatalog = cache((): AlgorithmSummary[] => {
+  const categoryRank = new Map<string, number>(ALGORITHM_CATEGORY_ORDER.map((category, index) => [category, index]));
+
+  return readCollection("algorithms")
+    .map(toAlgorithmSummary)
+    .sort((a, b) => {
+      const rankA = categoryRank.get(a.category) ?? Number.MAX_SAFE_INTEGER;
+      const rankB = categoryRank.get(b.category) ?? Number.MAX_SAFE_INTEGER;
+
+      if (rankA !== rankB) return rankA - rankB;
+      return a.name.localeCompare(b.name);
+    });
+});
+
+export const getAlgorithmCatalogEntry = cache((id: string): AlgorithmSummary | undefined => {
+  return getAlgorithmCatalog().find((algorithm) => algorithm.id === id);
+});
+
+export const getAlgorithmCatalogCategories = cache((): CategorySummary[] => {
+  const catalog = getAlgorithmCatalog();
+  const knownCategories = ALGORITHM_CATEGORY_ORDER.map((name) => ({
+    name,
+    algorithms: catalog.filter((algorithm) => algorithm.category === name),
+  })).filter((category) => category.algorithms.length > 0);
+
+  const knownCategoryNames = new Set(ALGORITHM_CATEGORY_ORDER);
+  const extraCategories = Array.from(
+    new Set(catalog.map((algorithm) => algorithm.category).filter((category) => !knownCategoryNames.has(category as typeof ALGORITHM_CATEGORY_ORDER[number]))),
+  )
+    .sort()
+    .map((name) => ({
+      name,
+      algorithms: catalog.filter((algorithm) => algorithm.category === name),
+    }));
+
+  return [...knownCategories, ...extraCategories];
 });
 
 export const getBlogBySlug = cache((slug: string): BlogPost | null => {

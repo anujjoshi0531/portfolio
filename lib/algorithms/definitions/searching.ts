@@ -1,6 +1,21 @@
 import type { Algorithm, Step, HighlightType } from '../types'
 import { d } from '../shared'
 
+interface ArraySearchInput {
+  array?: unknown
+  target?: unknown
+}
+
+function readArraySearchInput(input: unknown, fallbackArray: number[], fallbackTarget: number) {
+  const runtimeInput = input && typeof input === 'object' ? (input as ArraySearchInput) : {}
+  const array = Array.isArray(runtimeInput.array) && runtimeInput.array.every((value) => typeof value === 'number')
+    ? runtimeInput.array
+    : fallbackArray
+  const target = typeof runtimeInput.target === 'number' ? runtimeInput.target : fallbackTarget
+
+  return { array, target }
+}
+
 const binarySearch: Algorithm = {
   id: 'binary-search',
   name: 'Binary Search',
@@ -26,9 +41,8 @@ const binarySearch: Algorithm = {
   return -1; // Not found
 }`,
 
-  generateSteps(locale = 'en') {
-    const arr = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
-    const target = 23
+  generateSteps(locale = 'en', input?: unknown) {
+    const { array: arr, target } = readArraySearchInput(input, [2, 5, 8, 12, 16, 23, 38, 56, 72, 91], 23)
     const steps: Step[] = []
 
     steps.push({

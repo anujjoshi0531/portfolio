@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAlgorithmContentBySlug } from "@/lib/server/local-content";
-import { isKnownAlgorithmId } from "@/lib/algorithms/registry";
+import { getAlgorithmCatalogEntry, getAlgorithmContentBySlug } from "@/lib/server/local-content";
 
 interface AlgorithmContentRouteProps {
   params: Promise<{ slug: string }>;
@@ -9,7 +8,7 @@ interface AlgorithmContentRouteProps {
 export async function GET(_request: Request, { params }: AlgorithmContentRouteProps) {
   const { slug } = await params;
 
-  if (!isKnownAlgorithmId(slug)) {
+  if (!getAlgorithmCatalogEntry(slug)) {
     return NextResponse.json({ error: "Algorithm not found" }, { status: 404 });
   }
 

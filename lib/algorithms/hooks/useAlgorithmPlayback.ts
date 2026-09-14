@@ -27,7 +27,7 @@ export function useAlgorithmPlayback({
 }: UseAlgorithmPlaybackOptions) {
   const [steps, setSteps] = useState<Step[]>(() => {
     if (initialSteps && initialSteps.length > 0) return initialSteps
-    if (algorithm) return algorithm.generateSteps('en')
+    if (algorithm) return algorithm.generateSteps('en', algorithm.runtimeInput)
     return []
   })
   const [currentStep, setCurrentStep] = useState(0)
@@ -39,7 +39,7 @@ export function useAlgorithmPlayback({
   // Sync when algorithm changes
   useEffect(() => {
     if (algorithm) {
-      const newSteps = algorithm.generateSteps('en')
+      const newSteps = algorithm.generateSteps('en', algorithm.runtimeInput)
       setSteps(newSteps)
       setCurrentStep(0)
       setIsPlaying(false)
@@ -89,7 +89,7 @@ export function useAlgorithmPlayback({
 
   const regenerate = useCallback(() => {
     if (algorithm) {
-      const newSteps = algorithm.generateSteps('en')
+      const newSteps = algorithm.generateSteps('en', algorithm.runtimeInput)
       setSteps(newSteps)
       setCurrentStep(0)
       setIsPlaying(false)
