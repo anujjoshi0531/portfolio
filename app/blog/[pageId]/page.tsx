@@ -3,7 +3,6 @@ import NotFound from "@/app/not-found";
 import BlogSection from "@/components/home/BlogSection";
 import { getBlogBySlug, getGraphData, getBacklinks } from "@/lib/server/local-content";
 import { MarkdownRenderer } from "@/components/global/MarkdownRenderer";
-import dynamic from "next/dynamic";
 import { NewsletterSubscription } from "@/components/blog/NewsletterSubscription";
 import JsonLd from "@/components/global/JsonLd";
 import { QuartzBreadcrumbs } from "@/components/blog/QuartzExplorer";

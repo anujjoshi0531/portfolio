@@ -1,0 +1,1717 @@
+import type { Algorithm, Step, HighlightType } from '../types'
+import { d } from '../shared'
+
+// ============================================================
+// BUBBLE SORT
+// ============================================================
+const bubbleSort: Algorithm = {
+  id: 'bubble-sort',
+  name: 'Bubble Sort',
+  category: 'Sorting',
+  difficulty: 'easy',
+  visualization: 'array',
+  code: `function bubbleSort(array) {
+  const n = array.length;
+
+  for (let i = 0; i < n - 1; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+      if (array[j] > array[j + 1]) {
+        // Swap adjacent elements
+        [array[j], array[j + 1]] = [array[j + 1], array[j]];
+      }
+    }
+  }
+
+  return array;
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [38, 27, 43, 3, 9, 82, 10]
+    const steps: Step[] = []
+    const sorted: number[] = []
+    const n = arr.length
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        'Initial array. Bubble Sort will compare adjacent elements and swap them if needed.',
+        'Arreglo inicial. Bubble Sort comparará elementos adyacentes y los intercambiará si es necesario.',
+      ),
+      codeLine: 1,
+      variables: { n, array: `[${arr.join(', ')}]` },
+    })
+
+    for (let i = 0; i < n - 1; i++) {
+      for (let j = 0; j < n - i - 1; j++) {
+        steps.push({
+          array: [...arr],
+          highlights: { [j]: 'comparing', [j + 1]: 'comparing' },
+          sorted: [...sorted],
+          description: d(
+            locale,
+            `Comparing ${arr[j]} and ${arr[j + 1]}`,
+            `Comparando ${arr[j]} y ${arr[j + 1]}`,
+          ),
+          codeLine: 5,
+          variables: { i, j, n, 'array[j]': arr[j], 'array[j+1]': arr[j + 1] },
+        })
+
+        if (arr[j] > arr[j + 1]) {
+          ;[arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
+          steps.push({
+            array: [...arr],
+            highlights: { [j]: 'swapped', [j + 1]: 'swapped' },
+            sorted: [...sorted],
+            description: d(
+              locale,
+              `Swapped! ${arr[j]} and ${arr[j + 1]}`,
+              `¡Intercambiados! ${arr[j]} y ${arr[j + 1]}`,
+            ),
+            codeLine: 7,
+            variables: { i, j, n, 'array[j]': arr[j], 'array[j+1]': arr[j + 1] },
+          })
+        }
+      }
+      sorted.push(n - i - 1)
+    }
+
+    sorted.push(0)
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Bubble Sort complete.',
+        '¡Arreglo ordenado! Bubble Sort completado.',
+      ),
+      codeLine: 12,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// SELECTION SORT
+// ============================================================
+const selectionSort: Algorithm = {
+  id: 'selection-sort',
+  name: 'Selection Sort',
+  category: 'Sorting',
+  difficulty: 'easy',
+  visualization: 'array',
+  code: `function selectionSort(array) {
+  const n = array.length;
+
+  for (let i = 0; i < n - 1; i++) {
+    let minIndex = i;
+
+    for (let j = i + 1; j < n; j++) {
+      if (array[j] < array[minIndex]) {
+        minIndex = j;
+      }
+    }
+
+    if (minIndex !== i) {
+      [array[i], array[minIndex]] = [array[minIndex], array[i]];
+    }
+  }
+
+  return array;
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [64, 25, 12, 22, 11, 90, 45]
+    const steps: Step[] = []
+    const sorted: number[] = []
+    const n = arr.length
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description:
+        'Initial array. Selection Sort finds the minimum and places it at the beginning.',
+      codeLine: 1,
+      variables: { n, array: `[${arr.join(', ')}]` },
+    })
+
+    for (let i = 0; i < n - 1; i++) {
+      let minIndex = i
+
+      steps.push({
+        array: [...arr],
+        highlights: { [i]: 'current', [minIndex]: 'minimum' },
+        sorted: [...sorted],
+        description: d(
+          locale,
+          `Starting pass ${i + 1}. Current minimum: ${arr[minIndex]} at index ${minIndex}`,
+          `Iniciando pasada ${i + 1}. Mínimo actual: ${arr[minIndex]} en índice ${minIndex}`,
+        ),
+        codeLine: 4,
+        variables: { i, minIndex, n, 'array[minIndex]': arr[minIndex] },
+      })
+
+      for (let j = i + 1; j < n; j++) {
+        steps.push({
+          array: [...arr],
+          highlights: { [i]: 'current', [minIndex]: 'minimum', [j]: 'comparing' },
+          sorted: [...sorted],
+          description: d(
+            locale,
+            `Comparing ${arr[j]} with current minimum ${arr[minIndex]}`,
+            `Comparando ${arr[j]} con el mínimo actual ${arr[minIndex]}`,
+          ),
+          codeLine: 7,
+          variables: { i, j, minIndex, 'array[j]': arr[j], 'array[minIndex]': arr[minIndex] },
+        })
+
+        if (arr[j] < arr[minIndex]) {
+          minIndex = j
+          steps.push({
+            array: [...arr],
+            highlights: { [i]: 'current', [minIndex]: 'minimum' },
+            sorted: [...sorted],
+            description: d(
+              locale,
+              `New minimum found: ${arr[minIndex]} at index ${minIndex}`,
+              `Nuevo mínimo encontrado: ${arr[minIndex]} en índice ${minIndex}`,
+            ),
+            codeLine: 8,
+            variables: { i, j, minIndex, 'array[j]': arr[j], 'array[minIndex]': arr[minIndex] },
+          })
+        }
+      }
+
+      if (minIndex !== i) {
+        ;[arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+        steps.push({
+          array: [...arr],
+          highlights: { [i]: 'swapped', [minIndex]: 'swapped' },
+          sorted: [...sorted],
+          description: d(
+            locale,
+            `Swapped ${arr[i]} and ${arr[minIndex]}`,
+            `Intercambiados ${arr[i]} y ${arr[minIndex]}`,
+          ),
+          codeLine: 13,
+          variables: { i, minIndex, 'array[i]': arr[i], 'array[minIndex]': arr[minIndex] },
+        })
+      }
+
+      sorted.push(i)
+    }
+
+    sorted.push(n - 1)
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Selection Sort complete.',
+        '¡Arreglo ordenado! Selection Sort completado.',
+      ),
+      codeLine: 17,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// INSERTION SORT
+// ============================================================
+const insertionSort: Algorithm = {
+  id: 'insertion-sort',
+  name: 'Insertion Sort',
+  category: 'Sorting',
+  difficulty: 'easy',
+  visualization: 'array',
+  code: `function insertionSort(array) {
+  const n = array.length;
+
+  for (let i = 1; i < n; i++) {
+    const key = array[i];
+    let j = i - 1;
+
+    while (j >= 0 && array[j] > key) {
+      array[j + 1] = array[j];
+      j--;
+    }
+
+    array[j + 1] = key;
+  }
+
+  return array;
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [12, 11, 13, 5, 6, 7, 42]
+    const steps: Step[] = []
+    const sorted: number[] = [0]
+    const n = arr.length
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [0],
+      description: d(
+        locale,
+        'Initial array. First element is considered sorted.',
+        'Arreglo inicial. El primer elemento se considera ordenado.',
+      ),
+      codeLine: 1,
+      variables: { n, array: `[${arr.join(', ')}]` },
+    })
+
+    for (let i = 1; i < n; i++) {
+      const key = arr[i]
+
+      steps.push({
+        array: [...arr],
+        highlights: { [i]: 'selected' },
+        sorted: [...sorted],
+        description: d(
+          locale,
+          `Picking element ${key} at index ${i} to insert into sorted portion`,
+          `Seleccionando elemento ${key} en índice ${i} para insertar en la porción ordenada`,
+        ),
+        codeLine: 4,
+        variables: { i, key, j: i - 1, n },
+      })
+
+      let j = i - 1
+      while (j >= 0 && arr[j] > key) {
+        steps.push({
+          array: [...arr],
+          highlights: { [j]: 'comparing', [j + 1]: 'selected' },
+          sorted: [...sorted],
+          description: d(
+            locale,
+            `${arr[j]} > ${key}, shifting ${arr[j]} to the right`,
+            `${arr[j]} > ${key}, desplazando ${arr[j]} a la derecha`,
+          ),
+          codeLine: 7,
+          variables: { i, j, key, 'array[j]': arr[j] },
+        })
+
+        arr[j + 1] = arr[j]
+        j--
+
+        steps.push({
+          array: [...arr],
+          highlights: j >= 0 ? { [j]: 'comparing', [j + 1]: 'swapped' } : { [j + 1]: 'swapped' },
+          sorted: [...sorted],
+          description: d(
+            locale,
+            `Shifted. Checking next position...`,
+            'Desplazado. Verificando siguiente posición...',
+          ),
+          codeLine: 8,
+          variables: { i, j, key, 'array[j+1]': arr[j + 1] },
+        })
+      }
+
+      arr[j + 1] = key
+      sorted.push(i)
+
+      steps.push({
+        array: [...arr],
+        highlights: { [j + 1]: 'found' },
+        sorted: [...sorted],
+        description: d(
+          locale,
+          `Inserted ${key} at index ${j + 1}`,
+          `Insertado ${key} en índice ${j + 1}`,
+        ),
+        codeLine: 11,
+        variables: { i, j: j + 1, key },
+      })
+    }
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Insertion Sort complete.',
+        '¡Arreglo ordenado! Insertion Sort completado.',
+      ),
+      codeLine: 15,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// QUICK SORT
+// ============================================================
+const quickSort: Algorithm = {
+  id: 'quick-sort',
+  name: 'Quick Sort',
+  category: 'Sorting',
+  difficulty: 'intermediate',
+  visualization: 'array',
+  code: `function quickSort(arr, low = 0, high = arr.length - 1) {
+  if (low < high) {
+    const pivotIdx = partition(arr, low, high);
+    quickSort(arr, low, pivotIdx - 1);
+    quickSort(arr, pivotIdx + 1, high);
+  }
+  return arr;
+}
+
+function partition(arr, low, high) {
+  const pivot = arr[high];
+  let i = low - 1;
+
+  for (let j = low; j < high; j++) {
+    if (arr[j] <= pivot) {
+      i++;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+  return i + 1;
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [38, 27, 43, 3, 9, 82, 10]
+    const steps: Step[] = []
+    const sorted: number[] = []
+    const n = arr.length
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        'Initial array. Quick Sort will pick a pivot and partition the array around it.',
+        'Arreglo inicial. Quick Sort elegirá un pivote y particionará el arreglo alrededor de él.',
+      ),
+      codeLine: 1,
+      variables: { low: 0, high: n - 1, array: `[${arr.join(', ')}]` },
+    })
+
+    function qs(low: number, high: number) {
+      if (low > high) return
+      if (low === high) {
+        sorted.push(low)
+        steps.push({
+          array: [...arr],
+          highlights: { [low]: 'sorted' },
+          sorted: [...sorted],
+          description: d(
+            locale,
+            `Element ${arr[low]} is in its final position (single element)`,
+            `El elemento ${arr[low]} está en su posición final (elemento único)`,
+          ),
+          codeLine: 2,
+          variables: { low, high, 'arr[low]': arr[low] },
+        })
+        return
+      }
+
+      const pivot = arr[high]
+      let i = low - 1
+
+      // Show pivot selection
+      steps.push({
+        array: [...arr],
+        highlights: { [high]: 'pivot' },
+        sorted: [...sorted],
+        description: d(
+          locale,
+          `Partitioning [${low}..${high}]. Pivot: ${arr[high]}`,
+          `Particionando [${low}..${high}]. Pivote: ${arr[high]}`,
+        ),
+        codeLine: 10,
+        variables: { low, high, pivot, i },
+      })
+
+      for (let j = low; j < high; j++) {
+        steps.push({
+          array: [...arr],
+          highlights: { [j]: 'comparing', [high]: 'pivot' },
+          sorted: [...sorted],
+          description: d(
+            locale,
+            `Comparing ${arr[j]} with pivot ${pivot}`,
+            `Comparando ${arr[j]} con pivote ${pivot}`,
+          ),
+          codeLine: 14,
+          variables: { j, i, pivot, 'arr[j]': arr[j] },
+        })
+
+        if (arr[j] <= pivot) {
+          i++
+          if (i !== j) {
+            ;[arr[i], arr[j]] = [arr[j], arr[i]]
+            steps.push({
+              array: [...arr],
+              highlights: { [i]: 'swapped', [j]: 'swapped', [high]: 'pivot' },
+              sorted: [...sorted],
+              description: d(
+                locale,
+                `${arr[i]} <= pivot, swapped positions ${i} and ${j}`,
+                `${arr[i]} <= pivote, intercambiadas posiciones ${i} y ${j}`,
+              ),
+              codeLine: 16,
+              variables: { j, i, pivot, 'arr[i]': arr[i], 'arr[j]': arr[j] },
+            })
+          }
+        }
+      }
+
+      ;[arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]
+      const pivotIdx = i + 1
+      sorted.push(pivotIdx)
+
+      steps.push({
+        array: [...arr],
+        highlights: { [pivotIdx]: 'found' },
+        sorted: [...sorted],
+        description: d(
+          locale,
+          `Pivot ${arr[pivotIdx]} placed at final position ${pivotIdx}`,
+          `Pivote ${arr[pivotIdx]} colocado en posición final ${pivotIdx}`,
+        ),
+        codeLine: 20,
+        variables: { pivotIdx, 'arr[pivotIdx]': arr[pivotIdx] },
+      })
+
+      qs(low, pivotIdx - 1)
+      qs(pivotIdx + 1, high)
+    }
+
+    qs(0, n - 1)
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Quick Sort complete.',
+        '¡Arreglo ordenado! Quick Sort completado.',
+      ),
+      codeLine: 6,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// MERGE SORT
+// ============================================================
+const mergeSort: Algorithm = {
+  id: 'merge-sort',
+  name: 'Merge Sort',
+  category: 'Sorting',
+  difficulty: 'intermediate',
+  visualization: 'array',
+  code: `function mergeSort(arr, start = 0, end = arr.length - 1) {
+  if (start >= end) return;
+
+  const mid = Math.floor((start + end) / 2);
+  mergeSort(arr, start, mid);
+  mergeSort(arr, mid + 1, end);
+  merge(arr, start, mid, end);
+}
+
+function merge(arr, start, mid, end) {
+  const temp = [];
+  let i = start, j = mid + 1;
+
+  while (i <= mid && j <= end) {
+    if (arr[i] <= arr[j]) {
+      temp.push(arr[i++]);
+    } else {
+      temp.push(arr[j++]);
+    }
+  }
+
+  while (i <= mid) temp.push(arr[i++]);
+  while (j <= end) temp.push(arr[j++]);
+
+  for (let k = 0; k < temp.length; k++) {
+    arr[start + k] = temp[k];
+  }
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [38, 27, 43, 3, 9, 82, 10]
+    const steps: Step[] = []
+    const n = arr.length
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        'Initial array. Merge Sort will divide and merge sorted halves.',
+        'Arreglo inicial. Merge Sort dividirá y mezclará mitades ordenadas.',
+      ),
+      codeLine: 1,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    function ms(start: number, end: number) {
+      if (start >= end) return
+
+      const mid = Math.floor((start + end) / 2)
+
+      const leftH: Record<number, HighlightType> = {}
+      const rightH: Record<number, HighlightType> = {}
+      for (let i = start; i <= mid; i++) leftH[i] = 'left'
+      for (let i = mid + 1; i <= end; i++) rightH[i] = 'right'
+
+      steps.push({
+        array: [...arr],
+        highlights: { ...leftH, ...rightH },
+        sorted: [],
+        description: d(
+          locale,
+          `Dividing [${start}..${end}] into [${start}..${mid}] and [${mid + 1}..${end}]`,
+          `Dividiendo [${start}..${end}] en [${start}..${mid}] y [${mid + 1}..${end}]`,
+        ),
+        codeLine: 4,
+        variables: { start, end, mid },
+      })
+
+      ms(start, mid)
+      ms(mid + 1, end)
+
+      // Merge
+      const temp: number[] = []
+      let i = start,
+        j = mid + 1
+
+      while (i <= mid && j <= end) {
+        steps.push({
+          array: [...arr],
+          highlights: { [i]: 'left', [j]: 'right' },
+          sorted: [],
+          description: d(
+            locale,
+            `Merging: comparing ${arr[i]} (left) and ${arr[j]} (right)`,
+            `Mezclando: comparando ${arr[i]} (izquierda) y ${arr[j]} (derecha)`,
+          ),
+          codeLine: 14,
+          variables: {
+            i,
+            j,
+            start,
+            mid,
+            end,
+            'arr[i]': arr[i],
+            'arr[j]': arr[j],
+            temp: `[${temp.join(', ')}]`,
+          },
+        })
+
+        if (arr[i] <= arr[j]) {
+          temp.push(arr[i++])
+        } else {
+          temp.push(arr[j++])
+        }
+      }
+
+      while (i <= mid) temp.push(arr[i++])
+      while (j <= end) temp.push(arr[j++])
+
+      for (let k = 0; k < temp.length; k++) {
+        arr[start + k] = temp[k]
+      }
+
+      const mergedH: Record<number, HighlightType> = {}
+      for (let k = start; k <= end; k++) mergedH[k] = 'merged'
+
+      steps.push({
+        array: [...arr],
+        highlights: mergedH,
+        sorted: [],
+        description: d(
+          locale,
+          `Merged [${start}..${end}]: [${arr.slice(start, end + 1).join(', ')}]`,
+          `Mezclado [${start}..${end}]: [${arr.slice(start, end + 1).join(', ')}]`,
+        ),
+        codeLine: 25,
+        variables: { start, end, result: `[${arr.slice(start, end + 1).join(', ')}]` },
+      })
+    }
+
+    ms(0, n - 1)
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Merge Sort complete.',
+        '¡Arreglo ordenado! Merge Sort completado.',
+      ),
+      codeLine: 1,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// HEAP SORT
+// ============================================================
+const heapSort: Algorithm = {
+  id: 'heap-sort',
+  name: 'Heap Sort',
+  category: 'Sorting',
+  difficulty: 'intermediate',
+  visualization: 'array',
+  code: `function heapSort(array) {
+  const n = array.length;
+
+  // Build max heap
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    heapify(array, n, i);
+  }
+
+  // Extract elements from heap
+  for (let i = n - 1; i > 0; i--) {
+    [array[0], array[i]] = [array[i], array[0]];
+    heapify(array, i, 0);
+  }
+
+  return array;
+}
+
+function heapify(array, size, root) {
+  let largest = root;
+  const left = 2 * root + 1;
+  const right = 2 * root + 2;
+
+  if (left < size && array[left] > array[largest]) {
+    largest = left;
+  }
+
+  if (right < size && array[right] > array[largest]) {
+    largest = right;
+  }
+
+  if (largest !== root) {
+    [array[root], array[largest]] = [array[largest], array[root]];
+    heapify(array, size, largest);
+  }
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [38, 27, 43, 3, 9, 82, 10]
+    const steps: Step[] = []
+    const n = arr.length
+    const sortedIndices: number[] = []
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description:
+        'Initial array. Heap Sort will build a max heap, then extract the maximum repeatedly.',
+      codeLine: 1,
+      variables: { n, array: `[${arr.join(', ')}]` },
+    })
+
+    function heapify(size: number, root: number) {
+      let largest = root
+      const left = 2 * root + 1
+      const right = 2 * root + 2
+
+      if (left < size) {
+        steps.push({
+          array: [...arr],
+          highlights: { [root]: 'comparing', [left]: 'comparing' },
+          sorted: [...sortedIndices],
+          description: d(
+            locale,
+            `Heapify: comparing parent ${arr[root]} (index ${root}) with left child ${arr[left]} (index ${left})`,
+            `Heapify: comparando padre ${arr[root]} (índice ${root}) con hijo izquierdo ${arr[left]} (índice ${left})`,
+          ),
+          codeLine: 23,
+          variables: { root, left, right, largest, size },
+        })
+        if (arr[left] > arr[largest]) {
+          largest = left
+        }
+      }
+
+      if (right < size) {
+        steps.push({
+          array: [...arr],
+          highlights: { [root]: 'comparing', [right]: 'comparing' },
+          sorted: [...sortedIndices],
+          description: d(
+            locale,
+            `Heapify: comparing ${arr[root]} (index ${root}) with right child ${arr[right]} (index ${right})`,
+            `Heapify: comparando ${arr[root]} (índice ${root}) con hijo derecho ${arr[right]} (índice ${right})`,
+          ),
+          codeLine: 27,
+          variables: { root, left, right, largest, size },
+        })
+        if (arr[right] > arr[largest]) {
+          largest = right
+        }
+      }
+
+      if (largest !== root) {
+        ;[arr[root], arr[largest]] = [arr[largest], arr[root]]
+        steps.push({
+          array: [...arr],
+          highlights: { [root]: 'swapped', [largest]: 'swapped' },
+          sorted: [...sortedIndices],
+          description: d(
+            locale,
+            `Swapped ${arr[root]} and ${arr[largest]}`,
+            `Intercambiados ${arr[root]} y ${arr[largest]}`,
+          ),
+          codeLine: 33,
+          variables: { root, largest },
+        })
+        heapify(size, largest)
+      }
+    }
+
+    // Build max heap
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        'Phase 1: Building max heap from the array.',
+        'Fase 1: Construyendo max-heap a partir del arreglo.',
+      ),
+      codeLine: 5,
+      variables: { n },
+    })
+
+    for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+      steps.push({
+        array: [...arr],
+        highlights: { [i]: 'current' },
+        sorted: [],
+        description: d(
+          locale,
+          `Heapifying subtree rooted at index ${i} (value ${arr[i]})`,
+          `Heapificando subárbol con raíz en índice ${i} (valor ${arr[i]})`,
+        ),
+        codeLine: 6,
+        variables: { i },
+      })
+      heapify(n, i)
+    }
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        `Max heap built: [${arr.join(', ')}]. Phase 2: Extract elements.`,
+        `Max-heap construido: [${arr.join(', ')}]. Fase 2: Extraer elementos.`,
+      ),
+      codeLine: 10,
+      variables: { heap: `[${arr.join(', ')}]` },
+    })
+
+    // Extract elements
+    for (let i = n - 1; i > 0; i--) {
+      steps.push({
+        array: [...arr],
+        highlights: { [0]: 'selected', [i]: 'selected' },
+        sorted: [...sortedIndices],
+        description: d(
+          locale,
+          `Swap max element ${arr[0]} with element ${arr[i]} at index ${i}`,
+          `Intercambiar elemento máximo ${arr[0]} con elemento ${arr[i]} en índice ${i}`,
+        ),
+        codeLine: 11,
+        variables: { i, max: arr[0] },
+      })
+
+      ;[arr[0], arr[i]] = [arr[i], arr[0]]
+      sortedIndices.push(i)
+
+      steps.push({
+        array: [...arr],
+        highlights: { [i]: 'sorted' },
+        sorted: [...sortedIndices],
+        description: d(
+          locale,
+          `${arr[i]} placed in final position. Heapify remaining heap of size ${i}.`,
+          `${arr[i]} colocado en posición final. Heapificar heap restante de tamaño ${i}.`,
+        ),
+        codeLine: 12,
+        variables: { i, sorted: arr[i] },
+      })
+
+      heapify(i, 0)
+    }
+
+    sortedIndices.push(0)
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Heap Sort complete.',
+        '¡Arreglo ordenado! Heap Sort completado.',
+      ),
+      codeLine: 15,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// COUNTING SORT
+// ============================================================
+const countingSort: Algorithm = {
+  id: 'counting-sort',
+  name: 'Counting Sort',
+  category: 'Sorting',
+  difficulty: 'intermediate',
+  visualization: 'array',
+  code: `function countingSort(array) {
+  const max = Math.max(...array);
+  const count = new Array(max + 1).fill(0);
+  const output = new Array(array.length);
+
+  // Count occurrences
+  for (let i = 0; i < array.length; i++) {
+    count[array[i]]++;
+  }
+
+  // Cumulative count
+  for (let i = 1; i <= max; i++) {
+    count[i] += count[i - 1];
+  }
+
+  // Build output (reverse for stability)
+  for (let i = array.length - 1; i >= 0; i--) {
+    output[count[array[i]] - 1] = array[i];
+    count[array[i]]--;
+  }
+
+  return output;
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [4, 2, 2, 8, 3, 3, 1]
+    const steps: Step[] = []
+    const n = arr.length
+    const max = Math.max(...arr)
+    const count = new Array(max + 1).fill(0)
+    const output: number[] = new Array(n).fill(0)
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        'Initial array. Counting Sort will count occurrences of each value to determine sorted positions.',
+        'Arreglo inicial. Counting Sort contará las ocurrencias de cada valor para determinar posiciones ordenadas.',
+      ),
+      codeLine: 1,
+      variables: { n, max, array: `[${arr.join(', ')}]` },
+    })
+
+    // Count phase
+    for (let i = 0; i < n; i++) {
+      count[arr[i]]++
+      steps.push({
+        array: [...arr],
+        highlights: { [i]: 'current' },
+        sorted: [],
+        description: d(
+          locale,
+          `Counting element ${arr[i]} at index ${i}. count[${arr[i]}] = ${count[arr[i]]}`,
+          `Contando elemento ${arr[i]} en índice ${i}. count[${arr[i]}] = ${count[arr[i]]}`,
+        ),
+        codeLine: 8,
+        variables: { i, 'array[i]': arr[i], count: `[${count.join(', ')}]` },
+      })
+    }
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        `Counting complete: [${count.join(', ')}]. Computing cumulative counts.`,
+        `Conteo completo: [${count.join(', ')}]. Calculando conteos acumulados.`,
+      ),
+      codeLine: 12,
+      variables: { count: `[${count.join(', ')}]` },
+    })
+
+    // Cumulative count
+    for (let i = 1; i <= max; i++) {
+      count[i] += count[i - 1]
+    }
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        `Cumulative counts: [${count.join(', ')}]. Now placing elements in sorted positions.`,
+        `Conteos acumulados: [${count.join(', ')}]. Colocando elementos en posiciones ordenadas.`,
+      ),
+      codeLine: 14,
+      variables: { count: `[${count.join(', ')}]` },
+    })
+
+    // Build output
+    const placed: boolean[] = new Array(n).fill(false)
+    for (let i = n - 1; i >= 0; i--) {
+      const pos = count[arr[i]] - 1
+      output[pos] = arr[i]
+      count[arr[i]]--
+      placed[pos] = true
+
+      const h: Record<number, HighlightType> = {}
+      for (let k = 0; k < n; k++) {
+        if (placed[k]) h[k] = 'sorted'
+      }
+      h[pos] = 'active'
+
+      steps.push({
+        array: [...output],
+        highlights: h,
+        sorted: [],
+        description: d(
+          locale,
+          `Placing ${arr[i]} at output position ${pos}`,
+          `Colocando ${arr[i]} en posición de salida ${pos}`,
+        ),
+        codeLine: 18,
+        variables: { i, 'array[i]': arr[i], pos, output: `[${output.join(', ')}]` },
+      })
+    }
+
+    steps.push({
+      array: [...output],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Counting Sort complete.',
+        '¡Arreglo ordenado! Counting Sort completado.',
+      ),
+      codeLine: 22,
+      variables: { output: `[${output.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// RADIX SORT
+// ============================================================
+const radixSort: Algorithm = {
+  id: 'radix-sort',
+  name: 'Radix Sort',
+  category: 'Sorting',
+  difficulty: 'intermediate',
+  visualization: 'array',
+  code: `function radixSort(array) {
+  const max = Math.max(...array);
+
+  for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+    countingSortByDigit(array, exp);
+  }
+
+  return array;
+}
+
+function countingSortByDigit(array, exp) {
+  const n = array.length;
+  const output = new Array(n);
+  const count = new Array(10).fill(0);
+
+  for (let i = 0; i < n; i++) {
+    const digit = Math.floor(array[i] / exp) % 10;
+    count[digit]++;
+  }
+
+  for (let i = 1; i < 10; i++) {
+    count[i] += count[i - 1];
+  }
+
+  for (let i = n - 1; i >= 0; i--) {
+    const digit = Math.floor(array[i] / exp) % 10;
+    output[count[digit] - 1] = array[i];
+    count[digit]--;
+  }
+
+  for (let i = 0; i < n; i++) {
+    array[i] = output[i];
+  }
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [170, 45, 75, 90, 802, 24, 2, 66]
+    const steps: Step[] = []
+    const n = arr.length
+    const max = Math.max(...arr)
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        'Initial array. Radix Sort will sort digit by digit, from least significant to most significant.',
+        'Arreglo inicial. Radix Sort ordenará dígito a dígito, del menos significativo al más significativo.',
+      ),
+      codeLine: 1,
+      variables: { n, max, array: `[${arr.join(', ')}]` },
+    })
+
+    for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+      const digitName = exp === 1 ? 'ones' : exp === 10 ? 'tens' : 'hundreds'
+      const digitNameEs = exp === 1 ? 'unidades' : exp === 10 ? 'decenas' : 'centenas'
+      const digits = arr.map((x) => Math.floor(x / exp) % 10)
+
+      const allCurrentH: Record<number, HighlightType> = {}
+      for (let j = 0; j < n; j++) allCurrentH[j] = 'current'
+
+      steps.push({
+        array: [...arr],
+        highlights: allCurrentH,
+        sorted: [],
+        description: d(
+          locale,
+          `Sorting by ${digitName} digit. Digits: [${digits.join(', ')}]`,
+          `Ordenando por dígito de ${digitNameEs}. Dígitos: [${digits.join(', ')}]`,
+        ),
+        codeLine: 4,
+        variables: { exp, digits: `[${digits.join(', ')}]` },
+      })
+
+      // Counting sort by digit
+      const output = new Array(n)
+      const count = new Array(10).fill(0)
+
+      for (let i = 0; i < n; i++) {
+        const digit = Math.floor(arr[i] / exp) % 10
+        count[digit]++
+      }
+
+      for (let i = 1; i < 10; i++) {
+        count[i] += count[i - 1]
+      }
+
+      for (let i = n - 1; i >= 0; i--) {
+        const digit = Math.floor(arr[i] / exp) % 10
+        output[count[digit] - 1] = arr[i]
+        count[digit]--
+      }
+
+      for (let i = 0; i < n; i++) {
+        arr[i] = output[i]
+      }
+
+      const allActiveH: Record<number, HighlightType> = {}
+      for (let j = 0; j < n; j++) allActiveH[j] = 'active'
+
+      steps.push({
+        array: [...arr],
+        highlights: allActiveH,
+        sorted: [],
+        description: d(
+          locale,
+          `After sorting by ${digitName} digit: [${arr.join(', ')}]`,
+          `Después de ordenar por dígito de ${digitNameEs}: [${arr.join(', ')}]`,
+        ),
+        codeLine: 5,
+        variables: { exp, array: `[${arr.join(', ')}]` },
+      })
+    }
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Radix Sort complete.',
+        '¡Arreglo ordenado! Radix Sort completado.',
+      ),
+      codeLine: 8,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// SHELL SORT
+// ============================================================
+const shellSort: Algorithm = {
+  id: 'shell-sort',
+  name: 'Shell Sort',
+  category: 'Sorting',
+  difficulty: 'intermediate',
+  visualization: 'array',
+  code: `function shellSort(array) {
+  const n = array.length;
+
+  for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+    for (let i = gap; i < n; i++) {
+      const temp = array[i];
+      let j = i;
+
+      while (j >= gap && array[j - gap] > temp) {
+        array[j] = array[j - gap];
+        j -= gap;
+      }
+
+      array[j] = temp;
+    }
+  }
+
+  return array;
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [38, 27, 43, 3, 9, 82, 10]
+    const steps: Step[] = []
+    const n = arr.length
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: [],
+      description: d(
+        locale,
+        'Initial array. Shell Sort uses decreasing gap sequences to sort far-apart elements first.',
+        'Arreglo inicial. Shell Sort usa secuencias de brechas decrecientes para ordenar primero elementos lejanos.',
+      ),
+      codeLine: 1,
+      variables: { n, array: `[${arr.join(', ')}]` },
+    })
+
+    for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+      steps.push({
+        array: [...arr],
+        highlights: {},
+        sorted: [],
+        description: d(
+          locale,
+          `Starting pass with gap = ${gap}`,
+          `Iniciando pasada con brecha = ${gap}`,
+        ),
+        codeLine: 4,
+        variables: { gap },
+      })
+
+      for (let i = gap; i < n; i++) {
+        const temp = arr[i]
+        let j = i
+
+        steps.push({
+          array: [...arr],
+          highlights: { [i]: 'current' },
+          sorted: [],
+          description: d(
+            locale,
+            `Gap ${gap}: Inserting element ${arr[i]} at index ${i}`,
+            `Brecha ${gap}: Insertando elemento ${arr[i]} en índice ${i}`,
+          ),
+          codeLine: 6,
+          variables: { gap, i, temp, j },
+        })
+
+        while (j >= gap && arr[j - gap] > temp) {
+          steps.push({
+            array: [...arr],
+            highlights: { [j]: 'comparing', [j - gap]: 'comparing' },
+            sorted: [],
+            description: d(
+              locale,
+              `Comparing: ${arr[j - gap]} (index ${j - gap}) > ${temp} — shift right`,
+              `Comparando: ${arr[j - gap]} (índice ${j - gap}) > ${temp} — desplazar a la derecha`,
+            ),
+            codeLine: 9,
+            variables: { gap, i, j, temp, 'array[j-gap]': arr[j - gap] },
+          })
+
+          arr[j] = arr[j - gap]
+          j -= gap
+
+          steps.push({
+            array: [...arr],
+            highlights: { [j + gap]: 'swapped' },
+            sorted: [],
+            description: d(
+              locale,
+              `Shifted ${arr[j + gap]} to index ${j + gap}`,
+              `Desplazado ${arr[j + gap]} al índice ${j + gap}`,
+            ),
+            codeLine: 10,
+            variables: { gap, i, j, temp },
+          })
+        }
+
+        if (j !== i) {
+          arr[j] = temp
+          steps.push({
+            array: [...arr],
+            highlights: { [j]: 'selected' },
+            sorted: [],
+            description: d(
+              locale,
+              `Placed ${temp} at index ${j}`,
+              `Colocado ${temp} en índice ${j}`,
+            ),
+            codeLine: 14,
+            variables: { gap, i, j, temp },
+          })
+        }
+      }
+
+      steps.push({
+        array: [...arr],
+        highlights: {},
+        sorted: [],
+        description: d(
+          locale,
+          `Gap ${gap} pass complete: [${arr.join(', ')}]`,
+          `Pasada con brecha ${gap} completa: [${arr.join(', ')}]`,
+        ),
+        codeLine: 16,
+        variables: { gap, array: `[${arr.join(', ')}]` },
+      })
+    }
+
+    steps.push({
+      array: [...arr],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      description: d(
+        locale,
+        'Array is sorted! Shell Sort complete.',
+        '¡Arreglo ordenado! Shell Sort completado.',
+      ),
+      codeLine: 18,
+      variables: { array: `[${arr.join(', ')}]` },
+    })
+
+    return steps
+  },
+}
+
+// ============================================================
+// BUCKET SORT
+// ============================================================
+const bucketSort: Algorithm = {
+  id: 'bucket-sort',
+  name: 'Bucket Sort',
+  category: 'Sorting',
+  difficulty: 'intermediate',
+  visualization: 'concept',
+  code: `function bucketSort(array, bucketSize = 5) {
+  if (array.length === 0) return array;
+
+  // 1. Find min and max values
+  let min = array[0];
+  let max = array[0];
+  for (let i = 1; i < array.length; i++) {
+    if (array[i] < min) min = array[i];
+    else if (array[i] > max) max = array[i];
+  }
+
+  // 2. Initialize buckets
+  const bucketCount = Math.floor((max - min) / bucketSize) + 1;
+  const buckets = new Array(bucketCount);
+  for (let i = 0; i < buckets.length; i++) {
+    buckets[i] = [];
+  }
+
+  // 3. Distribute elements into buckets
+  for (let i = 0; i < array.length; i++) {
+    const bucketIndex = Math.floor((array[i] - min) / bucketSize);
+    buckets[bucketIndex].push(array[i]);
+  }
+
+  // 4. Sort buckets and concatenate
+  array.length = 0;
+  for (let i = 0; i < buckets.length; i++) {
+    insertionSort(buckets[i]);
+    for (let j = 0; j < buckets[i].length; j++) {
+      array.push(buckets[i][j]);
+    }
+  }
+
+  return array;
+}`,
+
+  generateSteps(locale = 'en') {
+    const arr = [22, 45, 12, 8, 10, 6, 72, 81, 33, 18, 50, 14]
+    const steps: Step[] = []
+    const n = arr.length
+    const bucketSize = 20
+
+    // Phase 1: Range finding (Min/Max loop)
+    let min = arr[0]
+    let max = arr[0]
+
+    // Initial min/max step
+    steps.push({
+      array: [...arr],
+      highlights: { 0: 'comparing' },
+      concept: {
+        type: 'buckets',
+        array: [...arr],
+        buckets: [],
+        phase: 'initializing',
+        currentElementIndex: 0,
+        min,
+        max,
+        operation: d(
+          locale,
+          'Step 1: Finding range (min & max)',
+          'Paso 1: Buscando el rango (mín y máx)',
+        ),
+      },
+      description: d(
+        locale,
+        `Starting with the first element: setting initial min and max to ${arr[0]}.`,
+        `Empezando con el primer elemento: estableciendo mín y máx inicial en ${arr[0]}.`,
+      ),
+      codeLine: 5,
+      variables: { min, max },
+    })
+
+    for (let i = 1; i < n; i++) {
+      const isNewMin = arr[i] < min
+      const isNewMax = arr[i] > max
+
+      if (isNewMin) min = arr[i]
+      if (isNewMax) max = arr[i]
+
+      steps.push({
+        array: [...arr],
+        highlights: { [i]: 'comparing' },
+        concept: {
+          type: 'buckets',
+          array: [...arr],
+          buckets: [],
+          phase: 'initializing',
+          currentElementIndex: i,
+          min,
+          max,
+          operation: d(
+            locale,
+            `Checking element ${i}: ${arr[i]}`,
+            `Verificando elemento ${i}: ${arr[i]}`,
+          ),
+        },
+        description: d(
+          locale,
+          `Checking ${arr[i]}. ${isNewMin ? 'New min found!' : isNewMax ? 'New max found!' : 'Range remains same.'} Current min: ${min}, max: ${max}.`,
+          `Verificando ${arr[i]}. ${isNewMin ? '¡Nuevo mín!' : isNewMax ? '¡Nuevo máx!' : 'El rango se mantiene.'} Mín actual: ${min}, máx: ${max}.`,
+        ),
+        codeLine: 5,
+        variables: { i, min, max, 'array[i]': arr[i] },
+      })
+    }
+
+    // Phase 2: Create buckets
+    const bucketCount = Math.floor((max - min) / bucketSize) + 1
+    const finalBuckets: number[][] = Array.from({ length: bucketCount }, () => [])
+
+    // Show empty buckets appearing
+    steps.push({
+      array: [...arr],
+      concept: {
+        type: 'buckets',
+        array: [...arr],
+        buckets: Array.from({ length: bucketCount }, () => []),
+        phase: 'initializing',
+        min,
+        max,
+        bucketSize,
+        operation: d(
+          locale,
+          `Step 2: Creating ${bucketCount} buckets`,
+          `Paso 2: Creando ${bucketCount} cubetas`,
+        ),
+      },
+      description: d(
+        locale,
+        `With range [${min}..${max}] and size ${bucketSize}, we create ${bucketCount} empty buckets.`,
+        `Con el rango [${min}..${max}] y tamaño ${bucketSize}, creamos ${bucketCount} cubetas vacías.`,
+      ),
+      codeLine: 13,
+      variables: { min, max, bucketCount, bucketSize },
+    })
+
+    // Phase 3: Distribution
+    const buckets: number[][] = Array.from({ length: bucketCount }, () => [])
+    for (let i = 0; i < n; i++) {
+      const bucketIndex = Math.floor((arr[i] - min) / bucketSize)
+      buckets[bucketIndex].push(arr[i])
+
+      steps.push({
+        array: [...arr],
+        highlights: { [i]: 'active' },
+        concept: {
+          type: 'buckets',
+          array: [...arr],
+          buckets: buckets.map((b) => [...b]),
+          range: { min, max },
+          min,
+          max,
+          bucketSize,
+          currentElementIndex: i,
+          activeBucketIndex: bucketIndex,
+          phase: 'distributing',
+          operation: d(
+            locale,
+            `Distributing ${arr[i]} → Bucket ${bucketIndex}`,
+            `Distribuyendo ${arr[i]} → Cubeta ${bucketIndex}`,
+          ),
+        },
+        description: d(
+          locale,
+          `Element ${arr[i]} belongs to bucket ${bucketIndex} (range ${min + bucketIndex * bucketSize}-${min + (bucketIndex + 1) * bucketSize - 1}).`,
+          `El elemento ${arr[i]} pertenece a la cubeta ${bucketIndex} (rango ${min + bucketIndex * bucketSize}-${min + (bucketIndex + 1) * bucketSize - 1}).`,
+        ),
+        codeLine: 20,
+        variables: { i, 'array[i]': arr[i], bucketIndex },
+      })
+    }
+
+    // Phase 4: Selection and Sort
+    const collected: number[] = []
+
+    for (let i = 0; i < bucketCount; i++) {
+      if (buckets[i].length > 0) {
+        // Step-by-step Insertion Sort inside the bucket
+        const bucketArr = [...buckets[i]]
+        for (let k = 1; k < bucketArr.length; k++) {
+          const key = bucketArr[k]
+          let l = k - 1
+
+          steps.push({
+            array: [...arr],
+            concept: {
+              type: 'buckets',
+              array: [...arr],
+              buckets: buckets.map((b, idx) => (idx === i ? [...bucketArr] : [...b])),
+              range: { min, max },
+              min,
+              max,
+              bucketSize,
+              activeBucketIndex: i,
+              innerHighlights: { [k]: 'current', [l]: 'comparing' },
+              phase: 'sorting',
+              operation: d(
+                locale,
+                `Bucket ${i}: Comparing ${bucketArr[k]} and ${bucketArr[l]}`,
+                `Cubeta ${i}: Comparando ${bucketArr[k]} y ${bucketArr[l]}`,
+              ),
+            },
+            description: d(
+              locale,
+              `Bucket ${i}: Checking if ${bucketArr[k]} should move before ${bucketArr[l]}.`,
+              `Cubeta ${i}: Verificando si ${bucketArr[k]} debe ir antes de ${bucketArr[l]}.`,
+            ),
+            codeLine: 27,
+            variables: { bucketIndex: i, comparing: `${bucketArr[k]} < ${bucketArr[l]}` },
+          })
+
+          while (l >= 0 && bucketArr[l] > key) {
+            bucketArr[l + 1] = bucketArr[l]
+            l = l - 1
+
+            steps.push({
+              array: [...arr],
+              concept: {
+                type: 'buckets',
+                array: [...arr],
+                buckets: buckets.map((b, idx) => (idx === i ? [...bucketArr] : [...b])),
+                range: { min, max },
+                min,
+                max,
+                bucketSize,
+                activeBucketIndex: i,
+                innerHighlights: { [l + 1]: 'active', [l + 2]: 'active' },
+                phase: 'sorting',
+                operation: d(
+                  locale,
+                  `Bucket ${i}: Shifting elements`,
+                  `Cubeta ${i}: Desplazando elementos`,
+                ),
+              },
+              description: d(
+                locale,
+                `Bucket ${i}: Shifting ${bucketArr[l + 1]} to the right.`,
+                `Cubeta ${i}: Desplazando ${bucketArr[l + 1]} a la derecha.`,
+              ),
+              codeLine: 27,
+              variables: { bucketIndex: i, key },
+            })
+          }
+          bucketArr[l + 1] = key
+
+          steps.push({
+            array: [...arr],
+            concept: {
+              type: 'buckets',
+              array: [...arr],
+              buckets: buckets.map((b, idx) => (idx === i ? [...bucketArr] : [...b])),
+              range: { min, max },
+              min,
+              max,
+              bucketSize,
+              activeBucketIndex: i,
+              innerHighlights: { [l + 1]: 'found' },
+              phase: 'sorting',
+              operation: d(locale, `Bucket ${i}: Placed ${key}`, `Cubeta ${i}: Ubicado ${key}`),
+            },
+            description: d(
+              locale,
+              `Bucket ${i}: Placed ${key} in its sorted position.`,
+              `Cubeta ${i}: Ubicado ${key} en su posición ordenada.`,
+            ),
+            codeLine: 27,
+            variables: { bucketIndex: i, position: l + 1 },
+          })
+        }
+
+        // Final update for this bucket
+        buckets[i] = [...bucketArr]
+
+        steps.push({
+          array: [...arr],
+          concept: {
+            type: 'buckets',
+            array: [...arr],
+            buckets: buckets.map((b) => [...b]),
+            range: { min, max },
+            min,
+            max,
+            bucketSize,
+            activeBucketIndex: i,
+            phase: 'sorting',
+            operation: d(locale, `Bucket ${i} sorted`, `Cubeta ${i} ordenada`),
+          },
+          description: d(
+            locale,
+            `Bucket ${i} is now sorted: [${buckets[i].join(', ')}]`,
+            `La cubeta ${i} ahora está ordenada: [${buckets[i].join(', ')}]`,
+          ),
+          codeLine: 27,
+          variables: { bucketIndex: i },
+        })
+
+        // Collect
+        for (let j = 0; j < buckets[i].length; j++) {
+          collected.push(buckets[i][j])
+          steps.push({
+            array: [...collected, ...arr.slice(collected.length)],
+            highlights: { [collected.length - 1]: 'found' },
+            concept: {
+              type: 'buckets',
+              array: [...collected, ...arr.slice(collected.length)],
+              buckets: buckets.map((b) => [...b]),
+              range: { min, max },
+              min,
+              max,
+              bucketSize,
+              activeBucketIndex: i,
+              currentElementIndex: collected.length - 1,
+              innerHighlights: { [j]: 'found' },
+              phase: 'collecting',
+              operation: d(
+                locale,
+                `Step 4: Collecting ${buckets[i][j]}`,
+                `Paso 4: Recolectando ${buckets[i][j]}`,
+              ),
+            },
+            description: d(
+              locale,
+              `Collecting ${buckets[i][j]} from bucket ${i} into the final array.`,
+              `Recolectando ${buckets[i][j]} de la cubeta ${i} al arreglo final.`,
+            ),
+            codeLine: 29,
+            variables: { bucketIndex: i, element: buckets[i][j] },
+          })
+        }
+      }
+    }
+
+    steps.push({
+      array: [...collected],
+      highlights: {},
+      sorted: Array.from({ length: n }, (_, i) => i),
+      concept: {
+        type: 'buckets',
+        array: [...collected],
+        buckets: buckets.map((b) => [...b]),
+        min,
+        max,
+        phase: 'collecting',
+        operation: d(locale, 'Bucket Sort complete', 'Bucket Sort completado'),
+      },
+      description: d(
+        locale,
+        'All buckets are collected. The array is now fully sorted!',
+        'Todas las cubetas han sido recolectadas. ¡El arreglo ahora está completamente ordenado!',
+      ),
+      codeLine: 1,
+      variables: { totalElements: collected.length },
+    })
+
+    return steps
+  },
+}
+
+export {
+  bubbleSort,
+  selectionSort,
+  insertionSort,
+  quickSort,
+  mergeSort,
+  heapSort,
+  countingSort,
+  radixSort,
+  shellSort,
+  bucketSort,
+}

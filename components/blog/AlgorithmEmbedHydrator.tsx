@@ -1,0 +1,50 @@
+'use client'
+
+import React, { useEffect, useRef } from 'react'
+import { createRoot } from 'react-dom/client'
+import { AlgorithmVisualizer } from '@/components/algorithms/AlgorithmVisualizer'
+
+export function AlgorithmEmbedHydrator({ containerSelector = '.markdown-body' }: { containerSelector?: string }) {
+  const rootsRef = useRef<ReturnType<typeof createRoot>[]>([])
+
+  useEffect(() => {
+    // Clean up any previously mounted roots
+    rootsRef.current.forEach((r) => r.unmount())
+    rootsRef.current = []
+
+    const container = document.querySelector(containerSelector)
+    if (!container) return
+
+    const placeholders = container.querySelectorAll<HTMLElement>('.algo-embed-placeholder')
+
+    placeholders.forEach((el) => {
+      const algorithmId = el.getAttribute('data-algorithm')
+      if (!algorithmId) return
+
+      // Avoid double hydration
+      if (el.getAttribute('data-hydrated') === 'true') return
+      el.setAttribute('data-hydrated', 'true')
+
+      try {
+        const root = createRoot(el)
+        rootsRef.current.push(root)
+        root.render(<AlgorithmVisualizer algorithm={algorithmId} mode="embedded" />)
+      } catch (err) {
+        console.error('Failed to hydrate algorithm visualizer for:', algorithmId, err)
+      }
+    })
+
+    return () => {
+      rootsRef.current.forEach((r) => {
+        try {
+          r.unmount()
+        } catch {
+          // ignore unmount on destroyed nodes
+        }
+      })
+      rootsRef.current = []
+    }
+  }, [containerSelector])
+
+  return null
+}

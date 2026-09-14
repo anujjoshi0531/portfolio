@@ -277,6 +277,63 @@ function rehypeLazyImages(): Transformer<HastRoot> {
   };
 }
 
+/* ------------------------------------------------------------------ */
+/* Custom remark plugin: Algorithm Visualizer Embeds                  */
+/* ------------------------------------------------------------------ */
+
+const ALGO_JSX_TAG = /<(?:AlgorithmVisualizer|algo)\s+(?:algorithm|id)=["']([^"']+)["']\s*(?:\/>|>.*?<\/(?:AlgorithmVisualizer|algo)>)/i;
+
+export function remarkAlgorithmEmbeds(): Transformer<Root> {
+  return (tree) => {
+    // 1. Check code blocks: ```algo:binary-search or ```algo \n binary-search
+    visit(tree, "code", (node: any, index: number | undefined, parent: any) => {
+      if (!parent || index === undefined) return;
+      let slug: string | null = null;
+
+      if (node.lang?.startsWith("algo:")) {
+        slug = node.lang.slice(5).trim();
+      } else if (node.lang === "algo" || node.lang === "algorithm") {
+        slug = node.value.trim();
+      }
+
+      if (slug) {
+        parent.children[index] = {
+          type: "paragraph",
+          data: {
+            hName: "div",
+            hProperties: {
+              className: ["algo-embed-placeholder", "algo-embed-container"],
+              "data-algorithm": slug,
+            },
+          },
+          children: [],
+        };
+      }
+    });
+
+    // 2. Check HTML / Text nodes: <AlgorithmVisualizer algorithm="binary-search" />
+    visit(tree, ["html", "text"], (node: any, index: number | undefined, parent: any) => {
+      if (!parent || index === undefined || typeof node.value !== "string") return;
+
+      const match = ALGO_JSX_TAG.exec(node.value);
+      if (match) {
+        const slug = match[1].trim();
+        parent.children[index] = {
+          type: "paragraph",
+          data: {
+            hName: "div",
+            hProperties: {
+              className: ["algo-embed-placeholder", "algo-embed-container"],
+              "data-algorithm": slug,
+            },
+          },
+          children: [],
+        };
+      }
+    });
+  };
+}
+
 export interface RenderedMarkdown {
   html: string;
   toc: TocEntry[];
@@ -302,8 +359,9 @@ const processor = unified()
   .use(remarkCallouts)
   .use(remarkWikiEmbeds)
   .use(remarkWikiLinks)
+  .use(remarkAlgorithmEmbeds)
   .use(remarkWordCount)
-  .use(remarkRehype)
+  .use(remarkRehype, { allowDangerousHtml: true })
   .use(rehypeHighlight, { detect: false })
   .use(rehypeKatex, { errorColor: "#f87171", throwOnError: false })
   .use(rehypeSlug)
@@ -314,7 +372,7 @@ const processor = unified()
   })
   .use(rehypeCollectToc)
   .use(rehypeLazyImages)
-  .use(rehypeStringify);
+  .use(rehypeStringify, { allowDangerousHtml: true });
 
 /** Render markdown to HTML with generated ToC and reading-time stats. */
 export async function renderMarkdown(content: string): Promise<RenderedMarkdown> {
