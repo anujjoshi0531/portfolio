@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `N-Queens Problem
+const description = `N-Queens Problem
 
 The N-Queens problem asks: how can N chess queens be placed on an N×N chessboard so that no two queens threaten each other?
 
@@ -19,26 +16,6 @@ This visualization shows the 4-Queens problem on a 4×4 board.
 Time Complexity: O(N!) — in the worst case
 Space Complexity: O(N²) — for the board
 
-The N-Queens problem is a classic example of backtracking algorithms and constraint satisfaction problems.`,
-  es: `Problema de las N Reinas
+The N-Queens problem is a classic example of backtracking algorithms and constraint satisfaction problems.`
 
-El problema de las N Reinas pregunta: ¿cómo se pueden colocar N reinas de ajedrez en un tablero N×N de modo que ninguna reina amenace a otra?
-
-Una reina puede atacar cualquier pieza en la misma fila, columna o diagonal. Por lo tanto, una solución requiere que ningún par de reinas comparta la misma fila, columna o diagonal.
-
-Cómo funciona (Backtracking):
-1. Coloca reinas una fila a la vez
-2. Para cada fila, prueba cada columna
-3. Verifica si la posición es segura (sin conflictos)
-4. Si es segura, coloca la reina y pasa a la siguiente fila
-5. Si no existe columna segura, retrocede a la fila anterior
-
-Esta visualización muestra el problema de las 4 reinas en un tablero 4×4.
-
-Complejidad Temporal: O(N!) — en el peor caso
-Complejidad Espacial: O(N²) — para el tablero
-
-El problema de las N Reinas es un ejemplo clásico de algoritmos de backtracking y problemas de satisfacción de restricciones.`,
-}
-
-export default descriptions
+export default description

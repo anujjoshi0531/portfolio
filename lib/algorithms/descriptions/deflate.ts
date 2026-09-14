@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `DEFLATE
+const description = `DEFLATE
 
 DEFLATE is the lossless compression engine inside gzip, ZIP, and PNG. It is not a single trick — it is a pipeline that combines two ideas you can study separately on this site: LZ77 dictionary matching and Huffman coding.
 
@@ -26,33 +23,6 @@ Properties:
   - Real implementations use dynamic or fixed Huffman trees and separate distance codes — this page teaches the pipeline, not every RFC detail
   - Great mental model: dictionary first, entropy second
 
-If you only remember one sentence: gzip is mostly DEFLATE, and DEFLATE is LZ77 feeding Huffman.`,
-  es: `DEFLATE
+If you only remember one sentence: gzip is mostly DEFLATE, and DEFLATE is LZ77 feeding Huffman.`
 
-DEFLATE es el motor de compresión sin pérdida dentro de gzip, ZIP y PNG. No es un solo truco: es un pipeline que combina dos ideas que puedes estudiar por separado en este sitio: coincidencias de diccionario LZ77 y codificación de Huffman.
-
-Cómo funciona:
-1. Escaneo LZ77 — encontrar subcadenas repetidas en una ventana deslizante y emitir tokens (offset, longitud, siguiente)
-2. Flujo de símbolos — convertir esos tokens en una secuencia de símbolos (marcadores de match + literales)
-3. Codificación Huffman — asignar códigos de bits más cortos a los símbolos más frecuentes
-4. Flujo de bits — sustituir cada símbolo por su código; gzip envuelve el flujo con cabecera y checksum
-
-Por qué funciona:
-  LZ77 elimina la redundancia del tipo "ya dije esta frase". Huffman elimina la del tipo "algunos símbolos son raros". Juntos comprimen estructura y sesgo — mucho mejor que cada uno solo en texto y assets web típicos.
-
-Complejidad Temporal:
-  Dominada por la búsqueda de coincidencias: O(n · W) ingenua; mucho más rápida con hash chains en gzip real
-  Etapa Huffman: O(k log k) para k símbolos distintos del bloque
-
-Complejidad Espacial: O(W + k) para la ventana y las tablas de códigos
-
-Propiedades:
-  - Compresor por bloques sin pérdida (RFC 1951)
-  - Usado por gzip (RFC 1952), zlib, ZIP y PNG IDAT
-  - Las implementaciones reales usan árboles Huffman fijos o dinámicos y códigos de distancia separados — esta página enseña el pipeline, no cada detalle del RFC
-  - Modelo mental: primero diccionario, después entropía
-
-Si solo recuerdas una frase: gzip es sobre todo DEFLATE, y DEFLATE es LZ77 alimentando a Huffman.`,
-}
-
-export default descriptions
+export default description

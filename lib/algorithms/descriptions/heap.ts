@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Heap (Min Heap)
+const description = `Heap (Min Heap)
 
 A Heap is a complete binary tree where every parent is smaller (min-heap) or larger (max-heap) than its children. It's stored as an array.
 
@@ -19,26 +16,6 @@ Applications:
   - Priority queues
   - Heap Sort
   - Dijkstra's algorithm
-  - Finding k-th smallest/largest`,
-  es: `Montículo (Heap)
+  - Finding k-th smallest/largest`
 
-Un Heap es un árbol binario completo donde cada padre es menor (min-heap) o mayor (max-heap) que sus hijos. Se almacena como un arreglo.
-
-Mapeo arreglo-árbol (índice base 0):
-  Padre de i:       Math.floor((i - 1) / 2)
-  Hijo izquierdo:   2 * i + 1
-  Hijo derecho:     2 * i + 2
-
-Operaciones:
-  insert:     añadir al final, subir (bubble up)    — O(log n)
-  extractMin: eliminar raíz, bajar (bubble down)    — O(log n)
-  peek:       retornar la raíz                      — O(1)
-
-Aplicaciones:
-  - Colas de prioridad
-  - Heap Sort
-  - Algoritmo de Dijkstra
-  - Encontrar el k-ésimo menor/mayor`,
-}
-
-export default descriptions
+export default description

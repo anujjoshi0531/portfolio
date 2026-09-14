@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Prim's Algorithm
+const description = `Prim's Algorithm
 
 Prim's Algorithm finds a Minimum Spanning Tree (MST) for a weighted, connected, undirected graph. The MST connects all vertices with the minimum total edge weight.
 
@@ -23,30 +20,6 @@ Applications:
   - Cluster analysis
   - Image segmentation
 
-Prim's Algorithm is a greedy algorithm that always picks the cheapest edge to expand the tree. Compare with Kruskal's Algorithm, which sorts all edges globally.`,
-  es: `Algoritmo de Prim
+Prim's Algorithm is a greedy algorithm that always picks the cheapest edge to expand the tree. Compare with Kruskal's Algorithm, which sorts all edges globally.`
 
-El algoritmo de Prim encuentra un Árbol de Expansión Mínima (MST) para un grafo ponderado, conexo y no dirigido. El MST conecta todos los vértices con el peso total mínimo de aristas.
-
-Cómo funciona:
-1. Comenzar con cualquier nodo como árbol inicial
-2. Encontrar la arista de peso mínimo que conecte el árbol con un vértice externo
-3. Agregar esa arista y vértice al árbol
-4. Repetir hasta que todos los vértices estén en el árbol
-
-Complejidad Temporal:
-  O(V²) con matriz de adyacencia
-  O(E log V) con min-heap
-
-Complejidad Espacial: O(V)
-
-Aplicaciones:
-  - Diseño de redes (cableado de costo mínimo)
-  - Algoritmos de aproximación para problemas NP-duros
-  - Análisis de clusters
-  - Segmentación de imágenes
-
-El algoritmo de Prim es un algoritmo voraz que siempre elige la arista más barata para expandir el árbol. Compárese con el algoritmo de Kruskal, que ordena todas las aristas globalmente.`,
-}
-
-export default descriptions
+export default description

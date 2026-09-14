@@ -437,6 +437,10 @@ const algorithmCache = new Map<string, Promise<Algorithm>>()
 
 type ModuleLoader = () => Promise<Record<string, unknown>>
 
+type DescriptionModule = {
+  default?: string | { en?: string }
+}
+
 const MODULE_LOADERS: Record<string, { loader: ModuleLoader; exportName: string }> = {
   // Concepts & DS in concepts.ts
   'big-o-notation': { loader: () => import('./definitions/concepts'), exportName: 'bigONotation' },
@@ -525,9 +529,13 @@ export async function loadAlgorithm(id: string): Promise<Algorithm> {
 
     // Try to load detailed description and multi-language implementations lazily
     try {
-      const descMod = await import(`./descriptions/${id}`).catch(() => null)
-      if (descMod?.default?.en) {
-        algo.description = descMod.default.en
+      const descMod = (await import(`./descriptions/${id}`).catch(() => null)) as DescriptionModule | null
+      const description =
+        typeof descMod?.default === 'string' ? descMod.default : descMod?.default?.en
+
+      if (description) {
+        algo.description = description
+        algo.descriptionFormat = 'markdown'
       }
     } catch {
       // description is optional
@@ -562,29 +570,21 @@ export async function loadLanguageImplementation(
   const summary = getCatalogEntry(algorithmId)
   if (!summary) return undefined
 
-  const groupMap: Record<string, string> = {
-    Concepts: 'concepts',
-    'Data Structures': 'data-structures',
-    Sorting: 'sorting',
-    Searching: 'searching',
-    Graphs: 'graphs',
-    'Dynamic Programming': 'dynamic-programming',
-    Backtracking: 'backtracking',
-    'Divide and Conquer': 'divide-and-conquer',
-    Math: 'math',
-    Compression: 'compression',
+  const exportNameMap: Record<string, string> = {
+    python: 'pythonImplementations',
+    java: 'javaImplementations',
+    cpp: 'cppImplementations',
+    rust: 'rustImplementations',
   }
 
-  const group = groupMap[summary.category]
-  if (!group) return undefined
+  const exportName = exportNameMap[language]
+  if (!exportName) return undefined
 
   try {
-    const mod = await import(`./definitions/${language}/${group}`)
-    if (mod?.loadImplementation) {
-      return mod.loadImplementation(algorithmId)
-    }
+    const mod = await import(`./definitions/${language}/index`)
+    const implementations = mod[exportName] as Record<string, CodeImplementation> | undefined
+    return implementations?.[algorithmId]
   } catch {
     return undefined
   }
-  return undefined
 }

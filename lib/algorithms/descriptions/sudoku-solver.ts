@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Sudoku Solver
+const description = `Sudoku Solver
 
 This solver uses backtracking to fill a Sudoku grid so that each row, column, and box contains all digits exactly once. This visualization uses a 4×4 variant with digits 1-4.
 
@@ -20,27 +17,6 @@ Properties:
   - Backtracking prunes invalid branches early
   - Can be optimized with constraint propagation
 
-Sudoku is a classic constraint satisfaction problem solved efficiently with backtracking.`,
-  es: `Solucionador de Sudoku
+Sudoku is a classic constraint satisfaction problem solved efficiently with backtracking.`
 
-Este solucionador usa backtracking para llenar una cuadrícula de Sudoku de modo que cada fila, columna y caja contenga todos los dígitos exactamente una vez. Esta visualización usa una variante 4×4 con dígitos 1-4.
-
-Cómo funciona (Backtracking):
-1. Encontrar una celda vacía
-2. Probar cada número válido (1 a N)
-3. Verificar si el número es seguro (no está en la misma fila, columna o caja)
-4. Si es seguro, colocarlo e intentar recursivamente llenar la siguiente celda vacía
-5. Si ningún número válido funciona, retroceder (quitar el número e intentar el siguiente)
-
-Complejidad Temporal: O(N^(N×N)) — peor caso
-Complejidad Espacial: O(N×N) — para el tablero
-
-Propiedades:
-  - Siempre encuentra una solución si existe
-  - El backtracking poda ramas inválidas tempranamente
-  - Puede optimizarse con propagación de restricciones
-
-Sudoku es un problema clásico de satisfacción de restricciones resuelto eficientemente con backtracking.`,
-}
-
-export default descriptions
+export default description

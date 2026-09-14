@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Insertion Sort
+const description = `Insertion Sort
 
 Insertion Sort builds the sorted array one element at a time. It picks each element and inserts it into its correct position in the already-sorted portion of the array.
 
@@ -25,32 +22,6 @@ Properties:
   - In-place
   - Online (can sort as data is received)
 
-Excellent for small datasets or nearly sorted data. Often used as the base case in hybrid sorting algorithms like Timsort.`,
-  es: `Insertion Sort (Ordenamiento por Inserción)
+Excellent for small datasets or nearly sorted data. Often used as the base case in hybrid sorting algorithms like Timsort.`
 
-Insertion Sort construye el arreglo ordenado un elemento a la vez. Toma cada elemento y lo inserta en su posición correcta dentro de la porción ya ordenada del arreglo.
-
-Cómo funciona:
-1. Comienza desde el segundo elemento (el primero se considera trivialmente ordenado)
-2. Toma el elemento actual como "clave"
-3. Compara la clave con los elementos de la porción ordenada
-4. Desplaza los elementos mayores hacia la derecha
-5. Inserta la clave en su posición correcta
-
-Complejidad Temporal:
-  Mejor:    O(n) — ya ordenado
-  Promedio: O(n²)
-  Peor:     O(n²) — ordenado inversamente
-
-Complejidad Espacial: O(1) — in-place
-
-Propiedades:
-  - Ordenamiento estable
-  - Adaptativo (eficiente para datos casi ordenados)
-  - In-place
-  - Online (puede ordenar datos a medida que se reciben)
-
-Excelente para conjuntos pequeños o datos casi ordenados. Frecuentemente usado como caso base en algoritmos de ordenamiento híbridos como Timsort.`,
-}
-
-export default descriptions
+export default description

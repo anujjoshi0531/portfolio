@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Hash Table
+const description = `Hash Table
 
 A Hash Table maps keys to values using a hash function. It provides near-constant time O(1) for insert, lookup, and delete operations.
 
@@ -20,27 +17,6 @@ Time Complexity:
 
 Space Complexity: O(n)
 
-Applications: caches, databases, symbol tables, counting frequencies, deduplication`,
-  es: `Tabla Hash (Hash Table)
+Applications: caches, databases, symbol tables, counting frequencies, deduplication`
 
-Una Tabla Hash mapea claves a valores usando una función hash. Proporciona tiempo casi constante O(1) para insertar, buscar y eliminar.
-
-Cómo funciona:
-1. Una función hash convierte la clave en un índice del arreglo
-2. El valor se almacena en ese índice (bucket)
-3. Si dos claves producen el mismo índice → colisión
-
-Manejo de colisiones (encadenamiento):
-  Cada bucket almacena una lista de entradas.
-  Múltiples claves pueden compartir el mismo bucket.
-
-Complejidad Temporal:
-  Promedio: O(1) para set, get, delete
-  Peor:     O(n) cuando todas las claves colisionan
-
-Complejidad Espacial: O(n)
-
-Aplicaciones: cachés, bases de datos, tablas de símbolos, conteo de frecuencias, deduplicación`,
-}
-
-export default descriptions
+export default description

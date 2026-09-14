@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Recursion
+const description = `Recursion
 
 Recursion is a programming technique where a function calls itself to solve smaller instances of the same problem. It's one of the most powerful concepts in computer science.
 
@@ -26,33 +23,6 @@ Pitfalls:
   - Solution: use memoization or convert to iteration
 
 Recursive algorithms in this visualizer:
-  Quick Sort, Merge Sort, DFS, N-Queens, Sudoku Solver, Tower of Hanoi`,
-  es: `Recursión
+  Quick Sort, Merge Sort, DFS, N-Queens, Sudoku Solver, Tower of Hanoi`
 
-La recursión es una técnica de programación donde una función se llama a sí misma para resolver instancias más pequeñas del mismo problema. Es uno de los conceptos más poderosos en las ciencias de la computación.
-
-Toda función recursiva necesita dos partes:
-  1. Caso base — la condición que detiene la recursión
-  2. Caso recursivo — la función se llama con una entrada más pequeña
-
-Cómo funciona la pila de llamadas:
-  - Cada llamada a función se apila en la pila de llamadas
-  - Cuando se alcanza un caso base, los resultados se propagan hacia arriba
-  - La pila se desenrolla a medida que cada llamada retorna su resultado
-
-Patrones comunes:
-  - Factorial: n! = n × (n-1)!
-  - Fibonacci: F(n) = F(n-1) + F(n-2)
-  - Recorridos de árboles: procesar nodo, luego recurrir en hijos
-  - Divide y vencerás: dividir problema, resolver mitades, combinar
-
-Errores comunes:
-  - Desbordamiento de pila: demasiadas llamadas recursivas agotan la memoria
-  - Cálculos redundantes: la recursión ingenua puede ser exponencial
-  - Solución: usar memoización o convertir a iteración
-
-Algoritmos recursivos en este visualizador:
-  Quick Sort, Merge Sort, DFS, N-Queens, Sudoku Solver, Torre de Hanoi`,
-}
-
-export default descriptions
+export default description

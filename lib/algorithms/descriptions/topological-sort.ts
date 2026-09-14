@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Topological Sort (Kahn's Algorithm)
+const description = `Topological Sort (Kahn's Algorithm)
 
 Topological Sort produces a linear ordering of vertices in a Directed Acyclic Graph (DAG) such that for every directed edge u → v, vertex u comes before v in the ordering.
 
@@ -23,30 +20,6 @@ Applications:
   - Course prerequisite planning
   - Package dependency resolution
 
-Topological Sort is only possible for DAGs (Directed Acyclic Graphs). If the graph has a cycle, no valid ordering exists.`,
-  es: `Ordenamiento Topológico (Algoritmo de Kahn)
+Topological Sort is only possible for DAGs (Directed Acyclic Graphs). If the graph has a cycle, no valid ordering exists.`
 
-El Ordenamiento Topológico produce un ordenamiento lineal de vértices en un Grafo Acíclico Dirigido (DAG) tal que para cada arista dirigida u → v, el vértice u aparece antes que v en el ordenamiento.
-
-Cómo funciona (Algoritmo de Kahn - basado en BFS):
-1. Calcular el grado de entrada de cada vértice
-2. Agregar todos los vértices con grado de entrada 0 a una cola
-3. Mientras la cola no esté vacía:
-   a. Desencolar un vértice, agregarlo al resultado
-   b. Para cada arista saliente, decrementar el grado de entrada del vecino
-   c. Si el grado de entrada de un vecino llega a 0, encolarlo
-4. Si todos los vértices fueron procesados, el resultado es un orden topológico válido
-
-Complejidad Temporal: O(V + E)
-Complejidad Espacial: O(V)
-
-Aplicaciones:
-  - Planificación de tareas con dependencias
-  - Sistemas de compilación (Make, Gradle)
-  - Planificación de prerrequisitos de cursos
-  - Resolución de dependencias de paquetes
-
-El Ordenamiento Topológico solo es posible para DAGs (Grafos Acíclicos Dirigidos). Si el grafo tiene un ciclo, no existe un ordenamiento válido.`,
-}
-
-export default descriptions
+export default description

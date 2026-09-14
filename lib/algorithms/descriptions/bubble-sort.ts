@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Bubble Sort
+const description = `Bubble Sort
 
 Bubble Sort is a simple comparison-based sorting algorithm. It repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.
 
@@ -25,32 +22,6 @@ Properties:
   - Adaptive
   - In-place
 
-Mainly used for educational purposes. For production, prefer Quick Sort or Merge Sort.`,
-  es: `Bubble Sort (Ordenamiento Burbuja)
+Mainly used for educational purposes. For production, prefer Quick Sort or Merge Sort.`
 
-Bubble Sort es un algoritmo de ordenamiento simple basado en comparaciones. Recorre repetidamente la lista, compara elementos adyacentes y los intercambia si están en el orden incorrecto.
-
-El algoritmo recibe su nombre porque los elementos más pequeños "burbujean" hacia la parte superior de la lista con cada pasada.
-
-Cómo funciona:
-1. Compara cada par de elementos adyacentes
-2. Intercámbialos si el elemento izquierdo es mayor
-3. Después de cada pasada, el elemento más grande no ordenado queda en su posición final
-4. Repite hasta que no se necesiten más intercambios
-
-Complejidad Temporal:
-  Mejor:    O(n) — ya ordenado
-  Promedio: O(n²)
-  Peor:     O(n²)
-
-Complejidad Espacial: O(1) — in-place
-
-Propiedades:
-  - Ordenamiento estable
-  - Adaptativo
-  - In-place
-
-Se usa principalmente con fines educativos. En producción, es preferible Quick Sort o Merge Sort.`,
-}
-
-export default descriptions
+export default description

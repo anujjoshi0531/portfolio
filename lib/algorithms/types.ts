@@ -439,6 +439,7 @@ export interface Algorithm {
   visualization: VisualizationType
   generateSteps: (locale?: string) => Step[]
   description?: string
+  descriptionFormat?: 'plain' | 'markdown'
   timeComplexity?: {
     best?: string
     average?: string

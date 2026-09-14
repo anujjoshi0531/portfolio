@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Selection Sort
+const description = `Selection Sort
 
 Selection Sort divides the array into a sorted and unsorted region. It repeatedly selects the smallest element from the unsorted region and moves it to the end of the sorted region.
 
@@ -24,31 +21,6 @@ Properties:
   - In-place
   - Minimizes the number of swaps: O(n)
 
-Useful when memory writes are expensive, as it performs at most O(n) swaps.`,
-  es: `Selection Sort (Ordenamiento por Selección)
+Useful when memory writes are expensive, as it performs at most O(n) swaps.`
 
-Selection Sort divide el arreglo en una región ordenada y otra sin ordenar. Selecciona repetidamente el elemento más pequeño de la región sin ordenar y lo mueve al final de la región ordenada.
-
-Cómo funciona:
-1. Encuentra el elemento mínimo en la porción sin ordenar
-2. Intercámbialo con el primer elemento sin ordenar
-3. Mueve el límite entre ordenado y sin ordenar un elemento a la derecha
-4. Repite hasta que todo el arreglo esté ordenado
-
-Complejidad Temporal:
-  Mejor:    O(n²)
-  Promedio: O(n²)
-  Peor:     O(n²)
-
-Complejidad Espacial: O(1) — in-place
-
-Propiedades:
-  - No es estable (puede cambiar el orden relativo de elementos iguales)
-  - No es adaptativo
-  - In-place
-  - Minimiza el número de intercambios: O(n)
-
-Útil cuando las escrituras en memoria son costosas, ya que realiza como máximo O(n) intercambios.`,
-}
-
-export default descriptions
+export default description

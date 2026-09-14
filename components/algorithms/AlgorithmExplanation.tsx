@@ -1,7 +1,12 @@
 'use client'
 
-import React from 'react'
+import '@/styles/markdown.css'
+import 'highlight.js/styles/github-dark.min.css'
+import 'katex/dist/katex.min.css'
+
+import React, { useEffect, useState } from 'react'
 import type { Algorithm } from '@/lib/algorithms/types'
+import { renderMarkdown } from '@/lib/markdown'
 import { BookOpen, CheckCircle2, Layers } from 'lucide-react'
 
 interface AlgorithmExplanationProps {
@@ -11,6 +16,28 @@ interface AlgorithmExplanationProps {
 
 export function AlgorithmExplanation({ algorithm, className = '' }: AlgorithmExplanationProps) {
   const { description, prerequisites, howItWorks = [] } = algorithm
+  const [renderedDescription, setRenderedDescription] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+
+    if (!description || algorithm.descriptionFormat !== 'markdown') {
+      setRenderedDescription(null)
+      return
+    }
+
+    renderMarkdown(description)
+      .then(({ html }) => {
+        if (!cancelled) setRenderedDescription(html)
+      })
+      .catch(() => {
+        if (!cancelled) setRenderedDescription(null)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [description, algorithm.descriptionFormat])
 
   return (
     <div
@@ -22,11 +49,16 @@ export function AlgorithmExplanation({ algorithm, className = '' }: AlgorithmExp
       </div>
 
       {/* Description text */}
-      {description && (
+      {description && renderedDescription ? (
+        <div
+          className="markdown-body algorithm-description"
+          dangerouslySetInnerHTML={{ __html: renderedDescription }}
+        />
+      ) : description ? (
         <div className="text-sm sm:text-base text-muted-foreground leading-relaxed whitespace-pre-line">
           {description}
         </div>
-      )}
+      ) : null}
 
       {/* Prerequisites */}
       {prerequisites && (

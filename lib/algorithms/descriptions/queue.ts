@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Queue
+const description = `Queue
 
 A Queue is a linear data structure that follows the FIFO principle — First In, First Out. Like a line at a store: the first person in line is served first.
 
@@ -18,25 +15,6 @@ Applications:
   - Rate limiting
   - Order processing systems
 
-Space Complexity: O(n) for n elements`,
-  es: `Cola (Queue)
+Space Complexity: O(n) for n elements`
 
-Una Cola es una estructura de datos lineal que sigue el principio FIFO — Primero en Entrar, Primero en Salir. Como una fila en una tienda: el primero en llegar es atendido primero.
-
-Operaciones:
-  enqueue(item) — añadir al final     O(1)
-  dequeue()     — retirar del frente   O(1)
-  front()       — ver el frente        O(1)
-  isEmpty()     — verificar si está vacía O(1)
-
-Aplicaciones:
-  - Planificación de tareas (CPU, impresora)
-  - Búsqueda en Anchura (BFS)
-  - Buffers de mensajes y colas de eventos
-  - Limitación de velocidad (rate limiting)
-  - Sistemas de procesamiento de pedidos
-
-Complejidad Espacial: O(n) para n elementos`,
-}
-
-export default descriptions
+export default description

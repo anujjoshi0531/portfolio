@@ -1,7 +1,4 @@
-export type Locale = 'en' | 'es';
-
-const descriptions: Record<Locale, string> = {
-  en: `Linear Search
+const description = `Linear Search
 
 Linear Search (or Sequential Search) is the simplest searching algorithm. It checks every element in the list sequentially until the target is found or the list is exhausted.
 
@@ -23,30 +20,6 @@ Properties:
   - No preprocessing needed
   - Simple to implement
 
-Linear Search is useful for small datasets or unsorted data where more efficient algorithms cannot be applied.`,
-  es: `Linear Search (Búsqueda Lineal)
+Linear Search is useful for small datasets or unsorted data where more efficient algorithms cannot be applied.`
 
-Linear Search (o Búsqueda Secuencial) es el algoritmo de búsqueda más simple. Revisa cada elemento de la lista secuencialmente hasta encontrar el objetivo o agotar la lista.
-
-Cómo funciona:
-1. Comienza desde el primer elemento
-2. Compara cada elemento con el objetivo
-3. Si se encuentra una coincidencia, retorna el índice
-4. Si se llega al final sin coincidencia, retorna -1
-
-Complejidad Temporal:
-  Mejor:    O(1) — el objetivo es el primer elemento
-  Promedio: O(n)
-  Peor:     O(n) — el objetivo es el último o no está presente
-
-Complejidad Espacial: O(1)
-
-Propiedades:
-  - Funciona con arreglos sin ordenar
-  - No necesita preprocesamiento
-  - Simple de implementar
-
-Linear Search es útil para conjuntos de datos pequeños o datos sin ordenar donde algoritmos más eficientes no pueden aplicarse.`,
-}
-
-export default descriptions
+export default description
