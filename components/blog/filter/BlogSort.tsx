@@ -11,9 +11,10 @@ import { sortOptions } from "@/lib/client/data"
 interface BlogSortProps {
   onSortChange?: (value: string) => void
   defaultValue?: string
+  namesOnly?: boolean
 }
 
-export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue = "published-descending" }) => {
+export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue = "published-descending", namesOnly = false }) => {
   const [selectedValue, setSelectedValue] = useState(defaultValue)
 
   useEffect(() => {
@@ -34,14 +35,14 @@ export const BlogSort: React.FC<BlogSortProps> = ({ onSortChange, defaultValue =
       <DropdownMenuTrigger asChild>
         <Button variant="secondary"
           className="rounded-md h-9 px-2 w-full justify-start"
-          size="sm" aria-label={`Sort blogs by ${selectedOption?.label?.toLowerCase() || "default"}`}>
+          size="sm" aria-label={`Sort resources by ${selectedOption?.label?.toLowerCase() || "default"}`}>
           {selectedOption?.icon && <selectedOption.icon />}
           {selectedOption?.label || "Sort by"}
           <ChevronDown className="ml-auto" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-fit">
-        {sortOptions.map((option) => (
+        {sortOptions.filter((option) => !namesOnly || option.value.startsWith("name-")).map((option) => (
           <DropdownMenuItem
             key={option.value}
             onClick={() => handleSortChange(option.value)}

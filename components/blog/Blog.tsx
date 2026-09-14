@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Grid, List, X } from "lucide-react";
@@ -31,6 +33,18 @@ export default function Blog({
   totalCount,
   limit
 }: BlogProps) {
+  const searchParams = useSearchParams();
+  const contentTypeHref = (type: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("page");
+    params.delete("difficulty");
+    params.delete("published_gte");
+    params.delete("published_lte");
+    params.delete("sort_by");
+    if (type === "all") params.delete("blogsFilter");
+    else params.set("blogsFilter", type);
+    return `/blog?${params.toString()}`;
+  };
   const [layout, setLayout] = useState<"grid" | "list">("grid");
   const [hovered, setHovered] = useState<number | null>(null);
   const {
@@ -38,6 +52,8 @@ export default function Blog({
     activeDateFrom,
     activeDateTo,
     activeBlogsFilter,
+    activeCategory,
+    activeDifficulty,
     hasActiveFilters,
     removeFilter,
     clearAllFilters,
@@ -65,10 +81,10 @@ export default function Blog({
             </div>
             <div className="space-y-3">
               <h3 className="text-2xl md:text-3xl font-bold text-foreground">
-                No Blogs Available
+                No matching resources
               </h3>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-                We couldn&apos;t find any blog posts matching your criteria.
+                Try a different search or clear your filters.
               </p>
             </div>
           </div>
@@ -78,7 +94,7 @@ export default function Blog({
 
     return posts.map((blog, i) => (
       <BlogCard
-        key={blog.id}
+        key={`${blog.kind}:${blog.id}`}
         blog={blog}
         variant={layout === "grid" ? "vertical" : "horizontal"}
         className={layout === "grid" ? "" : "sm:h-[280px]"}
@@ -91,12 +107,21 @@ export default function Blog({
 
   return (
     <>
-      <PageTemplate title="Recent Blogs" subtitle="Insights, Tutorials and Tech Trends" />
+      <PageTemplate title="Blog & Learning Library" subtitle="Articles, interactive visualizers, and playlists to explore at your own pace." />
+      <nav aria-label="Content type" className="flex flex-wrap gap-2">
+        {([
+          ["all", "All"], ["blogs", "Articles"], ["visualizers", "Visualizers"], ["playlists", "Playlists"],
+        ] as const).map(([value, label]) => (
+          <Button key={value} asChild variant={activeBlogsFilter === value ? "default" : "secondary"}>
+            <Link href={contentTypeHref(value)} aria-current={activeBlogsFilter === value ? "page" : undefined}>{label}</Link>
+          </Button>
+        ))}
+      </nav>
 
       {/* Search and Controls */}
       <div className="flex w-full justify-between gap-2 items-center flex-wrap">
         <div className="w-full max-w-xl md:max-w-2xl mb-4">
-          <SearchInput placeholder="Search Blogs, Project, Articles.." />
+          <SearchInput placeholder="Search articles, visualizers, and playlists..." />
         </div>
         <div className="space-x-2 flex items-center">
           <BlogFilter tags={tags} categories={categories} />
@@ -105,7 +130,7 @@ export default function Blog({
             size="icon"
             className="hidden md:inline-flex"
             onClick={() => setLayout(layout === "grid" ? "list" : "grid")}
-            aria-label={`Switch blog layout to ${layout === "grid" ? "list" : "grid"} view`}>
+            aria-label={`Switch resource layout to ${layout === "grid" ? "list" : "grid"} view`}>
             {layout === "grid" ? <List /> : <Grid />}
           </Button>
         </div>
@@ -124,6 +149,8 @@ export default function Blog({
               <X />
             </Button>
           ))}
+          {activeCategory && <Button size="sm" onClick={() => removeFilter("category")} aria-label="Remove topic filter">{activeCategory}<X /></Button>}
+          {activeDifficulty && <Button size="sm" onClick={() => removeFilter("difficulty")} aria-label="Remove difficulty filter">{activeDifficulty}<X /></Button>}
           {activeDateFrom && (
             <Button
               size="sm"
@@ -150,7 +177,7 @@ export default function Blog({
               onClick={() => removeFilter("blogsFilter")}
               aria-label="Remove content type filter"
             >
-              {activeBlogsFilter === "blogs" ? "Blogs only" : "Playlists only"}
+              {activeBlogsFilter === "blogs" ? "Articles" : activeBlogsFilter === "visualizers" ? "Visualizers" : "Playlists"}
               <X />
             </Button>
           )}

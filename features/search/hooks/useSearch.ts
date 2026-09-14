@@ -46,6 +46,7 @@ export const useSearch = ({
 
   const handleSearch = useCallback((searchValue: string) => {
     if (!syncUrl) return;
+    if (searchValue === (searchParams.get("q") || "")) return;
 
     const params = new URLSearchParams(searchParams.toString());
 

@@ -1,4 +1,4 @@
-import { searchBlogs } from "@/features/blog/lib/content";
+import { searchBlogListings } from "@/features/blog/lib/listing";
 import { redis } from "@/lib/server/redis";
 import { NextResponse } from "next/server";
 
@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     
-    const cacheKey = `blog:search:${JSON.stringify(body)}`;
+    const cacheKey = `library:search:v1:${JSON.stringify(body)}`;
     
     if (redis) {
       const cachedData = await redis.get(cacheKey);
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const res = await searchBlogs(body);
+    const res = await searchBlogListings(body);
     
     if (redis) {
       await redis.set(cacheKey, res, { ex: 3600 });

@@ -5,7 +5,7 @@ import { timeAgo } from "@/lib/utils/dates";
 import type { BlogListingItem } from "@/features/blog/lib/listing";
 import Image from "next/image";
 import Link from "next/link";
-import { ListVideo } from "lucide-react";
+import { ListVideo, Braces } from "lucide-react";
 import ViewCounter from "./ViewCounter";
 
 interface BlogCardProps {
@@ -38,6 +38,9 @@ export default function BlogCard({
   const displayDate = blog.created ?? blog.published;
   const isPlaylist = "kind" in blog && blog.kind === "playlist";
 
+  const isVisualizer = "kind" in blog && blog.kind === "visualizer";
+  const kindLabel = isVisualizer ? "Visualizer" : isPlaylist ? "Playlist" : "Article";
+
   // FocusCard: blur & scale down when a sibling is hovered
   const isOtherHovered = hovered !== null && hovered !== index;
 
@@ -48,7 +51,7 @@ export default function BlogCard({
         "block w-full transition-opacity p-1",
         className
       )}
-      aria-label={isPlaylist ? `Open blog playlist: ${title}` : `Read blog post: ${title}`}
+      aria-label={isVisualizer ? `Explore visualizer: ${title}` : isPlaylist ? `Open blog playlist: ${title}` : `Read blog post: ${title}`}
       onMouseEnter={setHovered ? () => setHovered(index) : undefined}
       onMouseLeave={setHovered ? () => setHovered(null) : undefined}
     >
@@ -66,13 +69,18 @@ export default function BlogCard({
               ? "aspect-video w-full rounded-t-lg"
               : "aspect-video w-full sm:w-2/5 sm:aspect-square rounded-l-lg sm:rounded-r-none"
           )}>
-          <Image
+          {isVisualizer ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-primary/10 text-primary">
+              <Braces className="size-14" aria-hidden="true" />
+              <span className="text-sm font-mono">{blog.category}</span>
+            </div>
+          ) : <Image
             src={thumbnail}
             alt={title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-110"
-          />
+          />}
           {/* Always-visible bottom gradient */}
           <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
           {/* FocusCard-style title overlay — fades in on hover */}
@@ -85,7 +93,9 @@ export default function BlogCard({
           </div>
 
           <div className="absolute top-2 right-2 flex items-center gap-1 bg-black/60 backdrop-blur-md rounded-md px-2 py-1 text-white">
-            {isPlaylist ? (
+            {isVisualizer ? (
+              <span className="text-xs capitalize">{blog.difficulty}</span>
+            ) : isPlaylist ? (
               <>
                 <ListVideo className="size-4" aria-hidden="true" />
                 <span className="text-xs font-medium">{blog.itemCount ?? 0}</span>
@@ -113,6 +123,7 @@ export default function BlogCard({
           )}>
           <div>
             <CardHeader>
+              <span className="text-xs font-medium text-primary">{kindLabel}</span>
               <CardTitle className="line-clamp-1 text-md transition-colors">
                 {title}
               </CardTitle>
@@ -123,7 +134,9 @@ export default function BlogCard({
           </div>
 
           <CardContent className="flex items-center justify-end text-muted-foreground text-xs font-medium">
-            {isPlaylist ? (
+            {isVisualizer ? (
+              <span className="text-primary">Explore visualizer</span>
+            ) : isPlaylist ? (
               <span>{blog.itemCount ?? 0} {(blog.itemCount ?? 0) === 1 ? "post" : "posts"}</span>
             ) : (
               <time className="text-xs" dateTime={displayDate ? new Date(displayDate).toISOString() : undefined} suppressHydrationWarning>

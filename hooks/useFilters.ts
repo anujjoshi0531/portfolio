@@ -14,6 +14,7 @@ export const availableParams = new Set([
   "q",
   "category",
   "blogsFilter",
+  "difficulty",
 ]);
 
 export function filterDiscoverParams(
@@ -52,6 +53,7 @@ export const useFilters = (pathname: string = "/blog") => {
       )
     );
     const query = new URLSearchParams(cleanedParams);
+    query.delete("page");
     router.replace(`${pathname}?${query.toString()}`);
   }, [searchParams, filters, router, pathname]);
 
@@ -76,9 +78,11 @@ export const useFilters = (pathname: string = "/blog") => {
   const activeDateFrom = useMemo(() => searchParams.get("published_gte") ?? null, [searchParams]);
   const activeDateTo = useMemo(() => searchParams.get("published_lte") ?? null, [searchParams]);
   const activeBlogsFilter = useMemo(() => searchParams.get("blogsFilter") || "all", [searchParams]);
+  const activeCategory = searchParams.get("category");
+  const activeDifficulty = activeBlogsFilter === "visualizers" ? searchParams.get("difficulty") : null;
   const hasActiveFilters = useMemo(
-    () => activeTags.length > 0 || !!activeDateFrom || !!activeDateTo || activeBlogsFilter !== "all",
-    [activeTags, activeDateFrom, activeDateTo, activeBlogsFilter]
+    () => activeTags.length > 0 || !!activeDateFrom || !!activeDateTo || activeBlogsFilter !== "all" || !!activeCategory || !!activeDifficulty,
+    [activeTags, activeDateFrom, activeDateTo, activeBlogsFilter, activeCategory, activeDifficulty]
   );
 
   const removeFilter = useCallback((key: string, value?: string) => {
@@ -115,6 +119,8 @@ export const useFilters = (pathname: string = "/blog") => {
     activeDateFrom,
     activeDateTo,
     activeBlogsFilter,
+    activeCategory,
+    activeDifficulty,
     hasActiveFilters,
     removeFilter,
     clearAllFilters,

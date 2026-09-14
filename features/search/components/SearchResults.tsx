@@ -3,6 +3,7 @@
 import { EmptyState } from "@/features/search/components/EmptyState"
 import { SearchFooter } from "@/features/search/components/SearchFooter"
 import { SearchResultItem } from "@/features/search/components/SearchResultItem"
+import type { BlogListingItem } from "@/features/blog/lib/listing"
 
 interface SearchResultsProps {
   className?: string;
@@ -22,8 +23,8 @@ export function SearchResults({ className, hasQuery, query, searchResult, search
         ) : hasQuery && searchResult && Array.isArray((searchResult as { results?: unknown[] }).results) ? (
           (searchResult as { results: unknown[] }).results.length > 0 ? (
             <div>
-              {(searchResult as { results: BlogPost[] }).results.map((page) => (
-                <SearchResultItem key={page.id} page={page} onClose={onClose} />
+              {(searchResult as { results: BlogListingItem[] }).results.map((page) => (
+                <SearchResultItem key={`${page.kind}:${page.id}`} page={page} onClose={onClose} />
               ))}
             </div>
           ) : (

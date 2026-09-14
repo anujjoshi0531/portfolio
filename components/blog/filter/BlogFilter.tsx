@@ -29,7 +29,7 @@ export const BlogFilter = ({ tags, categories }: { tags: string[], categories: s
 
   return (
     <Sheet>
-      <SheetTrigger className={cn(buttonVariants({ variant: "secondary", size: "md" }))} aria-label={`Open blog filters${count > 0 ? ` (${count} active)` : ""}`}>
+      <SheetTrigger className={cn(buttonVariants({ variant: "secondary", size: "md" }))} aria-label={`Open library filters${count > 0 ? ` (${count} active)` : ""}`}>
         <SlidersHorizontal />
         {count > 0 && (
           <Badge className="text-xs">{count}</Badge>
@@ -55,6 +55,7 @@ export const BlogFilter = ({ tags, categories }: { tags: string[], categories: s
             </div>
 
             <div className="space-y-4">
+              {getFilter("blogsFilter") === "blogs" && <>
               <BlogFilterDate
                 label="Published From"
                 align="start"
@@ -69,15 +70,17 @@ export const BlogFilter = ({ tags, categories }: { tags: string[], categories: s
                 disableBefore={getFilter("published_gte")}
                 onChange={(value) => setFilter({ "published_lte": value })}
               />
+              </>}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
                 <Label className="flex text-muted-foreground" htmlFor="sort_by">Sort By</Label>
                 <BlogSort
-                  defaultValue={getFilter("sort_by") || "published-descending"}
+                  namesOnly={getFilter("blogsFilter") === "visualizers" || getFilter("blogsFilter") === "playlists"}
+                  defaultValue={getFilter("sort_by") || (getFilter("blogsFilter") === "visualizers" || getFilter("blogsFilter") === "playlists" ? "name-ascending" : "published-descending")}
                   onSortChange={(value) => setFilter({ sort_by: value })}
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
-                <Label className="flex text-muted-foreground" htmlFor="limit">Blogs Per Page</Label>
+                <Label className="flex text-muted-foreground" htmlFor="limit">Results Per Page</Label>
                 <Input
                   id="limit"
                   className="w-full"
@@ -102,15 +105,19 @@ export const BlogFilter = ({ tags, categories }: { tags: string[], categories: s
                 id="blogsFilter"
                 className="w-full"
                 value={getFilter("blogsFilter") || "all"}
-                onValueChange={(value) => setFilter({ blogsFilter: value })}
+                onValueChange={(value) => setFilter({ blogsFilter: value, difficulty: "", published_gte: "", published_lte: "", sort_by: "" })}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem id="blogsFilter-all" value="all" />
-                  <Label htmlFor="blogsFilter-all">Blogs and playlists</Label>
+                  <Label htmlFor="blogsFilter-all">All resources</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem id="blogsFilter-blogs" value="blogs" />
-                  <Label htmlFor="blogsFilter-blogs">Blogs only</Label>
+                  <Label htmlFor="blogsFilter-blogs">Articles only</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem id="blogsFilter-visualizers" value="visualizers" />
+                  <Label htmlFor="blogsFilter-visualizers">Visualizers only</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem id="blogsFilter-playlists" value="playlists" />
@@ -119,8 +126,21 @@ export const BlogFilter = ({ tags, categories }: { tags: string[], categories: s
               </RadioGroup>
             </div>
 
+            {getFilter("blogsFilter") === "visualizers" && (
+              <div className="space-y-2">
+                <Label htmlFor="difficulty">Difficulty</Label>
+                <RadioGroup id="difficulty" value={getFilter("difficulty") || "all"} onValueChange={(value) => setFilter({ difficulty: value === "all" ? "" : value })}>
+                  {["all", "easy", "intermediate", "advanced"].map((difficulty) => (
+                    <div key={difficulty} className="flex items-center space-x-2">
+                      <RadioGroupItem id={`difficulty-${difficulty}`} value={difficulty} />
+                      <Label className="capitalize" htmlFor={`difficulty-${difficulty}`}>{difficulty}</Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1">
-              <Label className="flex text-muted-foreground" htmlFor="category">Content Category</Label>
+              <Label className="flex text-muted-foreground" htmlFor="category">Topic</Label>
               <RadioGroup className="w-full" value={getFilter("category")} onValueChange={(value) => setFilter({ category: value })}>
                 {categories.map((category) => (
                   <div key={category} className="flex items-center space-x-2">
