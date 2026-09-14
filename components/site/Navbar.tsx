@@ -22,7 +22,6 @@ export default function Navbar() {
     { href: "/", title: "Home" },
     { href: "/about", title: "About" },
     { href: "/project", title: "Project" },
-    { href: "/algorithms", title: "Algorithms" },
     { href: "/blog", title: "Blog" },
     { href: "/contact", title: "Contact" },
   ];
@@ -126,7 +125,7 @@ export default function Navbar() {
 
           {/* Desktop Navigation Links */}
           <m.nav
-            className="hidden lg:flex justify-center items-center space-x-5 xl:space-x-7 uppercase font-semibold text-sm"
+            className="hidden lg:flex justify-center items-center space-x-7 uppercase font-semibold text-sm"
             variants={{
               initial: { opacity: 0 },
               animate: {
@@ -176,7 +175,7 @@ export default function Navbar() {
           </m.nav>
 
           {/* Mobile Actions */}
-          <div className="flex lg:hidden items-center space-x-2" suppressHydrationWarning>
+          <div className="lg:hidden flex items-center space-x-2" suppressHydrationWarning>
             <SearchButton />
             <Button variant="ghost" className="rounded-full" onClick={toggleMenu} aria-label="Open menu">
               <Menu className="size-5" />

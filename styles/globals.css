@@ -256,25 +256,9 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-
-    --surface: #ffffff;
-    --subtle: rgba(0, 0, 0, 0.04);
-    --subtle-strong: rgba(0, 0, 0, 0.08);
-    --subtle-hover: rgba(0, 0, 0, 0.14);
-    --viz-muted: #94a3b8;
-    --viz-faint: #cbd5e1;
-    --viz-grid: rgba(0, 0, 0, 0.06);
-    --viz-axis: rgba(0, 0, 0, 0.2);
-    --viz-label: rgba(0, 0, 0, 0.55);
-    --viz-cell: rgba(0, 0, 0, 0.04);
-    --viz-cell-alt: rgba(0, 0, 0, 0.015);
-    --viz-border: rgba(0, 0, 0, 0.1);
-    --viz-text: #1e293b;
   }
 
   .dark {
-    --theme: 140 100% 55%;
-    --chatbot-theme: hsl(var(--theme));
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -299,20 +283,6 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-
-    --surface: #0a0a0a;
-    --subtle: rgba(255, 255, 255, 0.04);
-    --subtle-strong: rgba(255, 255, 255, 0.08);
-    --subtle-hover: rgba(255, 255, 255, 0.14);
-    --viz-muted: #64748b;
-    --viz-faint: #334155;
-    --viz-grid: rgba(255, 255, 255, 0.06);
-    --viz-axis: rgba(255, 255, 255, 0.2);
-    --viz-label: rgba(255, 255, 255, 0.5);
-    --viz-cell: rgba(255, 255, 255, 0.04);
-    --viz-cell-alt: rgba(255, 255, 255, 0.01);
-    --viz-border: rgba(255, 255, 255, 0.08);
-    --viz-text: #f1f5f9;
   }
 
   * {

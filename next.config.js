@@ -32,18 +32,6 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
-      {
-        protocol: "https",
-        hostname: "cdn.sanity.io",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-        port: "",
-        pathname: "/**",
-      },
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours
@@ -77,6 +65,15 @@ const nextConfig = {
   },
   async headers() {
     return [
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       {
         source: '/fonts/(.*)',
         headers: [
@@ -123,7 +120,7 @@ const nextConfig = {
 
 // Injected content via Sentry wizard below
 
-const { withSentryConfig } = require("@sentry/nextjs/config");
+const { withSentryConfig } = require("@sentry/nextjs");
 
 module.exports = withSentryConfig(nextConfig, {
   org: "anujjoshi",
