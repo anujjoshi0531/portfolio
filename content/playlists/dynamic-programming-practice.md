@@ -1,0 +1,15 @@
+---
+id: dynamic-programming-practice
+title: Dynamic Programming Practice
+description: Blog posts that build dynamic programming intuition through solved problems.
+summary: Start with divisibility and range-value problems, then move into contest-style optimization.
+sections:
+  - title: Core Problems
+    items:
+      - greatest-sum-divisible-by-three
+      - sum-of-subarray-minimums
+      - maximum-total-value-k-subarrays
+  - title: Adjacent Patterns
+    items:
+      - subarrays-with-first-element-minimum
+---

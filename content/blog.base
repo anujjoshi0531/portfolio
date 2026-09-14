@@ -1,0 +1,70 @@
+filters:
+  and:
+    - file.inFolder(this.file.folder + "/blog")
+    - file.ext == "md"
+formulas:
+  post_link: link(file.path, title)
+  formatted_date: if(published, date(published).format("MMM DD, YYYY"), "")
+properties:
+  title:
+    displayName: Post Title
+  formula.post_link:
+    displayName: Title
+  published:
+    displayName: Published Date
+  formula.formatted_date:
+    displayName: Published
+  tags:
+    displayName: Tags
+  category:
+    displayName: Category
+  likes:
+    displayName: Likes
+  views:
+    displayName: Views
+  created:
+    displayName: Created At
+  updated:
+    displayName: Updated At
+  note.tags:
+    displayName: Tags
+views:
+  - type: table
+    name: Table
+    order:
+      - formula.post_link
+      - tags
+      - formula.formatted_date
+      - category
+      - views
+      - likes
+    sort:
+      - property: Category
+        direction: DESC
+      - property: tags
+        direction: DESC
+      - property: formula.post_link
+        direction: ASC
+    summaries:
+      views: Sum
+      likes: Sum
+  - type: cards
+    name: Cards
+    order:
+      - formula.post_link
+      - tags
+      - formula.formatted_date
+      - category
+      - views
+      - likes
+  - type: table
+    name: All Details
+    order:
+      - title
+      - published
+      - tags
+      - category
+      - likes
+      - views
+      - created
+      - updated

@@ -1,0 +1,63 @@
+filters:
+  and:
+    - file.inFolder(this.file.folder + "/experience")
+    - file.ext == "md"
+formulas:
+  role_link: link(file.path, title)
+  duration: if(start, date(start).format("MMM YYYY") + " - " + if(end, date(end).format("MMM YYYY"), "Present"), "")
+properties:
+  title:
+    displayName: Role
+  formula.role_link:
+    displayName: Role
+  organization:
+    displayName: Organization
+  type:
+    displayName: Type
+  formula.duration:
+    displayName: Duration
+  location:
+    displayName: Location
+  skills:
+    displayName: Skills
+  url:
+    displayName: Website
+  certificate:
+    displayName: Certificate
+  description:
+    displayName: Description
+  created:
+    displayName: Created At
+  updated:
+    displayName: Updated At
+views:
+  - type: table
+    name: Table
+    order:
+      - formula.role_link
+      - organization
+      - type
+      - formula.duration
+  - type: table
+    name: All Details
+    order:
+      - title
+      - organization
+      - type
+      - start
+      - end
+      - location
+      - skills
+      - url
+      - certificate
+      - description
+      - created
+      - updated
+  - type: cards
+    name: Cards
+    order:
+      - title
+      - organization
+      - type
+      - formula.duration
+      - location

@@ -1,0 +1,79 @@
+filters:
+  and:
+    - file.inFolder(this.file.folder + "/projects")
+    - file.ext == "md"
+formulas:
+  project_link: link(file.path, title)
+  card_preview: if(thumbnail, image(if(thumbnail.startsWith((this.file.folder + "/")), thumbnail, (this.file.folder + "/") + thumbnail)), "")
+  status_icon: if(status == "Completed", "Completed", "In Progress")
+properties:
+  title:
+    displayName: Project Name
+  formula.project_link:
+    displayName: Project Name
+  category:
+    displayName: Category
+  status:
+    displayName: Status
+  formula.status_icon:
+    displayName: Status
+  description:
+    displayName: Description
+  start:
+    displayName: Start Date
+  end:
+    displayName: End Date
+  tags:
+    displayName: Tech Stack
+  url:
+    displayName: Live Site
+  github:
+    displayName: GitHub Repo
+  thumbnail:
+    displayName: Thumbnail
+  slug:
+    displayName: Slug
+  formula.card_preview:
+    displayName: Preview
+  created:
+    displayName: Created At
+  updated:
+    displayName: Updated At
+views:
+  - type: table
+    name: Table
+    order:
+      - formula.project_link
+      - category
+      - formula.status_icon
+      - tags
+      - url
+      - github
+    sort:
+      - property: formula.status_icon
+        direction: ASC
+  - type: cards
+    name: Cards
+    order:
+      - formula.card_preview
+      - formula.project_link
+      - category
+      - formula.status_icon
+      - tags
+      - description
+  - type: table
+    name: All Details
+    order:
+      - title
+      - category
+      - status
+      - description
+      - start
+      - end
+      - tags
+      - url
+      - github
+      - thumbnail
+      - slug
+      - created
+      - updated

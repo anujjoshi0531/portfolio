@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 @source "../app";
 @source "../components";
 @source "../content";
@@ -6,6 +7,7 @@
 @plugin "tailwindcss-animate";
 
 @theme {
+  --color-reading-accent: var(--reading-accent);
   --color-theme: hsl(var(--theme));
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -230,6 +232,7 @@
 
   :root {
     --theme: 140 100% 55%;
+    --reading-accent: hsl(from hsl(var(--theme)) h s 28%);
     --chatbot-theme: hsl(var(--theme));
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -259,6 +262,7 @@
   }
 
   .dark {
+    --reading-accent: hsl(var(--theme));
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;

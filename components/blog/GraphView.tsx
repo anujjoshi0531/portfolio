@@ -62,6 +62,18 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Canvas needs a resolved color; CSS variables cannot be used directly in its paint styles.
+    let themeColor = getComputedStyle(canvas).color;
+    let isDark = document.documentElement.classList.contains("dark");
+    const themeObserver = new MutationObserver(() => {
+      themeColor = getComputedStyle(canvas).color;
+      isDark = document.documentElement.classList.contains("dark");
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
+
     let width = (canvas.width = containerRef.current?.clientWidth || 320);
     let height = (canvas.height = isFullscreen ? Math.max(300, window.innerHeight - 100) : 280);
 
@@ -186,14 +198,16 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
           const isHighlighted =
             currentHoveredId && (l.source === currentHoveredId || l.target === currentHoveredId);
           ctx.strokeStyle = isHighlighted
-            ? "rgba(59, 130, 246, 0.8)"
+            ? themeColor
             : currentHoveredId
-            ? "rgba(255, 255, 255, 0.04)"
-            : "rgba(255, 255, 255, 0.15)";
+            ? (isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(15, 23, 42, 0.08)")
+            : (isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(15, 23, 42, 0.22)");
           ctx.beginPath();
           ctx.moveTo(n1.x, n1.y);
           ctx.lineTo(n2.x, n2.y);
+          ctx.globalAlpha = isHighlighted ? 0.8 : 1;
           ctx.stroke();
+          ctx.globalAlpha = 1;
         }
       });
 
@@ -207,18 +221,18 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
         ctx.arc(n.x, n.y, isHovered ? n.radius + 3 : n.radius, 0, 2 * Math.PI);
 
         if (active) {
-          ctx.fillStyle = "#3b82f6";
-          ctx.shadowColor = "#3b82f6";
+          ctx.fillStyle = themeColor;
+          ctx.shadowColor = themeColor;
           ctx.shadowBlur = 10;
         } else if (isHovered || isNeighbor) {
-          ctx.fillStyle = "#60a5fa";
-          ctx.shadowColor = "#60a5fa";
+          ctx.fillStyle = themeColor;
+          ctx.shadowColor = themeColor;
           ctx.shadowBlur = 8;
         } else if (currentHoveredId) {
           ctx.fillStyle = "rgba(156, 163, 175, 0.2)";
           ctx.shadowBlur = 0;
         } else {
-          ctx.fillStyle = "#9ca3af";
+          ctx.fillStyle = isDark ? "#9ca3af" : "#64748b";
           ctx.shadowBlur = 0;
         }
 
@@ -229,7 +243,9 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
         if (active || isHovered || isNeighbor || nodesArray.length <= 15) {
           const safeTitle = typeof n.title === "string" ? n.title : String(n.title || "");
           ctx.font = active || isHovered ? "600 12px Inter, sans-serif" : "400 11px Inter, sans-serif";
-          ctx.fillStyle = active || isHovered ? "#f3f4f6" : "rgba(209, 213, 219, 0.75)";
+          ctx.fillStyle = isDark
+            ? (active || isHovered ? "#f3f4f6" : "rgba(209, 213, 219, 0.75)")
+            : (active || isHovered ? "#111827" : "#475569");
           ctx.textAlign = "center";
           ctx.fillText(
             safeTitle.length > 22 ? safeTitle.slice(0, 20) + "…" : safeTitle,
@@ -285,6 +301,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
     canvas.addEventListener("click", handleClick);
 
     return () => {
+      themeObserver.disconnect();
       window.removeEventListener("resize", handleResize);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("click", handleClick);
@@ -295,30 +312,30 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
   return (
     <div
       ref={containerRef}
-      className={`relative rounded-xl border border-neutral-800 bg-neutral-900/60 p-4 backdrop-blur-md transition-all ${
+      className={`relative rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 p-4 backdrop-blur-md transition-all ${
         isFullscreen
-          ? "fixed inset-4 z-50 flex flex-col justify-between bg-neutral-950/95 p-6 shadow-2xl"
+          ? "fixed inset-4 z-50 flex flex-col justify-between bg-white dark:bg-neutral-950/95 p-6 shadow-2xl"
           : className
       }`}
     >
-      <div className="flex items-center justify-between mb-3 border-b border-neutral-800/80 pb-2.5">
+      <div className="flex items-center justify-between mb-3 border-b border-neutral-200 dark:border-neutral-800/80 pb-2.5">
         <div className="flex items-center gap-2">
-          <Network className="w-4 h-4 text-blue-400" />
-          <span className="text-xs sm:text-sm font-semibold text-neutral-200 uppercase tracking-wider">
+          <Network className="w-4 h-4 text-reading-accent" />
+          <span className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-200 uppercase tracking-wider">
             {title}
           </span>
         </div>
 
         <div className="flex items-center gap-1.5">
           {currentSlug && (
-            <div className="flex items-center rounded-lg bg-neutral-800/80 p-0.5 border border-neutral-700/50 text-xs">
+            <div className="flex items-center rounded-lg bg-neutral-100 dark:bg-neutral-800/80 p-0.5 border border-neutral-200 dark:border-neutral-700/50 text-xs">
               <button
                 type="button"
                 onClick={() => setMode("local")}
                 className={`px-2 py-0.5 rounded-md transition-colors ${
                   mode === "local"
-                    ? "bg-blue-600 text-white font-medium shadow-xs"
-                    : "text-neutral-400 hover:text-neutral-200"
+                    ? "bg-theme/15 text-reading-accent font-medium shadow-xs"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
                 }`}
               >
                 Local
@@ -328,8 +345,8 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
                 onClick={() => setMode("global")}
                 className={`px-2 py-0.5 rounded-md transition-colors ${
                   mode === "global"
-                    ? "bg-blue-600 text-white font-medium shadow-xs"
-                    : "text-neutral-400 hover:text-neutral-200"
+                    ? "bg-theme/15 text-reading-accent font-medium shadow-xs"
+                    : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
                 }`}
               >
                 Global
@@ -340,7 +357,7 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
           <button
             type="button"
             onClick={() => setIsFullscreen(!isFullscreen)}
-            className="p-1.5 rounded-lg bg-neutral-800/60 hover:bg-neutral-800 text-neutral-400 hover:text-neutral-100 transition-colors"
+            className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800/60 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
             title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Graph"}
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -349,13 +366,13 @@ export function GraphView({ data, currentSlug, className = "", title = "Graph Vi
       </div>
 
       <div className="relative w-full flex-1 min-h-[260px] flex items-center justify-center overflow-hidden">
-        <canvas ref={canvasRef} className="w-full h-full block rounded-lg" />
+        <canvas ref={canvasRef} className="w-full h-full block rounded-lg text-reading-accent" />
         {filteredData.nodes.length === 0 && (
-          <p className="absolute text-xs text-neutral-500">No graph connections found</p>
+          <p className="absolute text-xs text-neutral-600 dark:text-neutral-500">No graph connections found</p>
         )}
       </div>
 
-      <div className="mt-2.5 flex items-center justify-between text-[11px] text-neutral-500">
+      <div className="mt-2.5 flex items-center justify-between text-[11px] text-neutral-600 dark:text-neutral-500">
         <span>
           {filteredData.nodes.length} nodes · {filteredData.links.length} links
         </span>

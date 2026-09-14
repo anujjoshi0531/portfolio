@@ -20,7 +20,11 @@ This is a Next.js App Router portfolio and content site. The architecture favors
 - `lib/content/`: generic content root resolution, frontmatter parsing, collection reads, normalization, excerpt extraction, and Markdown rendering.
 - `lib/server/`: server-only integrations and adapters, including Redis, email, newsletter subscribers, and compatibility exports.
 - `lib/utils/`: small shared utility modules grouped by purpose.
-- `content/`: local Markdown and Obsidian Base content.
+- `content/`: Markdown, Obsidian Base views, and article asset sources, tracked in this repository.
+- `content/_assets/`: canonical article media and editable drawing sources. Export drawings to browser-ready images here.
+- `public/_assets/`: ignored generated media, copied from `content/_assets/` by `pnpm assets:sync` before development and builds. Do not edit files here.
+- `public/` outside `_assets/`: tracked site-wide static assets such as icons, hero media, and the resume.
+- `scripts/`: build and authoring utilities, including content asset synchronization.
 - `db/` and `drizzle/`: database schema and migrations.
 - `styles/`: global CSS, markdown rendering styles, and sprite styles.
 - `types/`: global TypeScript declarations only.
@@ -47,7 +51,7 @@ This is a Next.js App Router portfolio and content site. The architecture favors
 ## Content Flow
 
 1. Markdown files live under `content/`.
-2. `lib/content/root.ts` resolves the content directory.
+2. `lib/content/root.ts` resolves this repository's content directory without external checkouts.
 3. `lib/content/frontmatter.ts`, `normalize.ts`, `search.ts`, and `collections.ts` parse and normalize content items.
 4. Feature modules project generic content into public feature shapes:
    - `features/blog/lib/content.ts`

@@ -3,9 +3,14 @@
    ============================================================ */
 
 .markdown-body {
+  --markdown-text: #374151;
+  --markdown-code-bg: #f1f5f9;
+  --markdown-code-text: #be123c;
+  --markdown-surface: #f3f4f6;
+  --markdown-stripe: #f9fafb;
   line-height: 1.75;
   font-size: 1rem;
-  color: var(--color-neutral-300);
+  color: var(--markdown-text);
   overflow-wrap: break-word;
 }
 
@@ -24,7 +29,7 @@
 .markdown-body h6 {
   position: relative;
   font-weight: 700;
-  color: var(--color-neutral-100);
+  color: hsl(var(--foreground));
   scroll-margin-top: 6rem;
 }
 
@@ -32,7 +37,7 @@
   font-size: 1.875rem;
   margin: 2.5rem 0 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--color-neutral-800);
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 @media (min-width: 640px) {
@@ -56,7 +61,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   margin: 1.5rem 0 0.75rem;
-  color: var(--color-neutral-200);
+  color: hsl(var(--foreground));
 }
 
 @media (min-width: 640px) {
@@ -71,13 +76,13 @@
   font-size: 1.125rem;
   font-weight: 600;
   margin: 1.25rem 0 0.5rem;
-  color: var(--color-neutral-200);
+  color: hsl(var(--foreground));
 }
 
 /* Heading anchor links */
 .heading-anchor {
   margin-left: 0.5rem;
-  color: hsl(var(--theme));
+  color: var(--reading-accent);
   opacity: 0;
   text-decoration: none !important;
   transition: opacity 0.15s ease;
@@ -99,7 +104,7 @@
 }
 
 .markdown-body a:not(.heading-anchor) {
-  color: hsl(var(--theme));
+  color: var(--reading-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: opacity 0.15s ease;
@@ -110,7 +115,7 @@
 }
 
 .markdown-body a.quartz-wikilink {
-  color: #60a5fa;
+  color: var(--reading-accent);
   text-decoration: underline dotted;
   text-underline-offset: 3px;
   font-weight: 500;
@@ -120,19 +125,19 @@
 }
 
 .markdown-body a.quartz-wikilink:hover {
-  color: #93c5fd;
+  color: var(--reading-accent);
   text-decoration: underline solid;
-  background-color: rgba(59, 130, 246, 0.15);
+  background-color: hsl(var(--theme) / 0.15);
 }
 
 .markdown-body strong {
-  color: var(--color-neutral-100);
+  color: hsl(var(--foreground));
   font-weight: 600;
 }
 
 .markdown-body hr {
   border: 0;
-  border-top: 1px solid var(--color-neutral-800);
+  border-top: 1px solid hsl(var(--border));
   margin: 2rem 0;
 }
 
@@ -165,14 +170,14 @@
 }
 
 .markdown-body input[type="checkbox"] {
-  accent-color: hsl(var(--theme));
+  accent-color: var(--reading-accent);
   margin-right: 0.5rem;
 }
 
 /* ---------- Inline code ---------- */
 .markdown-body code:not(pre code) {
-  background-color: rgb(71 76 80 / 0.55);
-  color: #ff7b9c;
+  background-color: var(--markdown-code-bg);
+  color: var(--markdown-code-text);
   border-radius: 5px;
   padding: 0.2em 0.4em;
   font-size: 0.9em;
@@ -183,7 +188,7 @@
 .markdown-body pre {
   margin: 1.5rem 0;
   border-radius: 0.5rem;
-  border: 1px solid var(--color-neutral-800);
+  border: 1px solid hsl(var(--border));
   background-color: #0d1117;
   scrollbar-width: thin;
   scrollbar-color: rgb(156 163 175 / 0.4) transparent;
@@ -213,12 +218,12 @@
 /* ---------- Blockquote (non-callout) ---------- */
 .markdown-body > blockquote {
   border-left: 4px solid var(--color-neutral-600);
-  background: rgb(23 23 23 / 0.5);
+  background: var(--markdown-surface);
   border-radius: 0 0.375rem 0.375rem 0;
   padding: 0.5rem 1rem;
   margin: 1rem 0;
   font-style: italic;
-  color: var(--color-neutral-300);
+  color: var(--markdown-text);
 }
 
 /* ---------- Callouts (Obsidian-style) ---------- */
@@ -301,19 +306,19 @@
 
 .markdown-body th,
 .markdown-body td {
-  border: 1px solid var(--color-neutral-800);
+  border: 1px solid hsl(var(--border));
   padding: 0.5rem 0.75rem;
   text-align: left;
 }
 
 .markdown-body thead th {
-  background-color: rgb(23 23 23 / 0.75);
-  color: var(--color-neutral-100);
+  background-color: var(--markdown-surface);
+  color: hsl(var(--foreground));
   font-weight: 600;
 }
 
 .markdown-body tbody tr:nth-child(even) {
-  background-color: rgb(23 23 23 / 0.35);
+  background-color: var(--markdown-stripe);
 }
 
 /* ---------- Images ---------- */
@@ -322,7 +327,7 @@
   height: auto;
   margin: 1.5rem auto;
   border-radius: 0.5rem;
-  border: 1px solid var(--color-neutral-800);
+  border: 1px solid hsl(var(--border));
 }
 
 .markdown-body p:has(> img:only-child) {
@@ -358,6 +363,23 @@
 
 .blog-reading-progress-bar {
   height: 100%;
-  background: hsl(var(--theme));
+  background: var(--reading-accent);
   transition: width 0.1s linear;
+}
+
+.dark .markdown-body {
+  --markdown-text: var(--color-neutral-300);
+  --markdown-code-bg: rgb(71 76 80 / 0.55);
+  --markdown-code-text: #ff7b9c;
+  --markdown-surface: rgb(23 23 23 / 0.75);
+  --markdown-stripe: rgb(23 23 23 / 0.35);
+}
+
+:root:not(.dark) .callout-title {
+  color: color-mix(in srgb, rgb(var(--callout-color)) 65%, black);
+}
+
+/* Code fences retain their syntax highlighter's dark palette in both themes. */
+.markdown-body pre {
+  color: #e6edf3;
 }

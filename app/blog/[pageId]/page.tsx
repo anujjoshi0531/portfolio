@@ -1,4 +1,3 @@
-import Image from "next/image";
 import NotFound from "@/app/not-found";
 import BlogSection from "@/components/home/BlogSection";
 import { getBlogBySlug } from "@/features/blog/lib/content";
@@ -107,19 +106,6 @@ export default async function page({ params, searchParams }: {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Main Content Area */}
         <div className="lg:col-span-8 space-y-8">
-          {localBlog.thumbnail && (
-            <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-neutral-800">
-              <Image
-                src={localBlog.thumbnail}
-                alt={localBlog.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 900px) 100vw, 900px"
-                priority
-              />
-            </div>
-          )}
-
           {showIndex && <TableOfContents toc={toc} className="lg:hidden" />}
 
           <BlogPlaylistContexts

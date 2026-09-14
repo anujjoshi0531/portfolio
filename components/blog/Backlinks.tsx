@@ -11,26 +11,26 @@ interface BacklinksProps {
 export function Backlinks({ backlinks, className = "" }: BacklinksProps) {
   if (!backlinks || backlinks.length === 0) {
     return (
-      <div className={`rounded-xl border border-neutral-800/80 bg-neutral-900/40 p-6 ${className}`}>
-        <div className="flex items-center gap-2 mb-2 text-neutral-400">
-          <Link2 className="w-4 h-4 text-theme" />
-          <h4 className="text-sm font-semibold uppercase tracking-wider text-neutral-300">Backlinks</h4>
+      <div className={`rounded-xl border border-neutral-200 dark:border-neutral-800/80 bg-neutral-50 dark:bg-neutral-900/40 p-6 ${className}`}>
+        <div className="flex items-center gap-2 mb-2 text-neutral-600 dark:text-neutral-400">
+          <Link2 className="w-4 h-4 text-reading-accent" />
+          <h4 className="text-sm font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-300">Backlinks</h4>
         </div>
-        <p className="text-xs text-neutral-500 italic">No notes link to this post yet.</p>
+        <p className="text-xs text-neutral-600 dark:text-neutral-500 italic">No notes link to this post yet.</p>
       </div>
     );
   }
 
   return (
-    <div className={`rounded-xl border border-neutral-800/90 bg-neutral-900/50 p-6 backdrop-blur-md ${className}`}>
-      <div className="flex items-center justify-between mb-4 border-b border-neutral-800 pb-3">
+    <div className={`rounded-xl border border-neutral-200 dark:border-neutral-800/90 bg-neutral-50 dark:bg-neutral-900/50 p-6 backdrop-blur-md ${className}`}>
+      <div className="flex items-center justify-between mb-4 border-b border-neutral-200 dark:border-neutral-800 pb-3">
         <div className="flex items-center gap-2">
-          <Link2 className="w-4.5 h-4.5 text-theme" />
-          <h4 className="text-sm font-semibold uppercase tracking-wider text-neutral-200">
+          <Link2 className="w-4.5 h-4.5 text-reading-accent" />
+          <h4 className="text-sm font-semibold uppercase tracking-wider text-neutral-900 dark:text-neutral-200">
             Mentioned In ({backlinks.length})
           </h4>
         </div>
-        <span className="text-xs text-neutral-500">Backlinks</span>
+        <span className="text-xs text-neutral-600 dark:text-neutral-500">Backlinks</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -38,24 +38,24 @@ export function Backlinks({ backlinks, className = "" }: BacklinksProps) {
           <Link
             key={item.slug}
             href={`/blog/${item.slug}`}
-            className="group relative block rounded-lg border border-neutral-800/70 bg-neutral-950/60 p-4 transition-all duration-200 hover:border-theme/40 hover:bg-neutral-800/50 hover:shadow-lg hover:shadow-theme/5"
+            className="group relative block rounded-lg border border-neutral-200 dark:border-neutral-800/70 bg-white dark:bg-neutral-950/60 p-4 transition-all duration-200 hover:border-theme/40 hover:bg-neutral-100 dark:hover:bg-neutral-800/50 hover:shadow-lg hover:shadow-theme/5"
           >
             <div className="flex items-center justify-between gap-2 mb-1.5">
-              <h5 className="text-sm font-semibold text-neutral-100 group-hover:text-theme transition-colors line-clamp-1">
+              <h5 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-reading-accent transition-colors line-clamp-1">
                 {item.title}
               </h5>
               {item.category && (
-                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-theme/10 border border-theme/30 text-theme">
+                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-theme/10 border border-theme/30 text-reading-accent">
                   {item.category}
                 </span>
               )}
             </div>
 
-            <p className="text-xs text-neutral-400 line-clamp-2 mb-3 font-normal leading-relaxed">
+            <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2 mb-3 font-normal leading-relaxed">
               {item.description}
             </p>
 
-            <div className="flex items-center justify-between text-[11px] text-neutral-500 pt-2 border-t border-neutral-800/50">
+            <div className="flex items-center justify-between text-[11px] text-neutral-600 dark:text-neutral-500 pt-2 border-t border-neutral-200 dark:border-neutral-800/50">
               {item.published ? (
                 <span className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
@@ -65,8 +65,8 @@ export function Backlinks({ backlinks, className = "" }: BacklinksProps) {
                 <span />
               )}
               {item.tags.length > 0 && (
-                <span className="flex items-center gap-1 text-neutral-400">
-                  <Tag className="w-3 h-3 text-theme" />
+                <span className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
+                  <Tag className="w-3 h-3 text-reading-accent" />
                   {item.tags.slice(0, 2).join(", ")}
                 </span>
               )}

@@ -101,7 +101,7 @@ export function PopoverPreview() {
     >
       {loading ? (
         <div className="flex items-center gap-2 text-xs text-neutral-400 py-2">
-          <div className="w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-3.5 h-3.5 border-2 border-theme border-t-transparent rounded-full animate-spin" />
           <span>Loading note preview...</span>
         </div>
       ) : data ? (
@@ -112,7 +112,7 @@ export function PopoverPreview() {
             </div>
           )}
 
-          <div className="flex items-center gap-1.5 mb-1 text-[10px] uppercase font-semibold text-blue-400">
+          <div className="flex items-center gap-1.5 mb-1 text-[10px] uppercase font-semibold text-theme">
             <FileText className="w-3 h-3" />
             <span>{data.category || "Blog"}</span>
           </div>
@@ -131,7 +131,7 @@ export function PopoverPreview() {
             )}
             {data.tags && data.tags.length > 0 && (
               <span className="flex items-center gap-1 text-neutral-400">
-                <Tag className="w-3 h-3 text-blue-400" />
+                <Tag className="w-3 h-3 text-theme" />
                 {data.tags[0]}
               </span>
             )}

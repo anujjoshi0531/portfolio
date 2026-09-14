@@ -1,0 +1,68 @@
+filters:
+  and:
+    - file.inFolder(this.file.folder + "/testimonials")
+    - file.ext == "md"
+formulas:
+  testimonial_link: link(file.path, name)
+  avatar_preview: if(avatar, image(if(avatar.startsWith((this.file.folder + "/")), avatar, (this.file.folder + "/") + avatar)), icon("user"))
+properties:
+  title:
+    displayName: Title
+  name:
+    displayName: Name
+  formula.testimonial_link:
+    displayName: Name
+  company:
+    displayName: Company
+  position:
+    displayName: Position
+  date:
+    displayName: Date
+  project:
+    displayName: Project / Context
+  rating:
+    displayName: Rating
+  contact:
+    displayName: Contact
+  avatar:
+    displayName: Avatar Path
+  formula.avatar_preview:
+    displayName: Avatar
+  created:
+    displayName: Created At
+  updated:
+    displayName: Updated At
+views:
+  - type: cards
+    name: Cards
+    order:
+      - formula.avatar_preview
+      - formula.testimonial_link
+      - position
+      - company
+      - rating
+      - project
+  - type: table
+    name: Table
+    order:
+      - formula.testimonial_link
+      - company
+      - position
+      - date
+      - project
+      - rating
+      - contact
+  - type: table
+    name: All Details
+    order:
+      - name
+      - title
+      - company
+      - position
+      - date
+      - project
+      - rating
+      - contact
+      - avatar
+      - created
+      - updated

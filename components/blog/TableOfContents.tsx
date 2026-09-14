@@ -58,12 +58,12 @@ export function TableOfContents({ toc, className = "", title = "Index" }: TableO
 
   return (
     <div
-      className={`rounded-xl border border-neutral-800 bg-neutral-900/60 p-4 backdrop-blur-md ${className}`}
+      className={`rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 p-4 backdrop-blur-md ${className}`}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 mb-3 border-b border-neutral-800/80 pb-2.5">
-        <List className="w-4 h-4 text-theme" />
-        <span className="text-xs sm:text-sm font-semibold text-neutral-200 uppercase tracking-wider">
+      <div className="flex items-center gap-2 mb-3 border-b border-neutral-200 dark:border-neutral-800/80 pb-2.5">
+        <List className="w-4 h-4 text-reading-accent" />
+        <span className="text-xs sm:text-sm font-semibold text-neutral-900 dark:text-neutral-200 uppercase tracking-wider">
           {title}
         </span>
       </div>
@@ -86,8 +86,8 @@ export function TableOfContents({ toc, className = "", title = "Index" }: TableO
                     transition-all duration-200 ${indent}
                     ${
                       isActive
-                        ? "text-theme bg-theme/10 font-medium border-l-2 border-theme"
-                        : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60 border-l-2 border-transparent"
+                        ? "text-reading-accent bg-theme/10 font-medium border-l-2 border-theme"
+                        : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800/60 border-l-2 border-transparent"
                     }
                   `}
                   title={entry.text}

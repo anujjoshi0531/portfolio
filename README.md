@@ -21,6 +21,7 @@ Portfolio and content site for Anuj Joshi, built with Next.js App Router, React,
 ## Scripts
 
 - `pnpm dev`: start the local Next.js dev server.
+- `pnpm assets:sync`: refresh generated article media after editing files in `content/_assets/`.
 - `pnpm lint`: run ESLint 9 with the flat config.
 - `pnpm typecheck`: run TypeScript without emitting files.
 - `pnpm build`: build the production app.
@@ -34,11 +35,13 @@ Portfolio and content site for Anuj Joshi, built with Next.js App Router, React,
 
 Local content lives in `content/` and is read through server-only collection helpers in `lib/content` and feature projection modules under `features/*/lib`.
 
+Application code and content share one Git repository and one commit workflow. A normal clone includes the articles and their assets.
+
 - Blog posts: `content/blog/*.md`
 - Projects: `content/projects/*.md`
 - About data: `content/experience`, `content/education`, and `content/testimonials`
 - Algorithm articles: `content/algorithms/*.md`
-- Public content assets: use `_assets` paths that resolve to `/_assets/...`
+- Content assets: maintain files under `content/_assets/` and use `_assets` paths that resolve to `/_assets/...`. `pnpm assets:sync` copies publishable media to ignored `public/_assets/` and removes stale output. It runs automatically before `pnpm dev` and `pnpm build`; rerun it after changing assets during development. Editable `.excalidraw` files stay in content; export their images there too.
 
 Markdown rendering is handled by `lib/content/markdown`, with plugins split by callouts, wikilinks, algorithm embeds, and reading stats.
 
@@ -72,5 +75,5 @@ Current lint output may include warnings for unused values in algorithm visualiz
 
 - If `pnpm build` changes `tsconfig.json`, keep Next.js mandatory compiler settings unless they break local tooling.
 - If QStash newsletter dispatch runs locally, the webhook URL must be publicly reachable through a tunnel.
-- If content appears missing, confirm `content/` exists and is populated; the content root helper also checks `../portfolio-content` as a fallback.
+- If content appears missing, confirm the tracked `content/` directory is populated. There is no external content checkout or fallback.
 - If email fails, confirm mail credentials and display addresses in `.env`.

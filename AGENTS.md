@@ -15,7 +15,7 @@ Example requests:
 ## Repository Rules
 
 - Read `ARCHITECTURE.md` before application changes; current source takes precedence over historical plans in `docs/`, `plan.md`, and `better idea plan.md`.
-- Inspect Git status before edits. `content` is declared as a separate repository/submodule; inspect `git -C content status` and `git submodule status` when touching content. Report content-repository changes separately if applicable.
+- Content lives in this repository as ordinary tracked files. Check git status before edits. Maintain article assets in content/_assets/; pnpm assets:sync generates ignored public/_assets/ files.
 - Draft articles belong in `docs/drafts/` by default. The current blog loader exposes all top-level `.md` files under `content/blog`; `draft: true`, status flags, and future dates do not hide them.
 - Keep work within the requested scope. Authoring a post does not require implementing a CMS, adding a visualizer, or redesigning the site.
 - Use the package manager and scripts from `package.json` (currently pnpm). For application changes, run relevant checks and report failures accurately. Documentation-only skill edits do not require an application build.

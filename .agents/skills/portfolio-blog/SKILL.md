@@ -12,7 +12,7 @@ Use this skill for work in this repository's blog system: drafting articles, imp
 - Treat the product as a technical blog and learning library with portfolio pages alongside it.
 - Keep article work and platform work scoped to the user's request. Writing a post does not imply building CMS features, visualizers, or a redesign.
 - Read the source for current behavior. Historical plans can explain intent, but `ARCHITECTURE.md`, `lib/content/*`, `features/blog/*`, and the actual renderer define what works now.
-- `content` is a separate repository/submodule. When touching published content, check both the main repository status and `content` repository status.
+- Content lives in this repository as ordinary tracked files. Check git status before edits. Maintain article assets in content/_assets/; pnpm assets:sync generates ignored public/_assets/ files.
 
 ## Content Rules
 

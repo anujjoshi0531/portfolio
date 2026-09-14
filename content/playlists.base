@@ -1,0 +1,31 @@
+filters:
+  and:
+    - file.inFolder(this.file.folder + "/playlists")
+    - file.ext == "md"
+properties:
+  id:
+    displayName: Playlist ID
+  title:
+    displayName: Title
+  description:
+    displayName: Description
+  summary:
+    displayName: Summary
+views:
+  - type: table
+    name: Playlists
+    order:
+      - file.name
+      - title
+      - description
+      - summary
+      - id
+    sort:
+      - property: title
+        direction: ASC
+  - type: cards
+    name: Cards
+    order:
+      - title
+      - description
+      - summary

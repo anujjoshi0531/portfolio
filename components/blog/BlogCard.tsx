@@ -49,8 +49,8 @@ export default function BlogCard({
         className
       )}
       aria-label={isPlaylist ? `Open blog playlist: ${title}` : `Read blog post: ${title}`}
-      onMouseEnter={() => setHovered?.(index)}
-      onMouseLeave={() => setHovered?.(null)}
+      onMouseEnter={setHovered ? () => setHovered(index) : undefined}
+      onMouseLeave={setHovered ? () => setHovered(null) : undefined}
     >
       <Card
         className={cn(
